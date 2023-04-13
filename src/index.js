@@ -1,13 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './index.css'; // importando el archivo index.css
 import App from './App';
 
-// Importing Sass with Bootstrap CSS
-import './App.scss';
-
-ReactDOM.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>,
-    document.getElementById('root')
-);
+ReactDOM.render(<App />, document.getElementById('root'));
