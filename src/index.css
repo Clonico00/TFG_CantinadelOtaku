@@ -4,6 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.mobile-menu {
+    transition: all 0.3s ease-in-out;
+}
+
+.button-rotate {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+}
 
 @media (max-width: 768px) {
     .mobile-menu {
