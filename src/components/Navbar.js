@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {Link, NavLink} from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import Logo from '../img/logo.png';
 
 function Navbar() {
     const [showMenu, setShowMenu] = useState(false);
@@ -9,63 +10,85 @@ function Navbar() {
     };
 
     return (
-        <nav className="bg-gray-800">
+        <nav className="bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center">
-                        <Link to="/">
-                            <span className="text-white font-bold text-xl">Cantina del Otaku</span>
+                        <Link
+                            to="/"
+                            style={{
+                                backfaceVisibility: 'hidden',
+                                color: '#3E62FF',
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <img src={Logo} alt="Logo" className="h-12 w-12 mr-2"/>
+                            <span className="font-extrabold tracking-tight text-2xl whitespace-nowrap">
+      Cantina del Otaku
+    </span>
                         </Link>
                     </div>
+
+
                     <div className="hidden md:block">
-                        <div className="ml-10 flex items-baseline space-x-4">
+                        <div className="ml-10 flex items-baseline space-x-4 tracking-tight">
                             <Link
                                 to="/"
-                                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                            >
+                                className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>
+
+
                                 Inicio
                             </Link>
-                            <NavLink
+                            <Link
                                 to="/merchandising"
-                                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                            >
+                                className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>
                                 Merchandising
-                            </NavLink>
+                            </Link>
                             <Link
                                 to="/mangas"
-                                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                            >
+                                className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>
                                 Mangas
                             </Link>
                             <Link
                                 to="/comics"
-                                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                            >
+                                className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>
                                 Comics
                             </Link>
                             <Link
                                 to="/foro"
-                                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                            >
+                                className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>
                                 Foro
                             </Link>
                             <Link
                                 to="/libreria"
-                                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                            >
+                                className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>
                                 Libreria
                             </Link>
                             <input
                                 type="text"
                                 placeholder="Buscar..."
-                                className="appearance-none bg-transparent border-2 border-gray-300 rounded-lg bg-gray-100 w-full text-grey mr-3 py-1 px-2 leading-tight focus:outline-none"
-                                style={{'transition': 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}}
+                                className="bg-transparent border-2 border-black rounded-lg w-full text-black font-md mr-3 py-1 px-2 leading-tight focus:outline-none placeholder:font-light"
+                                style={{
+                                    transition: 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+                                    color: '#3E62FF',
+                                    borderColor: '#3E62FF'
+                                }}
                             />
 
                             <button type="submit"
-                                    className="flex-shrink-0 text-white border-2 border-gray-300 text-sm py-1 px-4 rounded transform hover:scale-105 transition-all duration-300">
+                                    className="flex-shrink-0 font-bold border-2 border-black text-md py-1 px-4 rounded transform hover:scale-105 hover:shadow-md transition-all duration-300"
+                                    style={{backfaceVisibility: 'hidden', color: '#3E62FF', borderColor: '#3E62FF'}}>
+
                                 Buscar
                             </button>
+
 
                         </div>
 
@@ -73,7 +96,7 @@ function Navbar() {
                     <div className="-mr-2 flex md:hidden">
                         <button
                             type="button"
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none"
                             aria-controls="mobile-menu"
                             aria-expanded={showMenu ? 'true' : 'false'}
                             onClick={handleToggle}
@@ -81,35 +104,30 @@ function Navbar() {
                             <span className="sr-only">Open main menu</span>
                             {showMenu ? (
                                 <svg
-                                    className="block h-6 w-6"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    aria-hidden="true"
+                                    viewBox="0 0 448 512"
+                                    fill="currentColor"
+                                    height="1em"
+                                    width="1em"
+                                    className="fill-current text-black"
                                 >
-                                    <path d="M4 6h16M4 12h16M4 18h16"></path>
+                                    <path
+                                        d="M0 96c0-17.7 14.3-32 32-32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zm0 160c0-17.7 14.3-32 32-32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zm448 160c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h384c17.7 0 32 14.3 32 32z"/>
                                 </svg>
+
                             ) : (
                                 <svg
-                                    className="block h-6 w-6"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    aria-hidden="true"
+                                    viewBox="0 0 448 512"
+                                    fill="currentColor"
+                                    height="1em"
+                                    width="1em"
+                                    className="fill-current text-black"
                                 >
-                                    <path d="M4 6h16M4 12h16M4 18h16"></path>
+                                    <path
+                                        d="M0 96c0-17.7 14.3-32 32-32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zm0 160c0-17.7 14.3-32 32-32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zm448 160c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h384c17.7 0 32 14.3 32 32z"/>
                                 </svg>
                             )}
-
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -118,50 +136,51 @@ function Navbar() {
                     <Link
 
                         to="/"
-                        className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                    >
+                        className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                        style={{backfaceVisibility: 'hidden'}}>
                         Inicio
                     </Link>
                     <Link
                         to="/merchandising"
-                        className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                    >
+                        className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                        style={{backfaceVisibility: 'hidden'}}>
                         Merchandising
                     </Link>
                     <Link
                         to="/mangas"
-                        className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                    >
+                        className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                        style={{backfaceVisibility: 'hidden'}}>
                         Mangas
                     </Link>
                     <Link
                         to="/comics"
-                        className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                    >
+                        className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                        style={{backfaceVisibility: 'hidden'}}>
                         Comics
                     </Link>
                     <Link
                         to="/foro"
-                        className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                    >
+                        className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                        style={{backfaceVisibility: 'hidden'}}>
                         Foro
                     </Link>
                     <Link
                         to="/libreria"
-                        className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                    >
+                        className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                        style={{backfaceVisibility: 'hidden'}}>
                         Libreria
                     </Link>
                     <input
                         type="text"
                         placeholder="Buscar..."
-                        className="appearance-none bg-transparent border-2 border-gray-300 rounded-lg bg-gray-100 w-full text-grey mr-3 mb-4 py-1 px-2 leading-tight focus:outline-none"
+                        className="bg-transparent border-2 border-black rounded-lg w-full text-black font-bold mr-3 py-1 px-2 leading-tight focus:outline-none placeholder:font-light"
                         style={{'transition': 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}}
                     />
 
                     <button type="submit"
-                            className="flex-shrink-0 text-white border-2 border-gray-300 text-sm py-1 px-4 rounded  transform hover:scale-105 transition-all duration-300 mt-2 w-full mt-4"
-                    >
+
+                            className="flex-shrink-0 font-bold border-2 border-black text-md py-1 px-4 rounded transform hover:shadow-md transition-all duration-300 w-full mt-4"
+                            style={{backfaceVisibility: 'hidden'}}>
                         Buscar
                     </button>
                 </div>

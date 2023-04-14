@@ -1,25 +1,9 @@
+@import "@fontsource/inter";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-.navbar {
-    background-color: #1a202c;
-    color: #fff;
-}
-
-.nav-link {
-    color: #fff;
-    padding: 0.5rem 1rem;
-    font-size: 1.2rem;
-}
-
-.nav-link:hover {
-    text-decoration: none;
-}
-
-.mobile-menu {
-    display: none;
-}
 
 @media (max-width: 768px) {
     .mobile-menu {
@@ -29,17 +13,6 @@
     .navbar-menu {
         display: none;
     }
-}
-
-.navbar-toggler {
-    color: #fff;
-    border-color: #fff;
-}
-
-.navbar-toggler:hover {
-    color: #000;
-    background-color: #fff;
-    border-color: #fff;
 }
 
 @media (min-width: 768px) {
@@ -54,7 +27,6 @@
         align-items: center;
     }
 }
-
 
 
 
