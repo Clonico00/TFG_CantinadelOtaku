@@ -13,17 +13,7 @@
     transition: transform 0.3s ease;
 }
 
-@media (max-width: 768px) {
-    .mobile-menu {
-        display: block;
-    }
-
-    .navbar-menu {
-        display: none;
-    }
-}
-
-@media (min-width: 768px) {
+@media (min-width: 1200px) {
     footer {
         position: fixed;
         bottom: 0;
@@ -35,7 +25,3 @@
         align-items: center;
     }
 }
-
-
-
-
