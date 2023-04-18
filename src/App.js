@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, {useState} from "react";
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Inicio from "./components/Inicio";
@@ -10,10 +10,16 @@ import Foro from "./components/Foro";
 import Libreria from "./components/Libreria";
 
 function App() {
+    const [activeLink, setActiveLink] = useState('/');
+
+    const handleLinkClick = (path) => {
+        setActiveLink(path);
+    };
+
     return (
-        <div className="App">
-            <Router>
-                <Navbar />
+        <Router>
+            <div className="flex flex-col min-h-screen">
+                <Navbar activeLink={activeLink} handleLinkClick={handleLinkClick}/>
                 <Routes>
                     <Route path="/" element={<Inicio />} />
                     <Route path="/merchandising" element={<Mechandising />} />
@@ -22,10 +28,9 @@ function App() {
                     <Route path="/foro" element={<Foro />} />
                     <Route path="/libreria" element={<Libreria />} />
                 </Routes>
-            </Router>
-            <main></main>
-            <Footer />
-        </div>
+                <Footer activeLink={activeLink} handleLinkClick={handleLinkClick}/>
+            </div>
+        </Router>
     );
 }
 

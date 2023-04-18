@@ -2,19 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import Logo from '../img/logo.png';
 
-function Navbar() {
+function Navbar({ activeLink, handleLinkClick }) {
     const [showMenu, setShowMenu] = useState(false);
-    const [activeLink, setActiveLink] = useState(window.location.pathname);
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
     };
 
     const handleToggle = () => {
-        toggleMenu();
-    };
-    const handleLinkClick = (path) => {
-        setActiveLink(path);
         toggleMenu();
     };
 
@@ -24,7 +19,6 @@ function Navbar() {
                 setShowMenu(false);
             }
         }
-
         window.addEventListener('resize', handleResize);
 
         return () => window.removeEventListener('resize', handleResize);
