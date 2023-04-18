@@ -1,17 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import Logo from '../img/logo.png';
-// import anime from 'animejs';
 
 function Navbar() {
     const [showMenu, setShowMenu] = useState(false);
+    const [activeLink, setActiveLink] = useState(window.location.pathname);
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
     };
 
-
     const handleToggle = () => {
+        toggleMenu();
+    };
+    const handleLinkClick = (path) => {
+        setActiveLink(path);
         toggleMenu();
     };
 
@@ -26,6 +29,7 @@ function Navbar() {
 
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
     return (
         <nav className="bg-white navbar-menu">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -49,38 +53,62 @@ function Navbar() {
                         <div className="ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item">
                             <Link
                                 to="/"
-                                className="menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>
+                                className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg ${
+                                    activeLink === '/' ? 'underline' : ''
+                                }`}
+                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}
+                                onClick={() => handleLinkClick('/')}
+                            >
                                 Inicio
                             </Link>
                             <Link
                                 to="/merchandising"
-                                className="menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>
+                                className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg ${
+                                    activeLink === '/merchandising' ? 'underline' : ''
+                                }`}
+                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}
+                                onClick={() => handleLinkClick('/merchandising')}
+                            >
                                 Merchandising
                             </Link>
                             <Link
                                 to="/mangas"
-                                className="menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>
+                                className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg ${
+                                    activeLink === '/mangas' ? 'underline' : ''
+                                }`}
+                                style={{ backfaceVisibility: 'hidden', color: '#3E62FF' }}
+                                onClick={() => handleLinkClick('/mangas')}
+                            >
                                 Mangas
                             </Link>
                             <Link
                                 to="/comics"
-                                className="menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>
+                                className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg ${
+                                    activeLink === '/comics' ? 'underline' : ''
+                                }`}
+                                style={{ backfaceVisibility: 'hidden', color: '#3E62FF' }}
+                                onClick={() => handleLinkClick('/comics')}
+                            >
                                 Comics
                             </Link>
                             <Link
                                 to="/foro"
-                                className="menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>
+                                className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg ${
+                                    activeLink === '/foro' ? 'underline' : ''
+                                }`}
+                                style={{ backfaceVisibility: 'hidden', color: '#3E62FF' }}
+                                onClick={() => handleLinkClick('/foro')}
+                            >
                                 Foro
                             </Link>
                             <Link
                                 to="/libreria"
-                                className=" menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>
+                                className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg ${
+                                    activeLink === '/libreria' ? 'underline' : ''
+                                }`}
+                                style={{ backfaceVisibility: 'hidden', color: '#3E62FF' }}
+                                onClick={() => handleLinkClick('/libreria')}
+                            >
                                 Libreria
                             </Link>
                             <input

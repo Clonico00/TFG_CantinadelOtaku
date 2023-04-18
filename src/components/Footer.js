@@ -2,6 +2,7 @@ import React from 'react';
 import {BiMap} from "react-icons/bi";
 import {AiOutlinePhone, AiOutlineMail, AiOutlineTwitter, AiOutlineInstagram} from "react-icons/ai";
 import {FaTiktok} from "react-icons/fa";
+import Logo from "../img/logo.png";
 
 const Footer = () => {
     return <footer className="py-12 w-full">
@@ -9,6 +10,7 @@ const Footer = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="grid grid-cols-1 gap-4">
                     <div className="flex items-center mb-4">
+                        <img src={Logo} alt="Logo" className="h-12 w-12 mr-2"/>
                         <h2 className="font-extrabold tracking-tight text-2xl whitespace-nowrap" style={{
                             backfaceVisibility: 'hidden',
                             color: '#1e2447'
@@ -90,18 +92,21 @@ const Footer = () => {
                         <div className="flex flex-col">
                             <div className="flex items-center mb-4">
                                 <BiMap className="w-6 h-6 mr-2"/>
-                                <p  className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                    style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>Granada, España</p>
+                                <p className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                                   style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>Granada, España</p>
                             </div>
                             <div className="flex items-center mb-4">
                                 <AiOutlinePhone className="w-6 h-6 mr-2"/>
-                                <p  className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                    style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>+34 601 303 832</p>
+                                <p className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                                   style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>+34 601 303 832</p>
                             </div>
                             <div className="flex items-center mb-4">
                                 <AiOutlineMail className="w-6 h-6 mr-2"/>
-                                <p  className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                    style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>cantinadelotaku@gmail.com</p>
+                                <p className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                                   style={{
+                                       backfaceVisibility: 'hidden',
+                                       color: '#3E62FF'
+                                   }}>cantinadelotaku@gmail.com</p>
                             </div>
                         </div>
                     </div>
@@ -109,8 +114,9 @@ const Footer = () => {
             </div>
             <hr className="border-gray-600 my-8"/>
             <div className="text-center mt-8">
-                <p  className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold"
-                    style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>&copy; 2023 Mi sitio web. Todos los derechos reservados.</p>
+                <p className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold"
+                   style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>&copy; 2023 Mi sitio web. Todos los derechos
+                    reservados.</p>
             </div>
         </div>
 
