@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     screens: {
       'sm': '640px',
-      'md': '1100px', // Cambia este valor de 768 a 1200
+      'md': '1200px', // Cambia este valor de 768 a 1200
       'lg': '1024px',
       'xl': '1280px',
     },
@@ -14,5 +14,6 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/typography'),
+    require('flowbite/plugin')
   ],
 }

@@ -8,6 +8,8 @@ import Mangas from "./components/Mangas";
 import Comics from "./components/Comics";
 import Foro from "./components/Foro";
 import Libreria from "./components/Libreria";
+import Login from "./components/Login";
+import Register from "./components/Register";
 
 function App() {
     const [activeLink, setActiveLink] = useState('/');
@@ -27,6 +29,8 @@ function App() {
                     <Route path="/comics" element={<Comics />} />
                     <Route path="/foro" element={<Foro />} />
                     <Route path="/libreria" element={<Libreria />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                 </Routes>
                 <Footer activeLink={activeLink} handleLinkClick={handleLinkClick}/>
             </div>
