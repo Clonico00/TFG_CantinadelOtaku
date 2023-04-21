@@ -42,7 +42,6 @@ const Footer = ({ handleLinkClick}) => {
                             </Link>
                         </div>
 
-
                         <div className="flex items-center mb-4">
                             <Link
                                 className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg `}

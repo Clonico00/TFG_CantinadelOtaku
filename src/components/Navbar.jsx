@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import Logo from '../img/logo.png';
 import UsuarioIconDefault from '../img/usuario_icon.png';
+import Carrito from "../img/carrito.png";
+
 
 function Navbar({activeLink, handleLinkClick}) {
     const [showMenu, setShowMenu] = useState(false);
@@ -136,17 +138,28 @@ function Navbar({activeLink, handleLinkClick}) {
                         <div className="flex items-center relative">
                             <button
                                 type="button"
-                                className="text-gray-700 hover:text-gray-900 py-1 px-2 md:px-4"
+                                className="text-gray-700 hover:text-gray-900 py-1 px-2 ml-4 md:px-4"
                                 onClick={toggleMenuLogin}
-                                style={{ right: "0" }}
+                                style={{ right: "0"}}
                             >
                                 <img
                                     src={UsuarioIconDefault}
                                     alt="Logo"
                                     className="h-8 w-8 md:h-10 md:w-10 object-contain mr-2"
+                                    style={{minWidth: "20px", minHeight: "20px"}}
                                 />
                             </button>
-
+                            <button
+                                type="button"
+                                className="text-gray-700 hover:text-gray-900 py-1 px-1 md:px-4"
+                            >
+                                <img
+                                    src={Carrito}
+                                    alt="Logo"
+                                    className="h-6 w-6 md:h-8 md:w-8 object-contain mr-2"
+                                    style={{minWidth: "20px", minHeight: "20px"}}
+                                />
+                            </button>
                             {isMenuOpen && (
                                 <div
                                     className="absolute z-10 bg-white rounded-md shadow-xl flex flex-col"
