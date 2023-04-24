@@ -7,7 +7,7 @@ import {Link} from "react-router-dom";
 
 const Footer = ({handleLinkClick}) => {
     return <footer className="py-12 w-full rounded-t-lg shadow-md border border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:text-center md:text-left">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:text-center">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="grid grid-cols-1 gap-4 justify-center ">
                     <div className="flex items-center mb-4 justify-center mr-4">
@@ -20,7 +20,7 @@ const Footer = ({handleLinkClick}) => {
                     </div>
                 </div>
                 <div className="grid grid-cols-1 gap-4">
-                    <h2 className="font-extrabold tracking-tight text-xl whitespace-nowrap" style={{
+                    <h2 className="font-extrabold tracking-tight text-xl whitespace-nowrap text-center" style={{
                         backfaceVisibility: 'hidden',
                         color: '#1e2447'
                     }}>Enlaces</h2>
@@ -75,7 +75,7 @@ const Footer = ({handleLinkClick}) => {
                 </div>
                 <div className="flex flex-col">
                     <div className="grid grid-cols-1 gap-4">
-                        <h2 className="font-extrabold tracking-tight text-xl whitespace-nowrap" style={{
+                        <h2 className="font-extrabold tracking-tight text-xl whitespace-nowrap text-center" style={{
                             backfaceVisibility: 'hidden',
                             color: '#1e2447'
                         }}>Redes sociales</h2>
@@ -103,7 +103,7 @@ const Footer = ({handleLinkClick}) => {
                 </div>
                 <div className="flex flex-col">
                     <div className="grid grid-cols-1 gap-4">
-                        <h2 className="font-extrabold tracking-tight text-xl whitespace-nowrap" style={{
+                        <h2 className="font-extrabold tracking-tight text-xl whitespace-nowrap text-center" style={{
                             backfaceVisibility: 'hidden',
                             color: '#1e2447'
                         }}>Contacto</h2>
