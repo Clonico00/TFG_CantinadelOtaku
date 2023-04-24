@@ -15,9 +15,19 @@ function Navbar({activeLink, handleLinkClick}) {
     const toggleMenuLogin = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+
     const handleToggle = () => {
         toggleMenu();
     };
+    const closeMenu = () => {
+        setShowMenu(false);
+        setIsMenuOpen(false);
+    }
+
+    const handleLinkClickInternal = (path) => {
+        closeMenu(); // Cerrar el menú antes de cambiar la ruta
+        handleLinkClick(path); // Cambiar la ruta
+    }
 
     useEffect(() => {
         function handleResize() {
@@ -32,7 +42,7 @@ function Navbar({activeLink, handleLinkClick}) {
     }, []);
 
     return (
-        <nav className="bg-white navbar-menu">
+        <nav className="bg-white navbar-menu rounded-b-lg border border-gray-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center">
@@ -51,8 +61,6 @@ function Navbar({activeLink, handleLinkClick}) {
                                 Cantina del Otaku </span>
                         </Link>
                     </div>
-
-
                     <div className="hidden md:block">
                         <div className="ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item">
                             <Link
@@ -185,7 +193,7 @@ function Navbar({activeLink, handleLinkClick}) {
                                         to="/register"
                                         className={`menu-item hover:underline transition-all duration-400 px-3 py-2 text-sm font-bold hover:text-shadow-lg `}
                                         style={{backfaceVisibility: "hidden", color: "#4a63ee"}}
-                                        onClick={() => handleLinkClick("/")}
+                                        onClick={() => handleLinkClickInternal("/")}
                                     >
                                         Registro
                                     </Link>
@@ -193,7 +201,7 @@ function Navbar({activeLink, handleLinkClick}) {
                                         to="/login"
                                         className={`menu-item hover:underline transition-all duration-400 px-3 py-2 text-sm font-bold hover:text-shadow-lg `}
                                         style={{backfaceVisibility: "hidden", color: "#4a63ee"}}
-                                        onClick={() => handleLinkClick("/")}
+                                        onClick={() => handleLinkClickInternal("/")}
                                     >
                                         Iniciar sesión
                                     </Link>
@@ -243,56 +251,72 @@ function Navbar({activeLink, handleLinkClick}) {
 
                 </div>
             </div>
-            <div className={`${showMenu ? 'block' : 'hidden'} md:hidden`}>
-                <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    <Link
-                        to="/"
-                        className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}>
-                        Inicio
-                    </Link>
-                    <Link
-                        to="/merchandising"
-                        className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}>
-                        Merchandising
-                    </Link>
-                    <Link
-                        to="/mangas"
-                        className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}>
-                        Mangas
-                    </Link>
-                    <Link
-                        to="/comics"
-                        className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}>
-                        Comics
-                    </Link>
-                    <Link
-                        to="/foro"
-                        className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}>
-                        Foro
-                    </Link>
-                    <Link
-                        to="/libreria"
-                        className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}>
-                        Libreria
-                    </Link>
-                    <input
-                        type="text"
-                        placeholder="Buscar..."
-                        className="bg-transparent border-2 border-black rounded-lg w-full sm:w-1/2 text-black font-bold mr-3 py-1 px-2 leading-tight focus:outline-none placeholder:font-light menu-item"
-                        style={{'transition': 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}}
-                    />
-
-                    <button type="submit"
-                            className="flex-shrink-0 font-bold border-2 border-black text-md py-1 px-4 rounded-lg transform hover:shadow-md transition-all duration-300 w-full sm:w-1/2 mt-4 menu-item"
-                            style={{backfaceVisibility: 'hidden'}}>
-                        Buscar
-                    </button>
+            <div className="flex justify-center text-center">
+                <div className={`${showMenu ? 'block' : 'hidden'} md:hidden`}>
+                    <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                        <Link
+                            to="/"
+                            className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                            style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                        >
+                            Inicio
+                        </Link>
+                        <hr className="my-1 border-gray-300"/>
+                        <Link
+                            to="/merchandising"
+                            className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                            style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                        >
+                            Merchandising
+                        </Link>
+                        <hr className="my-1 border-gray-300"/>
+                        <Link
+                            to="/mangas"
+                            className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                            style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                        >
+                            Mangas
+                        </Link>
+                        <hr className="my-1 border-gray-300"/>
+                        <Link
+                            to="/comics"
+                            className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                            style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                        >
+                            Comics
+                        </Link>
+                        <hr className="my-1 border-gray-300"/>
+                        <Link
+                            to="/foro"
+                            className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                            style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                        >
+                            Foro
+                        </Link>
+                        <hr className="my-1 border-gray-300"/>
+                        <Link
+                            to="/libreria"
+                            className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                            style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                        >
+                            Libreria
+                        </Link>
+                        <div className="flex">
+                            <input
+                                type="text"
+                                placeholder="Buscar..."
+                                className="bg-transparent border-2 border-black rounded-lg flex-grow text-black font-bold mr-3 py-1 px-2 leading-tight focus:outline-none placeholder:font-light menu-item"
+                                style={{'transition': 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}}
+                            />
+                            <button
+                                type="submit"
+                                className="flex-shrink-0 font-bold border-2 border-black text-md py-1 px-4 rounded-lg transform hover:shadow-md transition-all duration-300 menu-item"
+                                style={{backfaceVisibility: 'hidden'}}
+                            >
+                                Buscar
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>
