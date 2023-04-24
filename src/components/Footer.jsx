@@ -6,7 +6,7 @@ import Logo from "../img/logo.png";
 import {Link} from "react-router-dom";
 
 const Footer = ({handleLinkClick}) => {
-    return <footer className="py-12 w-full rounded-t-lg shadow-md border border-gray-200">
+    return <footer className="py-12 w-full rounded-t-lg shadow-md border border-gray-200 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:text-center">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="grid grid-cols-1 gap-4 justify-center ">
