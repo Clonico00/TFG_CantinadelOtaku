@@ -26,15 +26,15 @@ const Footer = ({ handleLinkClick}) => {
                     <div className="flex flex-col">
                         <div className="flex items-center mb-4">
                             <Link
-                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg `}
-                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}
+                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
                                 onClick={() => handleLinkClick('/')}
                                 to="/">Inicio</Link>
                         </div>
                         <div className="flex items-center mb-4">
                             <Link
-                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg `}
-                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}
+                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
                                 onClick={() => handleLinkClick('/merchandising')}
                                 to="/merchandising"
                             >
@@ -44,29 +44,29 @@ const Footer = ({ handleLinkClick}) => {
 
                         <div className="flex items-center mb-4">
                             <Link
-                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg `}
-                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}
+                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
                                 onClick={() => handleLinkClick('/mangas')}
                                 to="/">Mangas</Link>
                         </div>
                         <div className="flex items-center mb-4">
                             <Link
-                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg `}
-                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}
+                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
                                 onClick={() => handleLinkClick('/comics')}
                                 to="/comics">Comics</Link>
                         </div>
                         <div className="flex items-center mb-4">
                             <Link
-                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg `}
-                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}
+                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
                                 onClick={() => handleLinkClick('/foro')}
                                 to="/foro">Foro</Link>
                         </div>
                         <div className="flex items-center mb-4">
                             <Link
-                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg `}
-                                style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}
+                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
                                 onClick={() => handleLinkClick('/libreria')}
                                 to="/libreria">Libreria</Link>
                         </div>
@@ -81,20 +81,20 @@ const Footer = ({ handleLinkClick}) => {
                         <div className="flex flex-col">
                             <div className="flex items-center mb-4">
                                 <AiOutlineInstagram className="w-6 h-6 mr-2"/>
-                                <a className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                   style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}
+                                <a className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg"
+                                   style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
                                    href="https://www.instagram.com/">Instagram</a>
                             </div>
                             <div className="flex items-center mb-4">
                                 <AiOutlineTwitter className="w-6 h-6 mr-2"/>
-                                <a className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                   style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}
+                                <a className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg"
+                                   style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
                                    href="https://www.twitter.com/">Twitter</a>
                             </div>
                             <div className="flex items-center mb-4">
                                 <FaTiktok className="w-6 h-6 mr-2"/>
-                                <a className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                   style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}
+                                <a className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg"
+                                   style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
                                    href="https://www.tiktok.com/">Tiktok</a>
                             </div>
                         </div>
@@ -109,20 +109,20 @@ const Footer = ({ handleLinkClick}) => {
                         <div className="flex flex-col">
                             <div className="flex items-center mb-4">
                                 <BiMap className="w-6 h-6 mr-2"/>
-                                <p className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                   style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>Granada, España</p>
+                                <p className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg"
+                                   style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}>Granada, España</p>
                             </div>
                             <div className="flex items-center mb-4">
                                 <AiOutlinePhone className="w-6 h-6 mr-2"/>
-                                <p className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
-                                   style={{backfaceVisibility: 'hidden', color: '#3E62FF'}}>+34 601 303 832</p>
+                                <p className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg"
+                                   style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}>+34 601 303 832</p>
                             </div>
                             <div className="flex items-center mb-4">
                                 <AiOutlineMail className="w-6 h-6 mr-2"/>
-                                <p className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-extrabold hover:text-shadow-lg"
+                                <p className="hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg"
                                    style={{
                                        backfaceVisibility: 'hidden',
-                                       color: '#3E62FF'
+                                       color: '#4a63ee'
                                    }}>cantinadelotaku@gmail.com</p>
                             </div>
                         </div>
