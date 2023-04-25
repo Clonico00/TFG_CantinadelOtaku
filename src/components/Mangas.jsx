@@ -228,17 +228,47 @@ function Mangas() {
                 </div>
 
                 <div className="flex justify-center my-6">
-                    {Array.from({length: totalPages}, (_, i) => i + 1).map((pageNum) => (
+                    {page > 1 && (
+                        <button
+                            className="mx-1 md:mx-2 lg:mx-3 py-2 px-3 md:py-2 md:px-4 lg:py-3 lg:px-5 rounded-full  border-2 text-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-300"
+                            onClick={() => handleClick(page - 1)}
+                        >
+                            <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                      clip-rule="evenodd" fill-rule="evenodd">
+                                </path>
+                            </svg>
+                        </button>
+                    )}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
                         <button
                             key={pageNum}
-                            className={`mx-2 py-2 px-4 rounded-full ${
-                                pageNum === page ? "bg-blue-500 text-white" : "bg-white border-blue-500 text-blue-500 border-2"
+                            className={`mx-1 md:mx-2 lg:mx-3 py-2 px-3 md:py-2 md:px-4 lg:py-3 lg:px-5 rounded-full ${
+                                pageNum === page
+                                    ? "bg-blue-500 text-white"
+                                    : "bg-white border border-white text-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-300"
                             }`}
                             onClick={() => handleClick(pageNum)}
                         >
                             {pageNum}
                         </button>
                     ))}
+                    {page < totalPages && (
+                        <button
+                            className="mx-1 md:mx-2 lg:mx-3 py-2 px-3 md:py-2 md:px-4 lg:py-3 lg:px-5 rounded-full bg-white border-2 text-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-300"
+                            onClick={() => handleClick(page + 1)}
+                        >
+                            <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                      clip-rule="evenodd" fill-rule="evenodd">
+
+                                </path>
+                            </svg>
+
+
+                        </button>
+
+                    )}
                 </div>
             </section>
         </>

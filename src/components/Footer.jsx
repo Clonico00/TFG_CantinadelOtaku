@@ -48,7 +48,7 @@ const Footer = ({handleLinkClick}) => {
                                 className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
                                 style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
                                 onClick={() => handleLinkClick('/mangas')}
-                                to="/">Mangas</Link>
+                                to="/mangas">Mangas</Link>
                         </div>
                         <div className="flex items-center mb-4 justify-center ">
                             <Link
