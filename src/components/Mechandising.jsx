@@ -1,7 +1,9 @@
 import React, {useState} from "react";
+import {Link} from "react-router-dom";
 
 function Mechandising() {
     const [page, setPage] = useState(1);
+    const section = "merchandising"; // Actualiza la sección aquí
 
     const articlesPerPage = 6;
     const articles = [
@@ -177,7 +179,7 @@ function Mechandising() {
                             key={article.id}
                             className="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300"
                         >
-                            <a href="/">
+                            <Link to={`/${section}/detail/${article.id}`}>
                                 <div className="relative flex items-end overflow-hidden rounded-xl">
                                     <img
                                         src={article.image}
@@ -220,7 +222,7 @@ function Mechandising() {
                                     </div>
 
                                 </div>
-                            </a>
+                            </Link>
                         </article>
 
 
