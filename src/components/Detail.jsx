@@ -58,9 +58,7 @@ export function Detail() {
                             >
                                 Articulo 1
                             </h1>
-                            <div className="flex mb-4">
 
-                            </div>
                             <p className="leading-relaxed">
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat lobortis nibh sit
                                 amet tristique. Orci varius natoque penatibus et magnis dis parturient montes, nascetur

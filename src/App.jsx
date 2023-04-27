@@ -11,6 +11,7 @@ import Libreria from "./components/Libreria";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import {Detail} from "./components/Detail";
+import {Carrito} from "./components/Carrito";
 
 function App() {
     const [activeLink, setActiveLink] = useState('/');
@@ -32,6 +33,7 @@ function App() {
                     <Route path="/libreria" element={<Libreria />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/carrito" element={<Carrito />} />
                     <Route path="/:category/detail/:id" element={<Detail />} />
                 </Routes>
                 <Footer activeLink={activeLink} handleLinkClick={handleLinkClick}/>

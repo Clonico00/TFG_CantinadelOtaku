@@ -164,12 +164,15 @@ function Navbar({activeLink, handleLinkClick}) {
                                 type="button"
                                 className="text-gray-700 hover:text-gray-900 py-1 px-1 md:px-4"
                             >
-                                <img
-                                    src={Carrito}
-                                    alt="Logo"
-                                    className="h-6 w-6 md:h-8 md:w-8 object-contain mr-2"
-                                    style={{minWidth: "20px", minHeight: "20px"}}
-                                />
+                                <Link to="/carrito">
+                                    <img
+                                        src={Carrito}
+                                        alt="Logo"
+                                        className="h-6 w-6 md:h-8 md:w-8 object-contain mr-2"
+                                        style={{minWidth: "20px", minHeight: "20px"}}
+                                    />
+                                </Link>
+
                             </button>
                             {isMenuOpen && (
                                 <div
