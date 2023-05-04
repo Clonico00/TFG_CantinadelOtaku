@@ -68,7 +68,7 @@ function Navbar({activeLink, handleLinkClick}) {
                                 className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
                                     activeLink === '/' ? 'underline' : ''
                                 }`}
-                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
                                 onClick={() => handleLinkClick('/')}
                             >
                                 Inicio
@@ -78,7 +78,7 @@ function Navbar({activeLink, handleLinkClick}) {
                                 className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
                                     activeLink === '/merchandising' ? 'underline' : ''
                                 }`}
-                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
                                 onClick={() => handleLinkClick('/merchandising')}
                             >
                                 Merchandising
@@ -88,7 +88,7 @@ function Navbar({activeLink, handleLinkClick}) {
                                 className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
                                     activeLink === '/mangas' ? 'underline' : ''
                                 }`}
-                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
                                 onClick={() => handleLinkClick('/mangas')}
                             >
                                 Mangas
@@ -98,7 +98,7 @@ function Navbar({activeLink, handleLinkClick}) {
                                 className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
                                     activeLink === '/comics' ? 'underline' : ''
                                 }`}
-                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
                                 onClick={() => handleLinkClick('/comics')}
                             >
                                 Comics
@@ -108,7 +108,7 @@ function Navbar({activeLink, handleLinkClick}) {
                                 className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
                                     activeLink === '/foro' ? 'underline' : ''
                                 }`}
-                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
                                 onClick={() => handleLinkClick('/foro')}
                             >
                                 Foro
@@ -118,7 +118,7 @@ function Navbar({activeLink, handleLinkClick}) {
                                 className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
                                     activeLink === '/libreria' ? 'underline' : ''
                                 }`}
-                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
                                 onClick={() => handleLinkClick('/libreria')}
                             >
                                 Libreria
@@ -195,7 +195,7 @@ function Navbar({activeLink, handleLinkClick}) {
                                     <Link
                                         to="/register"
                                         className={`menu-item hover:underline transition-all duration-400 px-3 py-2 text-sm font-bold hover:text-shadow-lg `}
-                                        style={{backfaceVisibility: "hidden", color: "#4a63ee"}}
+                                        style={{backfaceVisibility: "hidden", color: "#3a63f2"}}
                                         onClick={() => handleLinkClickInternal("/")}
                                     >
                                         Registro
@@ -203,7 +203,7 @@ function Navbar({activeLink, handleLinkClick}) {
                                     <Link
                                         to="/login"
                                         className={`menu-item hover:underline transition-all duration-400 px-3 py-2 text-sm font-bold hover:text-shadow-lg `}
-                                        style={{backfaceVisibility: "hidden", color: "#4a63ee"}}
+                                        style={{backfaceVisibility: "hidden", color: "#3a63f2"}}
                                         onClick={() => handleLinkClickInternal("/")}
                                     >
                                         Iniciar sesión
@@ -260,7 +260,7 @@ function Navbar({activeLink, handleLinkClick}) {
                         <Link
                             to="/"
                             className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                            style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                            style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
                         >
                             Inicio
                         </Link>
@@ -268,7 +268,7 @@ function Navbar({activeLink, handleLinkClick}) {
                         <Link
                             to="/merchandising"
                             className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                            style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                            style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
                         >
                             Merchandising
                         </Link>
@@ -276,7 +276,7 @@ function Navbar({activeLink, handleLinkClick}) {
                         <Link
                             to="/mangas"
                             className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                            style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                            style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
                         >
                             Mangas
                         </Link>
@@ -284,7 +284,7 @@ function Navbar({activeLink, handleLinkClick}) {
                         <Link
                             to="/comics"
                             className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                            style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                            style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
                         >
                             Comics
                         </Link>
@@ -292,7 +292,7 @@ function Navbar({activeLink, handleLinkClick}) {
                         <Link
                             to="/foro"
                             className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                            style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                            style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
                         >
                             Foro
                         </Link>
@@ -300,7 +300,7 @@ function Navbar({activeLink, handleLinkClick}) {
                         <Link
                             to="/libreria"
                             className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                            style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                            style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
                         >
                             Libreria
                         </Link>

@@ -13,4 +13,6 @@
     transition: transform 0.3s ease;
 }
 
-
+.carousel-fullscreen {
+    height: 100%;
+}
