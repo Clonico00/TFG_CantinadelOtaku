@@ -12,7 +12,9 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import {Detail} from "./components/Detail";
 import {Carrito} from "./components/Carrito";
-
+import Admin from "./components/Admin";
+import AddArticle from "./components/AddArticle";
+import EditArticle from "./components/EditArticle";
 function App() {
     const [activeLink, setActiveLink] = useState('/');
 
@@ -26,6 +28,7 @@ function App() {
                 <Navbar activeLink={activeLink} handleLinkClick={handleLinkClick}/>
                 <Routes>
                     <Route path="/" element={<Inicio />} />
+                    <Route path="/admin" element={<Admin />} />
                     <Route path="/merchandising" element={<Mechandising />} />
                     <Route path="/mangas" element={<Mangas />} />
                     <Route path="/comics" element={<Comics />} />
@@ -35,6 +38,8 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/carrito" element={<Carrito />} />
                     <Route path="/:category/detail/:id" element={<Detail />} />
+                    <Route path="/admin/add" element={<AddArticle />} />
+                    <Route path="/admin/edit/:id" element={<EditArticle />} />
                 </Routes>
                 <Footer activeLink={activeLink} handleLinkClick={handleLinkClick}/>
             </div>

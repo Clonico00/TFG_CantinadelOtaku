@@ -29,6 +29,13 @@ function Navbar({activeLink, handleLinkClick}) {
         handleLinkClick(path); // Cambiar la ruta
     }
 
+    const user = {
+        name: 'Juan',
+        role: 'admin',
+        isAdmin: true
+    }
+
+
     useEffect(() => {
         function handleResize() {
             if (window.innerWidth > 1100) {
@@ -62,118 +69,170 @@ function Navbar({activeLink, handleLinkClick}) {
                         </Link>
                     </div>
                     <div className="hidden md:block">
-                        <div className="ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item">
-                            <Link
-                                to="/"
-                                className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                    activeLink === '/' ? 'underline' : ''
-                                }`}
-                                style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                onClick={() => handleLinkClick('/')}
-                            >
-                                Inicio
-                            </Link>
-                            <Link
-                                to="/merchandising"
-                                className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                    activeLink === '/merchandising' ? 'underline' : ''
-                                }`}
-                                style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                onClick={() => handleLinkClick('/merchandising')}
-                            >
-                                Merchandising
-                            </Link>
-                            <Link
-                                to="/mangas"
-                                className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                    activeLink === '/mangas' ? 'underline' : ''
-                                }`}
-                                style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                onClick={() => handleLinkClick('/mangas')}
-                            >
-                                Mangas
-                            </Link>
-                            <Link
-                                to="/comics"
-                                className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                    activeLink === '/comics' ? 'underline' : ''
-                                }`}
-                                style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                onClick={() => handleLinkClick('/comics')}
-                            >
-                                Comics
-                            </Link>
-                            <Link
-                                to="/foro"
-                                className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                    activeLink === '/foro' ? 'underline' : ''
-                                }`}
-                                style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                onClick={() => handleLinkClick('/foro')}
-                            >
-                                Foro
-                            </Link>
-                            <Link
-                                to="/libreria"
-                                className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                    activeLink === '/libreria' ? 'underline' : ''
-                                }`}
-                                style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                onClick={() => handleLinkClick('/libreria')}
-                            >
-                                Libreria
-                            </Link>
-                            <input
-                                type="text"
-                                placeholder="Buscar..."
-                                className="menu-item bg-transparent border-2 border-black rounded-lg w-full text-black font-md mr-3 py-1 px-2 leading-tight focus:outline-none placeholder:font-light"
-                                style={{
-                                    transition: 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-                                    color: '#1e2447',
-                                    borderColor: '#1e2447',
-                                    minWidth: '100px',
-                                    maxWidth: '500px',
-                                    fontSize: '1rem'
-                                }}
-                            />
-                            <button type="submit"
-                                    className=" menu-item font-bold border-2 border-black text-md py-1 px-4 rounded-lg transform hover:scale-105 hover:shadow-md transition-all duration-300"
-                                    style={{backfaceVisibility: 'hidden', color: '#1e2447', borderColor: '#1e2447'}}>
-                                Buscar
-                            </button>
+                        <div className={`${user.isAdmin ? 'pr-20 mr-20' : ''} ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item `}>                                                   {user.isAdmin ? (
+                                <>
+                                    <Link
+                                        to="/admin"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                            activeLink === '/admin' ? 'underline' : ''
+                                        }`}
+                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                        onClick={() => handleLinkClick('/admin')}
+                                    >
+                                        Zona Admin
+                                    </Link>
+                                    <Link
+                                        to="/foro"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                            activeLink === '/foro' ? 'underline' : ''
+                                        }`}
+                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                        onClick={() => handleLinkClick('/foro')}
+                                    >
+                                        Foro
+                                    </Link>
+                                </>
+                            ) : (
+                                <>
+                                    <Link
+                                        to="/"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                            activeLink === '/' ? 'underline' : ''
+                                        }`}
+                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                        onClick={() => handleLinkClick('/')}
+                                    >
+                                        Inicio
+                                    </Link>
+                                    <Link
+                                        to="/merchandising"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                            activeLink === '/merchandising' ? 'underline' : ''
+                                        }`}
+                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                        onClick={() => handleLinkClick('/merchandising')}
+                                    >
+                                        Merchandising
+                                    </Link>
+                                    <Link
+                                        to="/mangas"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                            activeLink === '/mangas' ? 'underline' : ''
+                                        }`}
+                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                        onClick={() => handleLinkClick('/mangas')}
+                                    >
+                                        Mangas
+                                    </Link>
+                                    <Link
+                                        to="/comics"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                            activeLink === '/comics' ? 'underline' : ''
+                                        }`}
+                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                        onClick={() => handleLinkClick('/comics')}
+                                    >
+                                        Comics
+                                    </Link>
+                                    <Link
+                                        to="/foro"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                            activeLink === '/foro' ? 'underline' : ''
+                                        }`}
+                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                        onClick={() => handleLinkClick('/foro')}
+                                    >
+                                        Foro
+                                    </Link>
+                                    <Link
+                                        to="/libreria"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                            activeLink === '/libreria' ? 'underline' : ''
+                                        }`}
+                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                        onClick={() => handleLinkClick('/libreria')}
+                                    >
+                                        Libreria
+                                    </Link>
+                                    <input
+                                        type="text"
+                                        placeholder="Buscar..."
+                                        className="menu-item bg-transparent border-2 border-black rounded-lg w-full text-black font-md mr-3 py-1 px-2 leading-tight focus:outline-none placeholder:font-light"
+                                        style={{
+                                            transition: 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+                                            color: '#1e2447',
+                                            borderColor: '#1e2447',
+                                            minWidth: '100px',
+                                            maxWidth: '500px',
+                                            fontSize: '1rem'
+                                        }}
+                                    />
+                                    <button type="submit"
+                                            className=" menu-item font-bold border-2 border-black text-md py-1 px-4 rounded-lg transform hover:scale-105 hover:shadow-md transition-all duration-300"
+                                            style={{
+                                                backfaceVisibility: 'hidden',
+                                                color: '#1e2447',
+                                                borderColor: '#1e2447'
+                                            }}>
+                                        Buscar
+                                    </button>
 
+                                </>
+                            )}
 
                         </div>
                     </div>
                     <div className="flex md:flex-row">
-                        <div className="flex items-center relative">
-                            <button
-                                type="button"
-                                className="text-gray-700 hover:text-gray-900 py-1 px-2 ml-4 md:px-4"
-                                onClick={toggleMenuLogin}
-                                style={{right: "0"}}
-                            >
-                                <img
-                                    src={UsuarioIconDefault}
-                                    alt="Logo"
-                                    className="h-8 w-8 md:h-10 md:w-10 object-contain mr-2"
-                                    style={{minWidth: "20px", minHeight: "20px"}}
-                                />
-                            </button>
-                            <button
-                                type="button"
-                                className="text-gray-700 hover:text-gray-900 py-1 px-1 md:px-4"
-                            >
-                                <Link to="/carrito">
-                                    <img
-                                        src={Carrito}
-                                        alt="Logo"
-                                        className="h-6 w-6 md:h-8 md:w-8 object-contain mr-2"
-                                        style={{minWidth: "20px", minHeight: "20px"}}
-                                    />
-                                </Link>
+                        <div className={`flex items-center relative `}>
+                            {user.isAdmin ? (
+                                <>
+                                    <button
+                                        type="button"
+                                        className="text-gray-700 hover:text-gray-900 py-1 px-2 ml-4 md:px-4"
+                                        onClick={toggleMenuLogin}
+                                        style={{right: "0"}}
+                                    >
+                                        <img
+                                            src={UsuarioIconDefault}
+                                            alt="Logo"
+                                            className="h-8 w-8 md:h-10 md:w-10 object-contain mr-2"
+                                            style={{minWidth: "20px", minHeight: "20px"}}
+                                        />
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        type="button"
+                                        className="text-gray-700 hover:text-gray-900 py-1 px-2 ml-4 md:px-4"
+                                        onClick={toggleMenuLogin}
+                                        style={{right: "0"}}
+                                    >
+                                        <img
+                                            src={UsuarioIconDefault}
+                                            alt="Logo"
+                                            className="h-8 w-8 md:h-10 md:w-10 object-contain mr-2"
+                                            style={{minWidth: "20px", minHeight: "20px"}}
+                                        />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="text-gray-700 hover:text-gray-900 py-1 px-1 md:px-4"
+                                    >
+                                        <Link to="/carrito">
+                                            <img
+                                                src={Carrito}
+                                                alt="Logo"
+                                                className="h-6 w-6 md:h-8 md:w-8 object-contain mr-2"
+                                                style={{minWidth: "20px", minHeight: "20px"}}
+                                            />
+                                        </Link>
 
-                            </button>
+                                    </button>
+                                </>
+                            )}
+
+
                             {isMenuOpen && (
                                 <div
                                     className="absolute z-10 bg-white rounded-md shadow-xl flex flex-col"
@@ -251,74 +310,96 @@ function Navbar({activeLink, handleLinkClick}) {
                             </button>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div className="flex justify-center text-center">
                 <div className={`${showMenu ? 'block' : 'hidden'} md:hidden`}>
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                        <Link
-                            to="/"
-                            className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                            style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                        >
-                            Inicio
-                        </Link>
-                        <hr className="my-1 border-gray-300"/>
-                        <Link
-                            to="/merchandising"
-                            className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                            style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                        >
-                            Merchandising
-                        </Link>
-                        <hr className="my-1 border-gray-300"/>
-                        <Link
-                            to="/mangas"
-                            className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                            style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                        >
-                            Mangas
-                        </Link>
-                        <hr className="my-1 border-gray-300"/>
-                        <Link
-                            to="/comics"
-                            className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                            style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                        >
-                            Comics
-                        </Link>
-                        <hr className="my-1 border-gray-300"/>
-                        <Link
-                            to="/foro"
-                            className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                            style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                        >
-                            Foro
-                        </Link>
-                        <hr className="my-1 border-gray-300"/>
-                        <Link
-                            to="/libreria"
-                            className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
-                            style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                        >
-                            Libreria
-                        </Link>
-                        <div className="flex">
-                            <input
-                                type="text"
-                                placeholder="Buscar..."
-                                className="bg-transparent border-2 border-black rounded-lg flex-grow text-black font-bold mr-3 py-1 px-2 leading-tight focus:outline-none placeholder:font-light menu-item"
-                                style={{'transition': 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}}
-                            />
-                            <button
-                                type="submit"
-                                className="flex-shrink-0 font-bold border-2 border-black text-md py-1 px-4 rounded-lg transform hover:shadow-md transition-all duration-300 menu-item"
-                                style={{backfaceVisibility: 'hidden'}}
-                            >
-                                Buscar
-                            </button>
-                        </div>
+                        {user.isAdmin ? (
+                            <>
+                                <Link
+                                    to="/admin"
+                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                >
+                                    Zona Admin
+                                </Link>
+                                <hr className="my-1 border-gray-300"/>
+                                <Link
+                                    to="/foro"
+                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                >
+                                    Foro
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    to="/"
+                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                >
+                                    Inicio
+                                </Link>
+                                <hr className="my-1 border-gray-300"/>
+                                <Link
+                                    to="/merchandising"
+                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                >
+                                    Merchandising
+                                </Link>
+                                <hr className="my-1 border-gray-300"/>
+                                <Link
+                                    to="/mangas"
+                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                >
+                                    Mangas
+                                </Link>
+                                <hr className="my-1 border-gray-300"/>
+                                <Link
+                                    to="/comics"
+                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                >
+                                    Comics
+                                </Link>
+                                <hr className="my-1 border-gray-300"/>
+                                <Link
+                                    to="/foro"
+                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                >
+                                    Foro
+                                </Link>
+                                <hr className="my-1 border-gray-300"/>
+                                <Link
+                                    to="/libreria"
+                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                >
+                                    Libreria
+                                </Link>
+                                <div className="flex">
+                                    <input
+                                        type="text"
+                                        placeholder="Buscar..."
+                                        className="bg-transparent border-2 border-black rounded-lg flex-grow text-black font-bold mr-3 py-1 px-2 leading-tight focus:outline-none placeholder:font-light menu-item"
+                                        style={{'transition': 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}}
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="flex-shrink-0 font-bold border-2 border-black text-md py-1 px-4 rounded-lg transform hover:shadow-md transition-all duration-300 menu-item"
+                                        style={{backfaceVisibility: 'hidden'}}
+                                    >
+                                        Buscar
+                                    </button>
+                                </div>
+                            </>
+                        )}
+
                     </div>
                 </div>
             </div>

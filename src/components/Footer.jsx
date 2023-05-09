@@ -6,6 +6,13 @@ import Logo from "../img/logo.png";
 import {Link} from "react-router-dom";
 
 const Footer = ({handleLinkClick}) => {
+
+    const user = {
+        name: 'Juan',
+        role: 'admin',
+        isAdmin: true
+    }
+
     return <footer className="py-12 w-full rounded-t-lg shadow-md border border-gray-200 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:text-center">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
@@ -25,52 +32,74 @@ const Footer = ({handleLinkClick}) => {
                         color: '#1e2447'
                     }}>Enlaces</h2>
                     <div className="flex flex-col">
-                        <div className="flex items-center mb-4 justify-center">
-                            <Link
-                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
-                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
-                                onClick={() => handleLinkClick('/')}
-                                to="/">Inicio</Link>
-                        </div>
-                        <div className="flex items-center mb-4 justify-center">
-                            <Link
-                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
-                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
-                                onClick={() => handleLinkClick('/merchandising')}
-                                to="/merchandising"
-                            >
-                                Merchandising
-                            </Link>
-                        </div>
+                        {user.isAdmin ? (
+                            <>
+                                <div className="flex items-center mb-4 justify-center">
+                                    <Link
+                                        className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                        onClick={() => handleLinkClick('/admin')}
+                                        to="/admin">Zona Admin</Link>
+                                </div>
+                                <div className="flex items-center mb-4 justify-center">
+                                    <Link
+                                        className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                        onClick={() => handleLinkClick('/foro')}
+                                        to="/foro">Foro</Link>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="flex items-center mb-4 justify-center">
+                                    <Link
+                                        className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                        onClick={() => handleLinkClick('/')}
+                                        to="/">Inicio</Link>
+                                </div>
+                                <div className="flex items-center mb-4 justify-center">
+                                    <Link
+                                        className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                        onClick={() => handleLinkClick('/merchandising')}
+                                        to="/merchandising"
+                                    >
+                                        Merchandising
+                                    </Link>
+                                </div>
 
-                        <div className="flex items-center mb-4 justify-center">
-                            <Link
-                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
-                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
-                                onClick={() => handleLinkClick('/mangas')}
-                                to="/mangas">Mangas</Link>
-                        </div>
-                        <div className="flex items-center mb-4 justify-center ">
-                            <Link
-                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
-                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
-                                onClick={() => handleLinkClick('/comics')}
-                                to="/comics">Comics</Link>
-                        </div>
-                        <div className="flex items-center mb-4 justify-center">
-                            <Link
-                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
-                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
-                                onClick={() => handleLinkClick('/foro')}
-                                to="/foro">Foro</Link>
-                        </div>
-                        <div className="flex items-center mb-4 justify-center">
-                            <Link
-                                className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
-                                style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
-                                onClick={() => handleLinkClick('/libreria')}
-                                to="/libreria">Libreria</Link>
-                        </div>
+                                <div className="flex items-center mb-4 justify-center">
+                                    <Link
+                                        className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                        onClick={() => handleLinkClick('/mangas')}
+                                        to="/mangas">Mangas</Link>
+                                </div>
+                                <div className="flex items-center mb-4 justify-center ">
+                                    <Link
+                                        className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                        onClick={() => handleLinkClick('/comics')}
+                                        to="/comics">Comics</Link>
+                                </div>
+                                <div className="flex items-center mb-4 justify-center">
+                                    <Link
+                                        className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                        onClick={() => handleLinkClick('/foro')}
+                                        to="/foro">Foro</Link>
+                                </div>
+                                <div className="flex items-center mb-4 justify-center">
+                                    <Link
+                                        className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                        style={{backfaceVisibility: 'hidden', color: '#4a63ee'}}
+                                        onClick={() => handleLinkClick('/libreria')}
+                                        to="/libreria">Libreria</Link>
+                                </div>
+                            </>
+                        ) }
+
                     </div>
                 </div>
                 <div className="flex flex-col">
