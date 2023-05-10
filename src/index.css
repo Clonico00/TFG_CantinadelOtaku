@@ -12,3 +12,16 @@
     transform: rotate(180deg);
     transition: transform 0.3s ease;
 }
+.custom-margin {
+    margin-left: 350px !important;
+    margin-right: 350px !important;
+}
+
+@media (max-width: 768px) {
+
+    .custom-margin {
+        margin-left: 5px !important;
+        margin-right: 5px !important;
+    }
+}
+

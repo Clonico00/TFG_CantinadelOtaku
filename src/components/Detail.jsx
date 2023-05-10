@@ -36,7 +36,7 @@ export function Detail() {
                                                 : "Home"}
                                 </Link>
                                 <span className="mx-2">/</span>
-                                <span to="/detail" className="text-gray-800 font-bold" aria-current="page"
+                                <span className="text-gray-800 font-bold" aria-current="page"
                                       style={{backfaceVisibility: "hidden", color: "#1e2447"}}
                                 >
                                     Artículo 1
