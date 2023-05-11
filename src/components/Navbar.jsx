@@ -32,7 +32,7 @@ function Navbar({activeLink, handleLinkClick}) {
     const user = {
         name: 'Juan',
         role: 'admin',
-        isAdmin: true
+        isAdmin: false
     }
 
 
@@ -69,116 +69,124 @@ function Navbar({activeLink, handleLinkClick}) {
                         </Link>
                     </div>
                     <div className="hidden md:block">
-                        <div className={`${user.isAdmin ? 'pr-20 mr-20' : ''} ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item `}>                                                   {user.isAdmin ? (
-                                <>
-                                    <Link
-                                        to="/admin"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                            activeLink === '/admin' ? 'underline' : ''
-                                        }`}
-                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                        onClick={() => handleLinkClick('/admin')}
-                                    >
-                                        Zona Admin
-                                    </Link>
-                                    <Link
-                                        to="/foro"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                            activeLink === '/foro' ? 'underline' : ''
-                                        }`}
-                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                        onClick={() => handleLinkClick('/foro')}
-                                    >
-                                        Foro
-                                    </Link>
-                                </>
-                            ) : (
-                                <>
-                                    <Link
-                                        to="/"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                            activeLink === '/' ? 'underline' : ''
-                                        }`}
-                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                        onClick={() => handleLinkClick('/')}
-                                    >
-                                        Inicio
-                                    </Link>
-                                    <Link
-                                        to="/merchandising"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                            activeLink === '/merchandising' ? 'underline' : ''
-                                        }`}
-                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                        onClick={() => handleLinkClick('/merchandising')}
-                                    >
-                                        Merchandising
-                                    </Link>
-                                    <Link
-                                        to="/mangas"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                            activeLink === '/mangas' ? 'underline' : ''
-                                        }`}
-                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                        onClick={() => handleLinkClick('/mangas')}
-                                    >
-                                        Mangas
-                                    </Link>
-                                    <Link
-                                        to="/comics"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                            activeLink === '/comics' ? 'underline' : ''
-                                        }`}
-                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                        onClick={() => handleLinkClick('/comics')}
-                                    >
-                                        Comics
-                                    </Link>
-                                    <Link
-                                        to="/foro"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                            activeLink === '/foro' ? 'underline' : ''
-                                        }`}
-                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                        onClick={() => handleLinkClick('/foro')}
-                                    >
-                                        Foro
-                                    </Link>
-                                    <Link
-                                        to="/libreria"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
-                                            activeLink === '/libreria' ? 'underline' : ''
-                                        }`}
-                                        style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
-                                        onClick={() => handleLinkClick('/libreria')}
-                                    >
-                                        Libreria
-                                    </Link>
-                                    <input
-                                        type="text"
-                                        placeholder="Buscar..."
-                                        className="menu-item bg-transparent border-2 border-black rounded-lg w-full text-black font-md mr-3 py-1 px-2 leading-tight focus:outline-none placeholder:font-light"
-                                        style={{
-                                            transition: 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-                                            color: '#1e2447',
-                                            borderColor: '#1e2447',
-                                            minWidth: '100px',
-                                            maxWidth: '500px',
-                                            fontSize: '1rem'
-                                        }}
-                                    />
-                                    <button type="submit"
-                                            className=" menu-item font-bold border-2 border-black text-md py-1 px-4 rounded-lg transform hover:scale-105 hover:shadow-md transition-all duration-300"
+                        <div
+                            className={`${user.isAdmin ? 'pr-20 mr-20' : ''} ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item `}>                                                   {user.isAdmin ? (
+                            <>
+                                <Link
+                                    to="/admin"
+                                    className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                        activeLink === '/admin' ? 'underline' : ''
+                                    }`}
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                    onClick={() => handleLinkClick('/admin')}
+                                >
+                                    Zona Admin
+                                </Link>
+                                <Link
+                                    to="/foro"
+                                    className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                        activeLink === '/foro' ? 'underline' : ''
+                                    }`}
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                    onClick={() => handleLinkClick('/foro')}
+                                >
+                                    Foro
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    to="/"
+                                    className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                        activeLink === '/' ? 'underline' : ''
+                                    }`}
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                    onClick={() => handleLinkClick('/')}
+                                >
+                                    Inicio
+                                </Link>
+                                <Link
+                                    to="/merchandising"
+                                    className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                        activeLink === '/merchandising' ? 'underline' : ''
+                                    }`}
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                    onClick={() => handleLinkClick('/merchandising')}
+                                >
+                                    Merchandising
+                                </Link>
+                                <Link
+                                    to="/mangas"
+                                    className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                        activeLink === '/mangas' ? 'underline' : ''
+                                    }`}
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                    onClick={() => handleLinkClick('/mangas')}
+                                >
+                                    Mangas
+                                </Link>
+                                <Link
+                                    to="/comics"
+                                    className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                        activeLink === '/comics' ? 'underline' : ''
+                                    }`}
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                    onClick={() => handleLinkClick('/comics')}
+                                >
+                                    Comics
+                                </Link>
+                                <Link
+                                    to="/foro"
+                                    className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                        activeLink === '/foro' ? 'underline' : ''
+                                    }`}
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                    onClick={() => handleLinkClick('/foro')}
+                                >
+                                    Foro
+                                </Link>
+                                <Link
+                                    to="/libreria"
+                                    className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${
+                                        activeLink === '/libreria' ? 'underline' : ''
+                                    }`}
+                                    style={{backfaceVisibility: 'hidden', color: '#3a63f2'}}
+                                    onClick={() => handleLinkClick('/libreria')}
+                                >
+                                    Libreria
+                                </Link>
+                                <div className="flex items-center">
+                                    <div className="relative flex-grow">
+                                        <input
+                                            type="text"
+                                            placeholder="Buscar..."
+                                            className="menu-item bg-gray-50 border border-gray-400 text-gray-900 rounded-lg w-full font-md mr-3 py-1 px-2 leading-tight focus:ring-blue-500 focus:border-blue-500 placeholder:font-light"
+                                            style={{
+                                                transition: 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+                                                minWidth: '100px',
+                                                maxWidth: '500px',
+                                                fontSize: '1rem'
+                                            }}
+                                        />
+                                        <button
+                                            type="submit"
+                                            className="absolute right-0 top-0 bottom-0 rounded-r-lg flex items-center justify-center p-2"
                                             style={{
                                                 backfaceVisibility: 'hidden',
                                                 color: '#1e2447',
                                                 borderColor: '#1e2447'
-                                            }}>
-                                        Buscar
-                                    </button>
+                                            }}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="h-4 w-4">
+                                                <path
+                                                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
 
-                                </>
-                            )}
+                            </>
+                        )}
 
                         </div>
                     </div>
@@ -383,20 +391,27 @@ function Navbar({activeLink, handleLinkClick}) {
                                     Libreria
                                 </Link>
                                 <div className="flex">
-                                    <input
-                                        type="text"
-                                        placeholder="Buscar..."
-                                        className="bg-transparent border-2 border-black rounded-lg flex-grow text-black font-bold mr-3 py-1 px-2 leading-tight focus:outline-none placeholder:font-light menu-item"
-                                        style={{'transition': 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}}
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="flex-shrink-0 font-bold border-2 border-black text-md py-1 px-4 rounded-lg transform hover:shadow-md transition-all duration-300 menu-item"
-                                        style={{backfaceVisibility: 'hidden'}}
-                                    >
-                                        Buscar
-                                    </button>
+                                    <div className="relative flex-grow">
+                                        <input
+                                            type="text"
+                                            placeholder="Buscar..."
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg flex-grow   py-1 px-2 leading-tight focus:ring-blue-500 focus:border-blue-500 placeholder:font-light menu-item"
+                                            style={{ transition: 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms' }}
+                                        />
+                                        <button
+                                            type="submit"
+                                            className="absolute right-0 top-0 bottom-0 rounded-r-lg flex items-center justify-center p-2  "
+                                            style={{ backfaceVisibility: 'hidden', zIndex: 1, width: '2.5rem' }}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="h-4 w-4">
+                                                <path
+                                                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
+
                             </>
                         )}
 
