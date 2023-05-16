@@ -10,7 +10,7 @@ const Footer = ({handleLinkClick}) => {
     const user = {
         name: 'Juan',
         role: 'admin',
-        isAdmin: true
+        isAdmin: false
     }
 
     return <footer className="py-12 w-full rounded-t-lg shadow-md border border-gray-200 bg-gray-50">
