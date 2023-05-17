@@ -8,6 +8,7 @@ import Mangas from "./components/Mangas";
 import Comics from "./components/Comics";
 import Foro from "./components/Foro";
 import Libreria from "./components/Libreria";
+import LibreriaDetail from "./components/LibreriaDetail";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import {Detail} from "./components/Detail";
@@ -34,6 +35,7 @@ function App() {
                     <Route path="/comics" element={<Comics />} />
                     <Route path="/foro" element={<Foro />} />
                     <Route path="/libreria" element={<Libreria />} />
+                    <Route path="/libreria/:id" element={<LibreriaDetail />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/carrito" element={<Carrito />} />
