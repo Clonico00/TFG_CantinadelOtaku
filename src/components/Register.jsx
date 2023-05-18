@@ -5,6 +5,8 @@ import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, where } from "firebase/firestore";
+import { Link } from "react-router-dom";
+
 
 export default function Register() {
     const [name, setName] = useState('');
@@ -293,9 +295,9 @@ export default function Register() {
                                     </label>
                                 </div>
                                 <div className="text-sm">
-                                    <a href="/"
+                                    <Link to="/login"
                                         className="font-medium text-blue-600 hover:text-blue-500 dark:hover:text-blue-400">¿Tienes
-                                        una cuenta?</a>
+                                        una cuenta?</Link>
                                 </div>
                             </div>
                             <button
