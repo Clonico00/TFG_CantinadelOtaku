@@ -24,41 +24,42 @@ export default function Register() {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-          // Comprobar si el nombre de usuario ya existe en la base de datos
-          const usersCollection = collection(db, 'users');
-          const usernameQuery = query(usersCollection, where('username', '==', username));
-          const usernameSnapshot = await getDocs(usernameQuery);
-          if (!usernameSnapshot.empty) {
-            setError('El nombre de usuario ya está en uso.');
-            return;
-          }
-    
-          // Si el nombre de usuario no existe, se crea el nuevo usuario
-          const { user } = await createUserWithEmailAndPassword(auth, email, password);
-          // Sube la foto de perfil a Firebase Storage
-          const storageRef = ref(storage, `profile_pictures/${user.uid}`);
-          await uploadBytes(storageRef, image);
-          const profilePictureURL = await getDownloadURL(storageRef);
-          // Guarda los datos del usuario en Firestore
-          await setDoc(doc(db, 'users', user.uid), {
-            name: name,
-            apellidos: apellidos,
-            username: username,
-            email: email,
-            image: profilePictureURL,
-            isAdmin: false,
-          });
-    
-          navigate('/login'); // Redirigir a la página de login
+            // Comprobar si el nombre de usuario ya existe en la base de datos
+            console.log(image)
+            const usersCollection = collection(db, 'users');
+            const usernameQuery = query(usersCollection, where('username', '==', username));
+            const usernameSnapshot = await getDocs(usernameQuery);
+            if (!usernameSnapshot.empty) {
+                setError('El nombre de usuario ya está en uso.');
+                return;
+            }
+
+            // Si el nombre de usuario no existe, se crea el nuevo usuario
+            const { user } = await createUserWithEmailAndPassword(auth, email, password);
+            // Sube la foto de perfil a Firebase Storage
+            const storageRef = ref(storage, `profile_pictures/${user.uid}`);
+            await uploadBytes(storageRef, image);
+            const profilePictureURL = await getDownloadURL(storageRef);
+            // Guarda los datos del usuario en Firestore
+            await setDoc(doc(db, 'users', user.uid), {
+                name: name,
+                apellidos: apellidos,
+                username: username,
+                email: email,
+                image: profilePictureURL,
+                isAdmin: false,
+            });
+
+            navigate('/login'); // Redirigir a la página de login
         } catch (error) {
-          // En caso de error, se maneja el error y se muestra una alerta correspondiente
-          if (error.code === 'auth/email-already-in-use') {
-            setError('El correo electrónico ya está en uso.');
-          } else {
-            setError('Ocurrió un error durante el registro.' + error.code);
-          }
+            // En caso de error, se maneja el error y se muestra una alerta correspondiente
+            if (error.code === 'auth/email-already-in-use') {
+                setError('El correo electrónico ya está en uso.');
+            } else {
+                setError('Ocurrió un error durante el registro.' + error.code);
+            }
         }
-      };
+    };
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -278,9 +279,13 @@ export default function Register() {
                                     <div className="max-w-2xl mx-auto">
                                         <input
                                             className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                            id="photo" type="file" required
-                                            onChange={(e) => setImage(e.target.value)}
+                                            id="photo"
+                                            type="file"
+                                            accept="image/*" // Acepta solo archivos de imagen
+                                            required
+                                            onChange={(e) => setImage(e.target.files[0])} // Acceder al primer archivo seleccionado
                                         />
+
                                     </div>
                                 </div>
 

@@ -52,7 +52,7 @@ const Footer = ({ handleLinkClick }) => {
                     }}>Enlaces</h2>
                     <div className="flex flex-col">
                         
-                        {userData && userData.isAdmin===true ? (
+                        {currentUser && userData && userData.isAdmin===true ? (
                             <>
                                 <div className="flex items-center mb-4 justify-center">
                                     <Link

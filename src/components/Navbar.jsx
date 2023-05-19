@@ -6,12 +6,15 @@ import Carrito from "../img/carrito.png";
 import { AuthContext } from './AuthContext';
 import { db, auth } from '../firebase';
 import { collection, where, getDocs, query } from "firebase/firestore";
+import { useNavigate } from 'react-router-dom';
 
 function Navbar({ activeLink, handleLinkClick }) {
     const [showMenu, setShowMenu] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [userData, setUserData] = useState(null);
     const { currentUser } = useContext(AuthContext);
+    const [image, setImage] = useState(UsuarioIconDefault);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -24,6 +27,10 @@ function Navbar({ activeLink, handleLinkClick }) {
                     if (!snapshot.empty) {
                         const userData = snapshot.docs[0].data();
                         setUserData(userData);
+
+                        // Establecer el estado "image" después de obtener los datos del usuario
+                        const image = userData && userData.image ? userData.image : UsuarioIconDefault;
+                        setImage(image);
                     }
                 } catch (error) {
                     console.error('Error al obtener los datos del usuario:', error);
@@ -33,6 +40,10 @@ function Navbar({ activeLink, handleLinkClick }) {
 
         fetchUserData();
     }, [currentUser]);
+
+
+
+
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
@@ -57,13 +68,15 @@ function Navbar({ activeLink, handleLinkClick }) {
 
     const handleLogout = () => {
         auth
-          .signOut()
-        
-          .catch((error) => {
-            console.error('Error al cerrar sesión:', error);
-          });
-      };
-    
+            .signOut()
+            .then(() => {
+                navigate('/');
+            })
+            .catch((error) => {
+                console.error('Error al cerrar sesión:', error);
+            });
+    };
+
 
     useEffect(() => {
         function handleResize() {
@@ -98,10 +111,10 @@ function Navbar({ activeLink, handleLinkClick }) {
                         </Link>
                     </div>
                     <div className="hidden md:block">
-                            
+
                         <div
-                            className={`${userData && userData.isAdmin===true ? 'pr-20 mr-20' : ''} ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item `}>                                                   
-                            {userData && userData.isAdmin===true ? (
+                            className={`${currentUser && userData && userData.isAdmin === true ? 'pr-20 mr-20' : ''} ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item `}>
+                            {currentUser && userData && userData.isAdmin === true ? (
                                 <>
                                     <Link
                                         to="/admin"
@@ -215,7 +228,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                     </div>
                     <div className="flex md:flex-row">
                         <div className={`flex items-center relative `}>
-                            {userData && userData.isAdmin===true ? (
+                            {currentUser && userData && userData.isAdmin === true ? (
                                 <>
                                     <button
                                         type="button"
@@ -224,7 +237,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                                         style={{ right: "0" }}
                                     >
                                         <img
-                                            src={UsuarioIconDefault}
+                                            src={image}
                                             alt="Logo"
                                             className="h-8 w-8 md:h-10 md:w-10 object-contain mr-2"
                                             style={{ minWidth: "20px", minHeight: "20px" }}
@@ -240,7 +253,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                                         style={{ right: "0" }}
                                     >
                                         <img
-                                            src={UsuarioIconDefault}
+                                            src={image}
                                             alt="Logo"
                                             className="h-8 w-8 md:h-10 md:w-10 object-contain mr-2"
                                             style={{ minWidth: "20px", minHeight: "20px" }}
@@ -266,7 +279,7 @@ function Navbar({ activeLink, handleLinkClick }) {
 
                             {isMenuOpen && (
                                 <div
-                                    className="absolute z-10 bg-white rounded-md shadow-xl flex flex-col"
+                                    className={`${!currentUser && !userData ? 'mt-5' : 'mt-6'} absolute z-10 bg-white rounded-md shadow-xl flex flex-col `}
                                     style={{
                                         borderRadius: "0.375rem",
                                         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.25)",
@@ -363,7 +376,7 @@ function Navbar({ activeLink, handleLinkClick }) {
             <div className="flex justify-center text-center">
                 <div className={`${showMenu ? 'block' : 'hidden'} md:hidden`}>
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                        {userData && userData.isAdmin===true ? (
+                        {currentUser && userData && userData.isAdmin === true ? (
                             <>
                                 <Link
                                     to="/admin"

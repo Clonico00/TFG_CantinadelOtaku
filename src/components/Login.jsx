@@ -1,8 +1,9 @@
-import React, { useState, createContext } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { auth, } from "../firebase";
+import { auth,db } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
+import { collection, where, getDocs, query } from "firebase/firestore";
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -14,18 +15,33 @@ export default function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            // Iniciar sesión con correo electrónico y contraseña
-            await signInWithEmailAndPassword(auth, email, password);
-            navigate('/merchandising'); // Redirigir a la página de inicio del usuario después de iniciar sesión
-        } catch (error) {
-            // En caso de error, se maneja el error y se muestra una alerta correspondiente
-            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                setError('Credenciales inválidas. Verifica tu correo electrónico y contraseña.');
+          // Iniciar sesión con correo electrónico y contraseña
+          await signInWithEmailAndPassword(auth, email, password);
+      
+          // Obtener los datos del usuario
+          const usersRef = collection(db, 'users');
+          const userQuery = await query(usersRef, where('email', '==', email));
+          const snapshot = await getDocs(userQuery);
+      
+          if (!snapshot.empty) {
+            const userData = snapshot.docs[0].data();
+      
+            // Verificar si el usuario es administrador
+            if (userData.isAdmin) {
+              navigate('/admin'); // Redirigir a la página de administrador
             } else {
-                setError('Ocurrió un error durante el inicio de sesión.' + error.code);
+              navigate('/merchandising'); // Redirigir a la página de inicio del usuario
             }
+          }
+        } catch (error) {
+          // En caso de error, se maneja el error y se muestra una alerta correspondiente
+          if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+            setError('Credenciales inválidas. Verifica tu correo electrónico y contraseña.');
+          } else {
+            setError('Ocurrió un error durante el inicio de sesión. ' + error);
+          }
         }
-    };
+      };
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
