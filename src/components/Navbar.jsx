@@ -18,28 +18,29 @@ function Navbar({ activeLink, handleLinkClick }) {
 
     useEffect(() => {
         const fetchUserData = async () => {
-            if (currentUser) {
-                try {
-                    const usersRef = collection(db, 'users');
-                    const userQuery = await query(usersRef, where('email', '==', currentUser.email));
-                    const snapshot = await getDocs(userQuery);
-
-                    if (!snapshot.empty) {
-                        const userData = snapshot.docs[0].data();
-                        setUserData(userData);
-
-                        // Establecer el estado "image" después de obtener los datos del usuario
-                        const image = userData && userData.image ? userData.image : UsuarioIconDefault;
-                        setImage(image);
-                    }
-                } catch (error) {
-                    console.error('Error al obtener los datos del usuario:', error);
-                }
+          if (currentUser) {
+            try {
+              const usersRef = collection(db, 'users');
+              const userQuery = await query(usersRef, where('email', '==', currentUser.email));
+              const snapshot = await getDocs(userQuery);
+      
+              if (!snapshot.empty) {
+                const userData = snapshot.docs[0].data();
+                setUserData(userData);
+      
+                // Establecer el estado "image" después de obtener los datos del usuario
+                const image = userData && userData.image ? userData.image : UsuarioIconDefault;
+                setImage(image);
+              }
+            } catch (error) {
+              console.error('Error al obtener los datos del usuario:', error);
             }
+          }
         };
-
+      
         fetchUserData();
-    }, [currentUser]);
+      }, [currentUser]);
+      
 
 
 
@@ -68,14 +69,16 @@ function Navbar({ activeLink, handleLinkClick }) {
 
     const handleLogout = () => {
         auth
-            .signOut()
-            .then(() => {
-                navigate('/');
-            })
-            .catch((error) => {
-                console.error('Error al cerrar sesión:', error);
-            });
-    };
+          .signOut()
+          .then(() => {
+            setImage(UsuarioIconDefault); // Restablecer la imagen a la imagen predeterminada al cerrar sesión
+            navigate('/');
+          })
+          .catch((error) => {
+            console.error('Error al cerrar sesión:', error);
+          });
+      };
+      
 
 
     useEffect(() => {
