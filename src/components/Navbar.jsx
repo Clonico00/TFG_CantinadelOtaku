@@ -12,6 +12,7 @@ function Navbar({ activeLink, handleLinkClick }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [userData, setUserData] = useState(null);
     const { currentUser } = useContext(AuthContext);
+
     useEffect(() => {
         const fetchUserData = async () => {
             if (currentUser) {
@@ -62,14 +63,7 @@ function Navbar({ activeLink, handleLinkClick }) {
             console.error('Error al cerrar sesión:', error);
           });
       };
-      
-
-    const user = {
-        name: 'Juan',
-        role: 'admin',
-        isAdmin: false
-    }
-
+    
 
     useEffect(() => {
         function handleResize() {
@@ -104,8 +98,10 @@ function Navbar({ activeLink, handleLinkClick }) {
                         </Link>
                     </div>
                     <div className="hidden md:block">
+                            
                         <div
-                            className={`${user.isAdmin ? 'pr-20 mr-20' : ''} ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item `}>                                                   {user.isAdmin ? (
+                            className={`${userData && userData.isAdmin===true ? 'pr-20 mr-20' : ''} ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item `}>                                                   
+                            {userData && userData.isAdmin===true ? (
                                 <>
                                     <Link
                                         to="/admin"
@@ -219,7 +215,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                     </div>
                     <div className="flex md:flex-row">
                         <div className={`flex items-center relative `}>
-                            {user.isAdmin ? (
+                            {userData && userData.isAdmin===true ? (
                                 <>
                                     <button
                                         type="button"
@@ -367,7 +363,7 @@ function Navbar({ activeLink, handleLinkClick }) {
             <div className="flex justify-center text-center">
                 <div className={`${showMenu ? 'block' : 'hidden'} md:hidden`}>
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                        {user.isAdmin ? (
+                        {userData && userData.isAdmin===true ? (
                             <>
                                 <Link
                                     to="/admin"
