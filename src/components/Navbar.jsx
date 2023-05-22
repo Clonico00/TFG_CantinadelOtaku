@@ -18,29 +18,29 @@ function Navbar({ activeLink, handleLinkClick }) {
 
     useEffect(() => {
         const fetchUserData = async () => {
-          if (currentUser) {
-            try {
-              const usersRef = collection(db, 'users');
-              const userQuery = await query(usersRef, where('email', '==', currentUser.email));
-              const snapshot = await getDocs(userQuery);
-      
-              if (!snapshot.empty) {
-                const userData = snapshot.docs[0].data();
-                setUserData(userData);
-      
-                // Establecer el estado "image" después de obtener los datos del usuario
-                const image = userData && userData.image ? userData.image : UsuarioIconDefault;
-                setImage(image);
-              }
-            } catch (error) {
-              console.error('Error al obtener los datos del usuario:', error);
+            if (currentUser) {
+                try {
+                    const usersRef = collection(db, 'users');
+                    const userQuery = await query(usersRef, where('email', '==', currentUser.email));
+                    const snapshot = await getDocs(userQuery);
+
+                    if (!snapshot.empty) {
+                        const userData = snapshot.docs[0].data();
+                        setUserData(userData);
+
+                        // Establecer el estado "image" después de obtener los datos del usuario
+                        const image = userData && userData.image ? userData.image : UsuarioIconDefault;
+                        setImage(image);
+                    }
+                } catch (error) {
+                    console.error('Error al obtener los datos del usuario:', error);
+                }
             }
-          }
         };
-      
+
         fetchUserData();
-      }, [currentUser]);
-      
+    }, [currentUser]);
+
 
 
 
@@ -69,16 +69,16 @@ function Navbar({ activeLink, handleLinkClick }) {
 
     const handleLogout = () => {
         auth
-          .signOut()
-          .then(() => {
-            setImage(UsuarioIconDefault); // Restablecer la imagen a la imagen predeterminada al cerrar sesión
-            navigate('/');
-          })
-          .catch((error) => {
-            console.error('Error al cerrar sesión:', error);
-          });
-      };
-      
+            .signOut()
+            .then(() => {
+                setImage(UsuarioIconDefault); // Restablecer la imagen a la imagen predeterminada al cerrar sesión
+                navigate('/');
+            })
+            .catch((error) => {
+                console.error('Error al cerrar sesión:', error);
+            });
+    };
+
 
 
     useEffect(() => {
@@ -242,8 +242,9 @@ function Navbar({ activeLink, handleLinkClick }) {
                                         <img
                                             src={image}
                                             alt="Logo"
-                                            className="h-8 w-8 md:h-10 md:w-10 object-contain mr-2"
+                                            className="h-8 w-8 md:h-10 md:w-10 object-contain mr-2 rounded-full"
                                             style={{ minWidth: "20px", minHeight: "20px" }}
+                                            referrerPolicy="no-referrer"
                                         />
                                     </button>
                                 </>
@@ -258,8 +259,9 @@ function Navbar({ activeLink, handleLinkClick }) {
                                         <img
                                             src={image}
                                             alt="Logo"
-                                            className="h-8 w-8 md:h-10 md:w-10 object-contain mr-2"
+                                            className="h-8 w-8 md:h-10 md:w-10 object-contain mr-2 rounded-full"
                                             style={{ minWidth: "20px", minHeight: "20px" }}
+                                            referrerPolicy="no-referrer"
                                         />
                                     </button>
                                     <button
@@ -297,11 +299,18 @@ function Navbar({ activeLink, handleLinkClick }) {
                                     {currentUser ? (
                                         <>
                                             <div className="px-3 py-2">
-                                                <div className="font-extrabold mb-2">
-                                                    {userData ? userData.name : ''}
+                                                <div className="px-3 py-2 flex flex-row items-center">
+                                                    <div className="font-extrabold mr-2">
+                                                        {userData ? userData.name : ''}
+                                                    </div>
+                                                    <div className="text-md text-gray-400">
+                                                        @{userData ? userData.username : ''}
+                                                    </div>
                                                 </div>
-                                                <hr className="border-gray-400 mb-2" />
+
+                                                <hr className="border-gray-400" />
                                             </div>
+
                                             <button
                                                 className="menu-item hover:underline transition-all duration-400 px-3 py-2 text-sm font-bold hover:text-shadow-lg"
                                                 style={{ backfaceVisibility: "hidden", color: "#3a63f2" }}

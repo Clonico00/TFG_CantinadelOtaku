@@ -1,11 +1,39 @@
-import React from "react";
-import {Link, useLocation} from "react-router-dom";
+import React,{useState} from "react";
+import { Link, useLocation } from "react-router-dom";
+import { getDoc, doc } from 'firebase/firestore';
+import { db } from "../firebase";
+export async function Detail() {
+    const {article, setArticle} = useState(null);
 
-export function Detail() {
+
     const location = useLocation();
-    const isMerchandising = location.pathname.includes("merchandising");
-    const isComics = location.pathname.includes("comics");
-    const isMangas = location.pathname.includes("mangas");
+    const path = location.pathname;
+
+    // Obtener la categoría de la URL
+    let category = '';
+    if (path.includes('merchandising')) {
+        category = 'merchandising';
+    } else if (path.includes('comic')) {
+        category = 'comic';
+    } else if (path.includes('manga')) {
+        category = 'manga';
+    }
+
+    // Obtener el ID del artículo de la URL
+    let id = path.substring(path.lastIndexOf('/') + 1);
+    console.log(id);
+    // Realizar la consulta a la base de datos con la categoría y el ID
+    const getArticleByCategoryAndId = async (id) => {
+        const articleRef = doc(db, 'articles', id);
+        const snapshot = await getDoc(articleRef);
+        if (snapshot.exists()) {
+            const article = { id: snapshot.id, ...snapshot.data() };
+            return article;
+        } else {
+            // El documento no existe
+            return null;
+        }
+    };
 
     return (
         <>
@@ -17,69 +45,51 @@ export function Detail() {
                             <div className="container px-5 py-2 mx-auto flex">
                                 <Link
                                     to={
-                                        isMerchandising
-                                            ? "/merchandising"
-                                            : isComics
-                                                ? "/comics"
-                                                : isMangas
-                                                    ? "/mangas"
-                                                    : "/"
+
+                                        "/"
                                     }
                                     className="text-slate-400 hover:text-slate-500 hover:underline"
                                 >
-                                    {isMerchandising
-                                        ? "Merchandising"
-                                        : isComics
-                                            ? "Comics"
-                                            : isMangas
-                                                ? "Mangas"
-                                                : "Home"}
+                                    jds
                                 </Link>
                                 <span className="mx-2">/</span>
                                 <span className="text-gray-800 font-bold" aria-current="page"
-                                      style={{backfaceVisibility: "hidden", color: "#1e2447"}}
+                                    style={{ backfaceVisibility: "hidden", color: "#1e2447" }}
                                 >
-                                    Artículo 1
+                                    {article.title}
                                 </span>
                             </div>
                         </nav>
-
                         <img
                             alt="ecommerce"
                             className="lg:w-12 w-full object-cover object-center rounded-b border border-gray-200"
-                            src="https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+                            src={article.image}
                         />
                         <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
                             <h2 className="text-sm title-font text-slate-400 tracking-widest">
                                 BRAND NAME
                             </h2>
                             <h1 className="text-gray-900 text-3xl title-font font-bold mb-1 "
-                                style={{backfaceVisibility: "hidden", color: "#1e2447"}}
+                                style={{ backfaceVisibility: "hidden", color: "#1e2447" }}
                             >
-                                Articulo 1
+                                {article.title}
                             </h1>
 
                             <p className="leading-relaxed">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat lobortis nibh sit
-                                amet tristique. Orci varius natoque penatibus et magnis dis parturient montes, nascetur
-                                ridiculus mus. Nunc semper mauris eu volutpat varius. Sed consectetur congue efficitur.
-                                Praesent vestibulum purus quis risus tristique, vitae sagittis ante cursus. Sed eu
-                                laoreet orci, quis elementum ante. In id commodo augue, id pharetra velit. Quisque lacus
-                                enim, posuere in consequat ac, tristique sit amet massa. Maecenas eleifend nibh vel
-                                fringilla molestie.
+                                {article.description}
                             </p>
                             <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-200 mb-5">
-                                <hr/>
+                                <hr />
                             </div>
                             <div className="flex">
                                 <span className="title-font font-bold text-2xl text-gray-900"
-                                      style={{backfaceVisibility: "hidden", color: "#1e2447"}}
+                                    style={{ backfaceVisibility: "hidden", color: "#1e2447" }}
                                 >
-                                  $58.00
+                                    {article.price}
                                 </span>
                                 <button
                                     className="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded hover:scale-105 transition-all duration-400"
-                                    style={{backfaceVisibility: "hidden", backgroundColor: "#4a63ee"}}
+                                    style={{ backfaceVisibility: "hidden", backgroundColor: "#4a63ee" }}
                                 >
                                     Añadir al carrito
                                 </button>

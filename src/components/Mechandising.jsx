@@ -1,4 +1,6 @@
-import React, {useState} from "react";
+import React, {useState, useEffect } from "react";
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { db } from "../firebase";
 import {Link} from "react-router-dom";
 
 function Mechandising() {
@@ -6,150 +8,20 @@ function Mechandising() {
     const section = "merchandising"; // Actualiza la sección aquí
 
     const articlesPerPage = 6;
-    const articles = [
-        {
-            id: 1,
-            title: "Article 1",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 2,
-            title: "Article 2",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 3,
-            title: "Article 3",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 4,
-            title: "Article 4",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 5,
-            title: "Article 5",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 6,
-            title: "Article 6",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 7,
-            title: "Article 7",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 8,
-            title: "Article 8",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 9,
-            title: "Article 9",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 10,
-            title: "Article 10",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 11,
-            title: "Article 11",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 12,
-            title: "Article 12",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 13,
-            title: "Article 13",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 14,
-            title: "Article 14",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 15,
-            title: "Article 15",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 16,
-            title: "Article 16",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 17,
-            title: "Article 17",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 18,
-            title: "Article 18",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 19,
-            title: "Article 19",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100
-        },
-        {
-            id: 20,
-            title: "Article 20",
-            description: "Este es una artículo de prueba, me encanta es muy bonito y es lo mejor que hay en el mundo",
-            image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            price: 100,
-        },
+    
+    const [articles, setArticles] = useState([]);
 
-    ];
-
+    useEffect(() => {
+      const articlesRef = collection(db, 'articles');
+      const merchandisingQuery = query(articlesRef, where('category', '==', 'merchandising'));
+    
+      const unsubscribe = onSnapshot(merchandisingQuery, (snapshot) => {
+        const merchandisingArticles = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setArticles(merchandisingArticles);
+      });
+    
+      return () => unsubscribe();
+    }, []);
     const totalPages = Math.ceil(articles.length / articlesPerPage);
 
     const handleClick = (pageNum) => {
