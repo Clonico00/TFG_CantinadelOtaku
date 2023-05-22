@@ -1,39 +1,48 @@
-import React,{useState} from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from "../firebase";
-export async function Detail() {
-    const {article, setArticle} = useState(null);
 
+export function Detail() {
+  const location = useLocation();
+  const path = location.pathname;
 
-    const location = useLocation();
-    const path = location.pathname;
+  // Obtener la categoría de la URL
+  let category = '';
+  if (path.includes('merchandising')) {
+    category = 'merchandising';
+  } else if (path.includes('comic')) {
+    category = 'comics';
+  } else if (path.includes('manga')) {
+    category = 'mangas';
+  }
 
-    // Obtener la categoría de la URL
-    let category = '';
-    if (path.includes('merchandising')) {
-        category = 'merchandising';
-    } else if (path.includes('comic')) {
-        category = 'comic';
-    } else if (path.includes('manga')) {
-        category = 'manga';
-    }
+  // Obtener el ID del artículo de la URL
+  let id = path.substring(path.lastIndexOf('/') + 1);
 
-    // Obtener el ID del artículo de la URL
-    let id = path.substring(path.lastIndexOf('/') + 1);
-    console.log(id);
-    // Realizar la consulta a la base de datos con la categoría y el ID
-    const getArticleByCategoryAndId = async (id) => {
-        const articleRef = doc(db, 'articles', id);
-        const snapshot = await getDoc(articleRef);
-        if (snapshot.exists()) {
-            const article = { id: snapshot.id, ...snapshot.data() };
-            return article;
-        } else {
-            // El documento no existe
-            return null;
-        }
+  const [article, setArticle] = useState(null);
+
+  useEffect(() => {
+    const fetchArticle = async (id) => {
+      const articleRef = doc(db, 'articles', id);
+      const snapshot = await getDoc(articleRef);
+      if (snapshot.exists()) {
+        const articleData = { id: snapshot.id, ...snapshot.data() };
+        setArticle(articleData);
+      } else {
+        // El documento no existe
+        setArticle(null);
+      }
     };
+
+    fetchArticle(id);
+  }, [id]);
+
+  if (!article) {
+    // Renderizar un mensaje de carga mientras se obtiene el artículo
+    return <p>Cargando artículo...</p>;
+  }
+  
 
     return (
         <>
@@ -46,11 +55,11 @@ export async function Detail() {
                                 <Link
                                     to={
 
-                                        "/"
+                                        "/"+category
                                     }
                                     className="text-slate-400 hover:text-slate-500 hover:underline"
                                 >
-                                    jds
+                                    {category.charAt(0).toUpperCase() + category.slice(1)}
                                 </Link>
                                 <span className="mx-2">/</span>
                                 <span className="text-gray-800 font-bold" aria-current="page"
@@ -67,7 +76,7 @@ export async function Detail() {
                         />
                         <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
                             <h2 className="text-sm title-font text-slate-400 tracking-widest">
-                                BRAND NAME
+                                {article.brand}
                             </h2>
                             <h1 className="text-gray-900 text-3xl title-font font-bold mb-1 "
                                 style={{ backfaceVisibility: "hidden", color: "#1e2447" }}
@@ -85,7 +94,7 @@ export async function Detail() {
                                 <span className="title-font font-bold text-2xl text-gray-900"
                                     style={{ backfaceVisibility: "hidden", color: "#1e2447" }}
                                 >
-                                    {article.price}
+                                    {article.price} €
                                 </span>
                                 <button
                                     className="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded hover:scale-105 transition-all duration-400"
