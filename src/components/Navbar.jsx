@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, {  useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../img/logo.png';
 import UsuarioIconDefault from '../img/usuario_icon.png';
@@ -40,11 +40,6 @@ function Navbar({ activeLink, handleLinkClick }) {
 
         fetchUserData();
     }, [currentUser]);
-
-
-
-
-
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
