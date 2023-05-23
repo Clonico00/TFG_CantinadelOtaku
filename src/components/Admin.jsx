@@ -1,143 +1,161 @@
-import React, {useState, Fragment} from "react";
+import React, {useState, useEffect, Fragment } from "react";
+import { collection, query,  onSnapshot } from 'firebase/firestore';
+import { db } from "../firebase";
 import {Link} from "react-router-dom";
 import {Dialog, Transition} from '@headlessui/react'
 
-const articulos = [
-    {
-        id: "1",
-        nombre: "Articulo 1",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "2",
-        nombre: "Articulo 2",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "3",
-        nombre: "Articulo 3",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "4",
-        nombre: "Articulo 4",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "5",
-        nombre: "Articulo 5",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "6",
-        nombre: "Articulo 6",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "7",
-        nombre: "Articulo 7",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "8",
-        nombre: "Articulo 8",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "9",
-        nombre: "Articulo 9",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "10",
-        nombre: "Articulo 10",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "11",
-        nombre: "Articulo 11",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "12",
-        nombre: "Articulo 12",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "13",
-        nombre: "Articulo 13",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "14",
-        nombre: "Articulo 14",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
-    {
-        id: "15",
-        nombre: "Articulo 15",
-        imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        stock: "300",
-        precio: "10.95",
-        categoria: "Mangas"
-    },
+// const articles = [
+//     {
+//         id: "1",
+//         nombre: "Articulo 1",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "2",
+//         nombre: "Articulo 2",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "3",
+//         nombre: "Articulo 3",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "4",
+//         nombre: "Articulo 4",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "5",
+//         nombre: "Articulo 5",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "6",
+//         nombre: "Articulo 6",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "7",
+//         nombre: "Articulo 7",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "8",
+//         nombre: "Articulo 8",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "9",
+//         nombre: "Articulo 9",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "10",
+//         nombre: "Articulo 10",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "11",
+//         nombre: "Articulo 11",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "12",
+//         nombre: "Articulo 12",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "13",
+//         nombre: "Articulo 13",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "14",
+//         nombre: "Articulo 14",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
+//     {
+//         id: "15",
+//         nombre: "Articulo 15",
+//         imagen: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//         stock: "300",
+//         precio: "10.95",
+//         categoria: "Mangas"
+//     },
 
 
-];
+// ];
 
 export default function Admin() {
     const [currentPage, setCurrentPage] = useState(1);
     const [isOpen, setIsOpen] = useState(false)
+    const [articles, setArticles] = useState([]);
+
+    //nos teamos todos los articles de mi bbdd de la coleccion artices y los ordenamos por nombre
+    useEffect(() => {
+        const articlesRef = collection(db, 'articles');
+        const articlesQuery = query(articlesRef);
+
+        const unsubscribe = onSnapshot(articlesQuery, (snapshot) => {
+            const articles = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            setArticles(articles);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+
 
     const itemsPerPage = 10;
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const currentItems = articulos.slice(startIndex, endIndex);
+    const currentItems = articles.slice(startIndex, endIndex);
 
-    const totalPages = Math.ceil(articulos.length / itemsPerPage);
+    const totalPages = Math.ceil(articles.length / itemsPerPage);
 
     const setPage = (page) => {
         if (page < 1 || page > totalPages) {
@@ -182,6 +200,9 @@ export default function Admin() {
                             Nombre
                         </th>
                         <th scope="col" className="px-6 py-4 font-bold text-md" style={{color: "#1e2447"}}>
+                            Descripcion
+                        </th>
+                        <th scope="col" className="px-6 py-4 font-bold text-md" style={{color: "#1e2447"}}>
                             Stock
                         </th>
                         <th scope="col" className="px-6 py-4 font-bold text-md" style={{color: "#1e2447"}}>
@@ -189,6 +210,9 @@ export default function Admin() {
                         </th>
                         <th scope="col" className="px-6 py-4 font-bold text-md" style={{color: "#1e2447"}}>
                             Categoria
+                        </th>
+                        <th scope="col" className="px-6 py-4 font-bold text-md" style={{color: "#1e2447"}}>
+                            Brand
                         </th>
                         <th scope="col" className="px-6 py-4 font-bold text-md" style={{color: "#1e2447"}}>
                             Acciones
@@ -202,17 +226,19 @@ export default function Admin() {
                                 <div className="relative h-10 w-10">
                                     <img
                                         className="h-full w-full rounded-full object-cover object-center"
-                                        src={articulo.imagen}
-                                        alt={articulo.nombre}
+                                        src={articulo.image}
+                                        alt={articulo.title}
                                     />
                                 </div>
                                 <div className="mt-2.5 ml-2">
-                                    {articulo.nombre}
+                                    {articulo.title}
                                 </div>
                             </td>
+                            <td className="px-6 py-4">{articulo.description}</td>
                             <td className="px-6 py-4">{articulo.stock}</td>
-                            <td className="px-6 py-4">{articulo.precio}$</td>
-                            <td className="px-6 py-4">{articulo.categoria}</td>
+                            <td className="px-6 py-4">{articulo.price}$</td>
+                            <td className="px-6 py-4">{articulo.category}</td>
+                            <td className="px-6 py-4">{articulo.brand}</td>
                             <td className="px-6 py-4">
                                 <div className="flex justify-start gap-4 ">
                                     <Link to={`/admin/edit/${articulo.id}`}>

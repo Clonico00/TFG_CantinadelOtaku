@@ -13,7 +13,7 @@ function Comics() {
 
     useEffect(() => {
       const articlesRef = collection(db, 'articles');
-      const merchandisingQuery = query(articlesRef, where('category', '==', 'comic'));
+      const merchandisingQuery = query(articlesRef, where('category', '==', 'Comics'));
     
       const unsubscribe = onSnapshot(merchandisingQuery, (snapshot) => {
         const merchandisingArticles = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));

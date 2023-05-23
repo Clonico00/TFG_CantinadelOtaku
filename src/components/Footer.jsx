@@ -111,11 +111,24 @@ const Footer = ({ handleLinkClick }) => {
                                         to="/foro">Foro</Link>
                                 </div>
                                 <div className="flex items-center mb-4 justify-center">
+{/*                                     
                                     <Link
                                         className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
                                         style={{ backfaceVisibility: 'hidden', color: '#4a63ee' }}
                                         onClick={() => handleLinkClick('/libreria')}
-                                        to="/libreria">Libreria</Link>
+                                        to="/libreria">Libreria</Link> */}
+                                        
+                                        {currentUser ? (
+                                             <Link
+                                             className={`hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                             style={{ backfaceVisibility: 'hidden', color: '#4a63ee' }}
+                                             onClick={() => handleLinkClick('/libreria')}
+                                             to="/libreria">Libreria</Link>
+                                        ) : (
+                                            <>
+                                            </>
+                                        ) }
+
                                 </div>
                             </>
                         )}
