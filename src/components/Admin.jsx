@@ -1,5 +1,5 @@
 import React, {useState, useEffect, Fragment } from "react";
-import { collection, query,  onSnapshot } from 'firebase/firestore';
+import { collection, query,  onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import { db } from "../firebase";
 import {Link} from "react-router-dom";
 import {Dialog, Transition} from '@headlessui/react'
@@ -133,6 +133,7 @@ export default function Admin() {
     const [currentPage, setCurrentPage] = useState(1);
     const [isOpen, setIsOpen] = useState(false)
     const [articles, setArticles] = useState([]);
+    const [articleToDelete, setArticleToDelete] = useState('');
 
     //nos teamos todos los articles de mi bbdd de la coleccion artices y los ordenamos por nombre
     useEffect(() => {
@@ -147,7 +148,20 @@ export default function Admin() {
         return () => unsubscribe();
     }, []);
 
-
+    const handleDelete = async () => {
+        try {
+          await deleteDoc(doc(db, 'articles', articleToDelete));
+          console.log('Artículo borrado exitosamente');
+      
+          // Restablecer el estado del artículo a borrar
+          setArticleToDelete('');
+      
+          closeModal(); // Cerrar el diálogo
+        } catch (error) {
+          console.error('Error al borrar el artículo', error);
+        }
+      };
+      
 
     const itemsPerPage = 10;
 
@@ -251,9 +265,10 @@ export default function Admin() {
                                                 d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"/>
                                         </svg>
                                     </Link>
-                                    <button
-                                        onClick={openModal}
-                                    >
+                                    <button onClick={() => {
+  setArticleToDelete(articulo.id);
+  openModal();
+}}>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
                                              className="h-6 w-6"
                                              strokeWidth="1"
@@ -303,14 +318,14 @@ export default function Admin() {
                                                             </div>
 
                                                             <div className="mt-4 flex justify-end">
-                                                                <button
-                                                                    type="button"
-                                                                    className="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                                                                    onClick={closeModal}
-                                                                    style={{backgroundColor: '#4a63ee'}}
-                                                                >
-                                                                    Si, estoy seguro
-                                                                </button>
+                                                            <button
+  type="button"
+  className="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+  onClick={handleDelete}
+  style={{ backgroundColor: '#4a63ee' }}
+>
+  Si, estoy seguro
+</button>
                                                                 <button
                                                                     type="button"
                                                                     className="inline-flex justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 ml-2"
