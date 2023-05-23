@@ -180,7 +180,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                                     >
                                         Foro
                                     </Link>
-                                    <Link
+                                    {/* <Link
                                         to="/libreria"
                                         className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${activeLink === '/libreria' ? 'underline' : ''
                                             }`}
@@ -188,7 +188,23 @@ function Navbar({ activeLink, handleLinkClick }) {
                                         onClick={() => handleLinkClick('/libreria')}
                                     >
                                         Libreria
-                                    </Link>
+                                    </Link> */}
+{/* hacemos que si currentUser existe le enseñamos la libreria, si no no */}
+                                    {currentUser ? (
+                                        <Link
+                                            to="/libreria"
+                                            className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${activeLink === '/libreria' ? 'underline' : ''
+                                                }`}
+                                            style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                            onClick={() => handleLinkClick('/libreria')}
+                                        >
+                                            Libreria
+                                        </Link> 
+                                    ) : (
+                                        <></>
+                                    )}
+
+
                                     <div className="flex items-center">
                                         <div className="relative flex-grow">
                                             <input

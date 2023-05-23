@@ -11,23 +11,26 @@ const Forum = () => {
     const [isOpen, setIsOpen] = useState(false)
     const { currentUser } = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
+    // eslint-disable-next-line
     const [image, setImage] = useState(UsuarioIconDefault);
     const [messages, setMessages] = useState([]);
 
     const formatTimestamp = (timestamp) => {
-        const date = timestamp.toDate(); // Convertir el Timestamp a un objeto Date
-        
+        // const date = timestamp.toDate(); 
+        //hacemos la conversion si timestamp es no nulo
+        const date = timestamp ? timestamp.toDate() : new Date(); // Convertir el timestamp a un objeto Date
+
         const hour = date.getHours().toString().padStart(2, '0'); // Obtener la hora y asegurarse de que tenga 2 dígitos
         const minute = date.getMinutes().toString().padStart(2, '0'); // Obtener los minutos y asegurarse de que tengan 2 dígitos
         const formattedTime = `${hour}:${minute}`; // Formatear la hora y los minutos
-        
+
         const options = { year: 'numeric', month: 'numeric', day: 'numeric' }; // Opciones de formato de fecha
         const formattedDate = date.toLocaleDateString(undefined, options); // Formatear la fecha
-      
+
         return `${formattedTime} · ${formattedDate}`; // Combinar la hora y la fecha formateadas
-      };
-      
-      
+    };
+
+
     useEffect(() => {
         const fetchUserData = async () => {
             if (currentUser) {
@@ -120,28 +123,30 @@ const Forum = () => {
     // Función para calcular la diferencia de tiempo
     const getTimeDifference = (timestamp) => {
         const currentDate = new Date(); // Fecha actual
-        const messageDate = timestamp.toDate(); // Fecha del mensaje
+        // const messageDate = timestamp.toDate(); // Fecha del mensaje
+       //hacemos la conversion si timestamp es no nulo
+        const messageDate = timestamp ? timestamp.toDate() : new Date(); // Fecha del mensaje 
         const difference = Math.abs(currentDate - messageDate); // Diferencia en milisegundos
-        
+
         const minutesDifference = Math.floor(difference / (1000 * 60)); // Diferencia en minutos
-        
+
         if (minutesDifference < 1) {
-          return 'Posted less than a minute ago';
+            return 'Posted less than a minute ago';
         } else if (minutesDifference === 1) {
-          return 'Posted 1 minute ago';
+            return 'Posted 1 minute ago';
         } else if (minutesDifference < 60) {
-          return `Posted ${minutesDifference} minutes ago`;
+            return `Posted ${minutesDifference} minutes ago`;
         } else {
-          const hoursDifference = Math.floor(minutesDifference / 60); // Diferencia en horas
-          
-          if (hoursDifference === 1) {
-            return 'Posted 1 hour ago';
-          } else {
-            return `Posted ${hoursDifference} hours ago`;
-          }
+            const hoursDifference = Math.floor(minutesDifference / 60); // Diferencia en horas
+
+            if (hoursDifference === 1) {
+                return 'Posted 1 hour ago';
+            } else {
+                return `Posted ${hoursDifference} hours ago`;
+            }
         }
-      };
-      
+    };
+
 
     function closeModal() {
         setIsOpen(false)
@@ -179,18 +184,19 @@ const Forum = () => {
                                     <div className="text mt-2">
                                         <span className="text-lg">{msg.message}</span>
                                         {msg.message_img &&
+                                        // eslint-disable-next-line
                                             <img src={msg.message_img} alt="Message Image" className="mt-4" />}
                                         <span className="date text-sm text-gray-500 flex items-center mt-1" style={{ backfaceVisibility: "hidden" }}>
-  <span className="ml-2 text-gray-500">
-    {formatTimestamp(msg.message_date)}
-  </span>
-  <span className="ml-2" style={{ color: "#4a63ee" }}>
-    {getTimeDifference(msg.message_date)}
-  </span>
-</span>
+                                            <span className="ml-2 text-gray-500">
+                                                {formatTimestamp(msg.message_date)}
+                                            </span>
+                                            <span className="ml-2" style={{ color: "#4a63ee" }}>
+                                                {getTimeDifference(msg.message_date)}
+                                            </span>
+                                        </span>
                                     </div>
                                 </div>
-                                {currentUser.email === "admin@admin.com" && (
+                                {currentUser && currentUser.email === "admin@admin.com" && (
                                     <div className="admin-button flex justify-end mt-2">
                                         <button
                                             className="text-sm send-button
