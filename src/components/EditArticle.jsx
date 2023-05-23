@@ -8,6 +8,7 @@ export default function EditArticle() {
     const location = useLocation();
   const path = location.pathname;
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   let id = path.substring(path.lastIndexOf('/') + 1);
   const [article, setArticle] = useState(null);
@@ -90,7 +91,7 @@ export default function EditArticle() {
       });
       navigate('/admin');
     } catch (error) {
-      console.error('Error al actualizar el artículo', error);
+      setError('Error al actualizar el artículo', error);
     }
   };
   
@@ -114,6 +115,12 @@ export default function EditArticle() {
                                 color: '#1e2447'
                             }}>Editar Articulo</h2>
                         <form className="mt-4" onSubmit={handleEdit}>
+                        {error && (
+                                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 mb-2 rounded relative" role="alert">
+                                    <strong className="font-bold">Error: </strong>
+                                    <span className="block sm:inline">{error}</span>
+                                </div>
+                            )}
                             <div className="flex flex-col">
                                 <div>
                                     <label htmlFor="title"

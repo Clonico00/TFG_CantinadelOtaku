@@ -1,6 +1,65 @@
-import React from "react";
-
+import React, {useState} from "react";
+import {db, storage} from "../firebase";
+import {collection, addDoc, query, where, getDocs} from 'firebase/firestore';
+import {ref, uploadBytes, getDownloadURL} from 'firebase/storage';
+import { useNavigate } from "react-router-dom";
 export default function AddArticle() {
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+    const handleAdd = async (e) => {
+        e.preventDefault();
+      
+        // Obtener los valores del formulario
+        const title = e.target.nombre.value;
+        const description = e.target.description.value;
+        const category = e.target.categoria.value;
+        const precio = e.target.precio.value;
+        const stock = parseInt(e.target.stock.value);
+        const brand = e.target.brand.value;
+        const image = e.target.photo.files[0];
+      
+        try {
+          // Comprobar si ya existe un artículo con el mismo título y categoría
+          const articlesCollection = collection(db, 'articles');
+          const duplicateQuery = query(
+            articlesCollection,
+            where('title', '==', title),
+            where('category', '==', category)
+          );
+          const duplicateSnapshot = await getDocs(duplicateQuery);
+      
+          if (!duplicateSnapshot.empty) {
+            setError('Ya existe un artículo con el mismo título y categoría.');
+            return;
+          }
+      
+          // Subir la imagen a Firebase Storage
+          const fileRef = ref(storage, `articles/${title}/${image.name}`);
+          const snapshot = await uploadBytes(fileRef, image);
+          const imageUrl = await getDownloadURL(snapshot.ref);
+      
+          // Crear el nuevo artículo
+          const newArticle = {
+            title: title,
+            description: description,
+            category: category,
+            price: precio,
+            stock: stock,
+            brand: brand,
+            image: imageUrl,
+          };
+      
+          // Agregar el artículo a la colección "articles"
+          await addDoc(articlesCollection, newArticle);
+          console.log('Artículo agregado exitosamente');
+      
+          navigate('/admin');
+        } catch (error) {
+          console.error('Error al agregar el artículo', error);
+          setError('Ocurrió un error durante el registro.');
+        }
+      };
+      
     return (
         <>
             <div className="flex items-center justify-center min-h-screen ">
@@ -12,7 +71,13 @@ export default function AddArticle() {
                                     backfaceVisibility: 'hidden',
                                     color: '#1e2447'
                                 }}>Añadir Articulo</h2>
-                            <form className="mt-4">
+                            <form className="mt-4" onSubmit={handleAdd}>
+                            {error && (
+                                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 mb-2 rounded relative" role="alert">
+                                    <strong className="font-bold">Error: </strong>
+                                    <span className="block sm:inline">{error}</span>
+                                </div>
+                            )}
                                 <div className="flex flex-col">
                                     <div>
                                         <label htmlFor="nombre"
@@ -32,7 +97,25 @@ export default function AddArticle() {
                                         </div>
                                     </div>
                                 </div>
-
+                                <div className="flex flex-col">
+                                    <div>
+                                        <label htmlFor="description"
+                                               className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
+                                               style={{backfaceVisibility: 'hidden', color: '#1e2447'}}>Description: </label>
+                                        <div className="relative mb-6">
+                                            <input
+                                                type="text"
+                                                name="description"
+                                                id="description"
+                                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                                required
+                                                placeholder="Es un manga muy bueno..."
+                                                pattern="[A-Za-z0-9\s!@#$%^&*()_+=\-[\]{}|\\:;<>,.?/]*"
+                                                title="Solo se permiten letras, números y símbolos comunes."
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="flex flex-col">
                                     <div>
                                         <label htmlFor="categoria"
@@ -43,9 +126,9 @@ export default function AddArticle() {
                                                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                                     required>
                                                 <option value="">Seleccione una categoría</option>
-                                                <option value="merchandising">Merchandising</option>
-                                                <option value="manga">Manga</option>
-                                                <option value="comic">Comic</option>
+                                                <option value="Merchandising">Merchandising</option>
+                                                <option value="Mangas">Mangas</option>
+                                                <option value="Comics">Comics</option>
                                             </select>
                                         </div>
                                     </div>
@@ -78,7 +161,7 @@ export default function AddArticle() {
                                                style={{backfaceVisibility: 'hidden', color: '#1e2447'}}>Stock: </label>
                                         <div className="relative mb-6">
                                             <input
-                                                type="number"
+                                                type="text"
                                                 name="stock"
                                                 id="stock"
                                                 placeholder="300"
@@ -89,7 +172,24 @@ export default function AddArticle() {
                                         </div>
                                     </div>
                                 </div>
-
+                                <div className="flex flex-col">
+                                    <div>
+                                        <label htmlFor="brand"
+                                               className="text-sm font-bold text-gray-900 block dark:text-gray-300"
+                                               style={{backfaceVisibility: 'hidden', color: '#1e2447'}}>Brand: </label>
+                                        <div className="relative mb-6">
+                                            <input
+                                                type="text"
+                                                name="brand"
+                                                id="brand"
+                                                placeholder="Disney"
+                                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                                min="1"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="flex flex-col">
                                     <div className="relative">
                                         <label htmlFor="photo"
