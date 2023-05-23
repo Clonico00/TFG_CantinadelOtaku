@@ -30,9 +30,9 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Inicio />} />
                     <Route path="/admin" element={<Admin />} />
-                    <Route path="/merchandising" element={<Mechandising />} />
-                    <Route path="/mangas" element={<Mangas />} />
-                    <Route path="/comics" element={<Comics />} />
+                    <Route path="/Merchandising" element={<Mechandising />} />
+                    <Route path="/Mangas" element={<Mangas />} />
+                    <Route path="/Comics" element={<Comics />} />
                     <Route path="/foro" element={<Foro />} />
                     <Route path="/libreria" element={<Libreria />} />
                     <Route path="/libreria/:id" element={<LibreriaDetail />} />

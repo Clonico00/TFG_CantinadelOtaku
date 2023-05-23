@@ -9,12 +9,12 @@ export function Detail() {
 
   // Obtener la categoría de la URL
   let category = '';
-  if (path.includes('merchandising')) {
-    category = 'merchandising';
-  } else if (path.includes('comic')) {
-    category = 'comics';
-  } else if (path.includes('manga')) {
-    category = 'mangas';
+  if (path.includes('Merchandising') || path.includes('merchandising')) {
+    category = 'Merchandising';
+  } else if (path.includes('Comic') || path.includes('comic')) {
+    category = 'Comics';
+  } else if (path.includes('Manga') || path.includes('manga')) {
+    category = 'Mangas';
   }
 
   // Obtener el ID del artículo de la URL
