@@ -92,7 +92,7 @@ export function Detail() {
                             </div>
                             <div className="flex">
                                 <span className="title-font font-bold text-2xl text-gray-900"
-                                    style={{ backfaceVisibility: "hidden", color: "#1e2447" }}
+                                    style={{color: "#4a63ee"}}
                                 >
                                     {article.price} €
                                 </span>

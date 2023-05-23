@@ -165,7 +165,7 @@ const Forum = () => {
                         style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>Foro</h2>
                 </div>
                 <div
-                    className="custom-max-height overflow-auto bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 mt-5 max-w-7xl">
+                    className="custom-max-height overflow-auto bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 mt-5 max-w-7xl mb-8">
                     <div className="grid gap-4">
                         {messages.map((msg, index) => (
                             <div key={index} className="card bg-white rounded-lg p-4 mt-4 shadow mx-2 hover:bg-gray-50">
