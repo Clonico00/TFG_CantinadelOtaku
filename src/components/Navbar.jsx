@@ -114,7 +114,10 @@ function Navbar({ activeLink, handleLinkClick }) {
     const handleSearchChange = event => {
         setSearchText(event.target.value);
     };
-
+    const handleLinkClickIntern = () => {
+        closeMenu(); // Cerrar el menú antes de cambiar la ruta
+        handleInputBlur(); // Perder el enfoque del campo de búsqueda
+      };
 
 
     useEffect(() => {
@@ -128,6 +131,7 @@ function Navbar({ activeLink, handleLinkClick }) {
 
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+    
 
     return (
         <nav className="bg-white navbar-menu rounded-b-lg border border-gray-200">
@@ -278,9 +282,11 @@ function Navbar({ activeLink, handleLinkClick }) {
                                                                 <Link
                                                                     to={`/${article.category}/detail/${article.id}`}
                                                                     className="flex items-center"
+                                                                    onClick={handleLinkClickIntern}
+
                                                                 >
                                                                     <img src={article.image} alt={article.title} className="w-12 h-12 mr-2" />
-                                                                    <span className="font-bold text-sm" style={{ color: '#1e2447' }}>
+                                                                    <span className="font-bold" style={{ color: '#1e2447' }}>
                                                                         {article.title}
                                                                     </span>
                                                                 </Link>
@@ -556,12 +562,13 @@ function Navbar({ activeLink, handleLinkClick }) {
                                         />
                                         {isFocused && searchText.length > 0 && filteredArticles.length > 0 && (
                                             <div onMouseDown={(e) => e.preventDefault()} onClick={(e) => e.stopPropagation()}>
-                                                <ul className="absolute mt-2 py-2 w-full bg-white rounded-md shadow-lg max-h-24 overflow-y-auto" style={{ left: '0', right: 'auto' }}>
+                                                <ul className="absolute z-10 mt-2 py-2 w-full bg-white rounded-md shadow-lg max-h-48 overflow-y-auto" style={{ left: '0', right: 'auto' }}>
                                                     {filteredArticles.map((article, index) => (
                                                         <Link
                                                             to={`/${article.category}/detail/${article.id}`}
                                                             className="flex items-center"
                                                             key={article.id}
+                                                            onClick={handleLinkClickIntern}
                                                         >
                                                             <li className={`px-4 py-2 hover:bg-gray-100 ${index !== filteredArticles.length - 1 ? 'border-b' : ''}`}>
                                                                 <div className="flex items-center">
