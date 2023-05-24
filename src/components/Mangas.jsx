@@ -37,10 +37,15 @@ function Mangas({ addToCart, cartItems, setCartItems }) {
             item.id === article.id ? { ...item, cantidad: item.cantidad + 1 } : item
           );
           setCartItems(updatedCartItems);
+          //lo guardamos en el localstorage
+            localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+
         } else {
           // El artículo no está en el carrito, agregarlo con cantidad 1
           const newItem = { ...article, cantidad: 1 };
           setCartItems([...cartItems, newItem]);
+            //lo guardamos en el localstorage
+            localStorage.setItem("cartItems", JSON.stringify([...cartItems, newItem]));
         }
     
         navigate("/carrito");

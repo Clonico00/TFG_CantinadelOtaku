@@ -15,6 +15,8 @@ export function Carrito({ cartItems, setCartItems }) {
         return item;
       });
       setCartItems(updatedCartItems);
+      //lo guardamos en el localstorage
+        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     };
   
     const handleIncrease = (itemId) => {
@@ -25,6 +27,8 @@ export function Carrito({ cartItems, setCartItems }) {
         return item;
       });
       setCartItems(updatedCartItems);
+        //lo guardamos en el localstorage
+        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     };
   
     const handleDeleteItem = () => {
@@ -32,6 +36,8 @@ export function Carrito({ cartItems, setCartItems }) {
         (item) => item.id !== articleToDelete
       );
       setCartItems(updatedCartItems);
+        //lo guardamos en el localstorage
+        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
       closeModal();
     };
   
@@ -49,19 +55,18 @@ export function Carrito({ cartItems, setCartItems }) {
     function openModal() {
       setIsOpen(true);
     }
-  
+
     useEffect(() => {
-      // Guardar los datos del carrito en sessionStorage al cambiar cartItems
-      sessionStorage.setItem("cartItems", JSON.stringify(cartItems));
-    }, [cartItems]);
-  
-    useEffect(() => {
-      // Restaurar los datos del carrito desde sessionStorage al cargar el componente
-      const savedCartItems = sessionStorage.getItem("cartItems");
-      if (savedCartItems) {
-        setCartItems(JSON.parse(savedCartItems));
-      }
+        const cartItemsLocalStorage = JSON.parse(localStorage.getItem("cartItems"));
+        if (cartItemsLocalStorage) {
+            setCartItems(cartItemsLocalStorage);
+        }
+        else {
+            localStorage.setItem("cartItems", JSON.stringify(cartItems));
+        }
     }, []);
+
+   
     return (
         <>
             <div className=" pt-20 mb-24 overflow-auto">
