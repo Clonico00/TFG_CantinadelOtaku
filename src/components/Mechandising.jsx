@@ -71,9 +71,9 @@ function Mechandising() {
                                         </p>
                                     </div>
                                     <p className="my-2 text-sm text-slate-400 items-end flex-grow-0">{article.description}</p>
-                                    <div className="flex justify-end pt-5">
+                                    <div className="flex justify-end pt-5 ">
                                         <div
-                                            className="inline-flex items-center space-x-1.5 rounded-lg bg-blue-500 px-4 py-1.5 text-white duration-100 hover:bg-blue-600"
+                                            className="inline-flex items-center space-x-1.5 rounded-lg bg-blue-500 px-4 py-1.5 text-white duration-100 hover:bg-blue-600 hover:scale-105 transition-all duration-400"
                                             style={{backgroundColor: "#4a63ee", width: "fit-content"}}>
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +89,7 @@ function Mechandising() {
                                                     d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
                                                 />
                                             </svg>
-                                            <button className="text-sm inline-flex">Añadir</button>
+                                            <button className="text-sm inline-flex ">Añadir</button>
                                         </div>
                                     </div>
 

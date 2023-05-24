@@ -14,6 +14,10 @@ function Navbar({ activeLink, handleLinkClick }) {
     const [userData, setUserData] = useState(null);
     const { currentUser } = useContext(AuthContext);
     const [image, setImage] = useState(UsuarioIconDefault);
+    const [searchText, setSearchText] = useState('');
+    const [articles, setArticles] = useState([]);
+    const [filteredArticles, setFilteredArticles] = useState([]);
+    const [isFocused, setIsFocused] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -73,15 +77,11 @@ function Navbar({ activeLink, handleLinkClick }) {
                 console.error('Error al cerrar sesión:', error);
             });
     };
-    const [searchText, setSearchText] = useState('');
-    const [articles, setArticles] = useState([]);
-    const [filteredArticles, setFilteredArticles] = useState([]);
-    const [isFocused, setIsFocused] = useState(false);
+   
     // Función para manejar el enfoque en el campo de búsqueda
     const handleInputFocus = () => {
         setIsFocused(true);
     };
-
     // Función para manejar la pérdida de enfoque en el campo de búsqueda
     const handleInputBlur = () => {
         setIsFocused(false);
@@ -114,11 +114,10 @@ function Navbar({ activeLink, handleLinkClick }) {
     const handleSearchChange = event => {
         setSearchText(event.target.value);
     };
-    const handleLinkClickIntern = () => {
+    const handleLinkClickIntern = (path) => {
         closeMenu(); // Cerrar el menú antes de cambiar la ruta
         handleInputBlur(); // Perder el enfoque del campo de búsqueda
       };
-
 
     useEffect(() => {
         function handleResize() {
@@ -161,8 +160,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                                 <>
                                     <Link
                                         to="/admin"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${activeLink === '/admin' ? 'underline' : ''
-                                            }`}
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
                                         style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                         onClick={() => handleLinkClick('/admin')}
                                     >
@@ -170,8 +168,8 @@ function Navbar({ activeLink, handleLinkClick }) {
                                     </Link>
                                     <Link
                                         to="/foro"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${activeLink === '/foro' ? 'underline' : ''
-                                            }`}
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg 
+                                            `}
                                         style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                         onClick={() => handleLinkClick('/foro')}
                                     >
@@ -182,8 +180,8 @@ function Navbar({ activeLink, handleLinkClick }) {
                                 <>
                                     <Link
                                         to="/"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${activeLink === '/' ? 'underline' : ''
-                                            }`}
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg 
+                                            `}
                                         style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                         onClick={() => handleLinkClick('/')}
                                     >
@@ -191,8 +189,8 @@ function Navbar({ activeLink, handleLinkClick }) {
                                     </Link>
                                     <Link
                                         to="/merchandising"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${activeLink === '/merchandising' ? 'underline' : ''
-                                            }`}
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg 
+                                            `}
                                         style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                         onClick={() => handleLinkClick('/merchandising')}
                                     >
@@ -200,8 +198,8 @@ function Navbar({ activeLink, handleLinkClick }) {
                                     </Link>
                                     <Link
                                         to="/mangas"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${activeLink === '/mangas' ? 'underline' : ''
-                                            }`}
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg 
+                                            `}
                                         style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                         onClick={() => handleLinkClick('/mangas')}
                                     >
@@ -209,8 +207,8 @@ function Navbar({ activeLink, handleLinkClick }) {
                                     </Link>
                                     <Link
                                         to="/comics"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${activeLink === '/comics' ? 'underline' : ''
-                                            }`}
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg 
+                                            `}
                                         style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                         onClick={() => handleLinkClick('/comics')}
                                     >
@@ -218,8 +216,8 @@ function Navbar({ activeLink, handleLinkClick }) {
                                     </Link>
                                     <Link
                                         to="/foro"
-                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${activeLink === '/foro' ? 'underline' : ''
-                                            }`}
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg 
+                                            `}
                                         style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                         onClick={() => handleLinkClick('/foro')}
                                     >
@@ -229,8 +227,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                                     {currentUser ? (
                                         <Link
                                             to="/libreria"
-                                            className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg ${activeLink === '/libreria' ? 'underline' : ''
-                                                }`}
+                                            className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
                                             style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                             onClick={() => handleLinkClick('/libreria')}
                                         >
@@ -282,8 +279,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                                                                 <Link
                                                                     to={`/${article.category}/detail/${article.id}`}
                                                                     className="flex items-center"
-                                                                    onClick={handleLinkClickIntern}
-
+                                                                    onClick={() => handleLinkClickIntern(`/${article.category}`)}
                                                                 >
                                                                     <img src={article.image} alt={article.title} className="w-12 h-12 mr-2" />
                                                                     <span className="font-bold" style={{ color: '#1e2447' }}>
@@ -474,7 +470,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                             <>
                                 <Link
                                     to="/admin"
-                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
                                     style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                 >
                                     Zona Admin
@@ -482,7 +478,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                                 <hr className="my-1 border-gray-300" />
                                 <Link
                                     to="/foro"
-                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
                                     style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                 >
                                     Foro
@@ -492,7 +488,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                             <>
                                 <Link
                                     to="/"
-                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
                                     style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                 >
                                     Inicio
@@ -500,7 +496,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                                 <hr className="my-1 border-gray-300" />
                                 <Link
                                     to="/merchandising"
-                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
                                     style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                 >
                                     Merchandising
@@ -508,7 +504,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                                 <hr className="my-1 border-gray-300" />
                                 <Link
                                     to="/mangas"
-                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
                                     style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                 >
                                     Mangas
@@ -516,7 +512,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                                 <hr className="my-1 border-gray-300" />
                                 <Link
                                     to="/comics"
-                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
                                     style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                 >
                                     Comics
@@ -524,7 +520,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                                 <hr className="my-1 border-gray-300" />
                                 <Link
                                     to="/foro"
-                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
                                     style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                 >
                                     Foro
@@ -532,7 +528,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                                 <hr className="my-1 border-gray-300" />
                                 <Link
                                     to="/libreria"
-                                    className="hover:underline transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
                                     style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
                                 >
                                     Libreria
