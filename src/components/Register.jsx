@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { auth, db, storage } from "../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +35,13 @@ export default function Register() {
             }
 
             // Si el nombre de usuario no existe, se crea el nuevo usuario
+            // const { user } = await createUserWithEmailAndPassword(auth, email, password);
+            // await signOut(auth);
+            //haz que despues createUserWithEmailAndPassword se desloguee automaticamente
             const { user } = await createUserWithEmailAndPassword(auth, email, password);
+            await signOut(auth);
+
+
             // Sube la foto de perfil a Firebase Storage
             const storageRef = ref(storage, `profile_pictures/${user.uid}`);
             await uploadBytes(storageRef, image);
@@ -49,7 +55,6 @@ export default function Register() {
                 image: profilePictureURL,
                 isAdmin: false,
             });
-
             navigate('/login'); // Redirigir a la página de login
         } catch (error) {
             // En caso de error, se maneja el error y se muestra una alerta correspondiente

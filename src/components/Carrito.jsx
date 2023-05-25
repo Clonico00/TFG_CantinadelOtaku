@@ -64,6 +64,7 @@ export function Carrito({ cartItems, setCartItems }) {
         else {
             localStorage.setItem("cartItems", JSON.stringify(cartItems));
         }
+         // eslint-disable-next-line 
     }, []);
 
    

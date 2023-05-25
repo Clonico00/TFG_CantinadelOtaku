@@ -1,10 +1,11 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useContext } from "react";
 import { Link } from "react-router-dom";
 import { auth, db } from "../firebase";
 import { signInWithEmailAndPassword, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
-import { collection, where, getDocs, query, setDoc, doc } from "firebase/firestore";
+import { collection, where, getDocs, query, addDoc } from "firebase/firestore";
 import { Dialog, Transition } from "@headlessui/react";
+import { AuthContext } from "./AuthContext";
 
 const Modal = ({ isOpen, onClose, onSubmit }) => {
     const [email, setEmail] = useState("");
@@ -101,6 +102,7 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const { setCurrentUser } = useContext(AuthContext);
 
     const closeModal = () => {
         setIsOpen(false);
@@ -150,32 +152,23 @@ export default function Login() {
                 // Autenticación exitosa con Google
                 const user = result.user;
                 // IdP data available using getAdditionalUserInfo(result)
-                // ...
-                console.log(user);
-                // Obtener el correo electrónico y los datos del usuario
+                // ...                // Obtener el correo electrónico y los datos del usuario
                 const email = user.email;
                 const usersRef = collection(db, 'users');
                 const userQuery = query(usersRef, where('email', '==', email));
                 const snapshot = await getDocs(userQuery);
 
                 if (!snapshot.empty) {
-                    const userData = snapshot.docs[0].data();
+                    navigate('/merchandising'); // Redirigir a la página de inicio del usuario
 
-                    // Verificar si el usuario es administrador
-                    if (userData.isAdmin) {
-                        navigate('/admin'); // Redirigir a la página de administrador
-                    } else {
-                        navigate('/merchandising'); // Redirigir a la página de inicio del usuario
-                    }
                 } else {
 
-                    const newUser = {
-                        name: user.displayName,
+                    await addDoc(collection(db, 'users'), {
                         email: email,
+                        isAdmin: false,
+                        name: user.displayName,
                         image: user.photoURL,
-                        isAdmin: false, // Ajustar según tus necesidades
-                    };
-                    await setDoc(doc(usersRef), newUser);
+                    });
 
                     navigate('/merchandising'); // Redirigir a la página de inicio del usuario
                 }

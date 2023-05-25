@@ -24,18 +24,22 @@ function Navbar({ activeLink, handleLinkClick }) {
         const fetchUserData = async () => {
             if (currentUser) {
                 try {
-                    const usersRef = collection(db, 'users');
-                    const userQuery = await query(usersRef, where('email', '==', currentUser.email));
-                    const snapshot = await getDocs(userQuery);
+                    setTimeout(async () => {
+                        const usersRef = collection(db, 'users');
+                        const userQuery = query(usersRef, where('email', '==', currentUser.email));
+                        const snapshot = await getDocs(userQuery);
 
-                    if (!snapshot.empty) {
-                        const userData = snapshot.docs[0].data();
-                        setUserData(userData);
+                        if (!snapshot.empty) {
+                            const userData = snapshot.docs[0].data();
+                            setUserData(userData);
 
-                        // Establecer el estado "image" después de obtener los datos del usuario
-                        const image = userData && userData.image ? userData.image : UsuarioIconDefault;
-                        setImage(image);
+                            // Establecer el estado "image" después de obtener los datos del usuario
+                            const image = userData && userData.image ? userData.image : UsuarioIconDefault;
+                            setImage(image);
+                        }
                     }
+                        , 1000);
+
                 } catch (error) {
                     console.error('Error al obtener los datos del usuario:', error);
                 }
@@ -78,7 +82,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                 console.error('Error al cerrar sesión:', error);
             });
     };
-   
+
     // Función para manejar el enfoque en el campo de búsqueda
     const handleInputFocus = () => {
         setIsFocused(true);
@@ -118,7 +122,7 @@ function Navbar({ activeLink, handleLinkClick }) {
     const handleLinkClickIntern = (path) => {
         closeMenu(); // Cerrar el menú antes de cambiar la ruta
         handleInputBlur(); // Perder el enfoque del campo de búsqueda
-      };
+    };
 
     useEffect(() => {
         function handleResize() {
@@ -131,7 +135,7 @@ function Navbar({ activeLink, handleLinkClick }) {
 
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-    
+
 
     return (
         <nav className="bg-white navbar-menu rounded-b-lg border border-gray-200">
@@ -225,19 +229,15 @@ function Navbar({ activeLink, handleLinkClick }) {
                                         Foro
                                     </Link>
 
-                                    {currentUser ? (
-                                        <Link
-                                            to="/libreria"
-                                            className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
-                                            style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
-                                            onClick={() => handleLinkClick('/libreria')}
-                                        >
-                                            Libreria
-                                        </Link>
-                                    ) : (
-                                        <></>
-                                    )}
 
+                                    <Link
+                                        to="/libreria"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                        style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                        onClick={() => handleLinkClick('/libreria')}
+                                    >
+                                        Libreria
+                                    </Link>
 
                                     <div className="flex items-center">
                                         <div className="relative flex-grow">
@@ -378,17 +378,21 @@ function Navbar({ activeLink, handleLinkClick }) {
                                     {currentUser ? (
                                         <>
                                             <div className="px-3 py-2">
-                                                <div className="px-3 py-2 flex flex-row items-center">
-                                                    <div className="font-extrabold mr-2">
+                                                <div className="px-3 py-2 flex flex-col">
+                                                    <div className="font-bold text-md " style={{
+                                                        backfaceVisibility: "hidden",
+                                                        color: "#1e2447",
+                                                    }}
+                                                    >
                                                         {userData ? userData.name : ''}
                                                     </div>
-                                                    <div className="text-md text-gray-400">
-                                                        @{userData ? userData.username : ''}
+                                                    <div className="text-gray-600 text-sm mt-2">
+                                                        {userData && userData.username ? `@${userData.username}` : ''}
                                                     </div>
                                                 </div>
-
-                                                <hr className="border-gray-400" />
+                                                <hr className="border-gray-400 mt-4" />
                                             </div>
+
 
                                             <button
                                                 className="menu-item hover:underline transition-all duration-400 px-3 py-2 text-sm font-bold hover:text-shadow-lg"
