@@ -134,19 +134,55 @@ export default function Admin() {
     const [isOpen, setIsOpen] = useState(false)
     const [articles, setArticles] = useState([]);
     const [articleToDelete, setArticleToDelete] = useState('');
-
+    const [sortColumn, setSortColumn] = useState({
+        column: '', // Columna de ordenación actual
+        type: 'asc', // Tipo de orden: 'asc' para ascendente, 'desc' para descendente
+    });
+    const handleSort = (column) => {
+        if (sortColumn.column === column) {
+            // Si la columna actual es la misma que se hizo clic, invertir el tipo de orden
+            setSortColumn({
+                ...sortColumn,
+                type: sortColumn.type === 'asc' ? 'desc' : 'asc',
+            });
+        } else {
+            // Si la columna actual es diferente, establecer la nueva columna y orden ascendente
+            setSortColumn({
+                column,
+                type: 'asc',
+            });
+        }
+    };
     //nos teamos todos los articles de mi bbdd de la coleccion artices y los ordenamos por nombre
     useEffect(() => {
         const articlesRef = collection(db, 'articles');
         const articlesQuery = query(articlesRef);
 
         const unsubscribe = onSnapshot(articlesQuery, (snapshot) => {
-            const articles = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            let articles = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+            // Ordenar los artículos según la columna y tipo de orden actual
+            if (sortColumn.column) {
+                articles = articles.sort((a, b) => {
+                    const valueA = a[sortColumn.column];
+                    const valueB = b[sortColumn.column];
+
+                    if (valueA < valueB) {
+                        return sortColumn.type === 'asc' ? -1 : 1;
+                    } else if (valueA > valueB) {
+                        return sortColumn.type === 'asc' ? 1 : -1;
+                    } else {
+                        return 0;
+                    }
+                });
+            }
+
             setArticles(articles);
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [sortColumn]);
+
 
     const handleDelete = async () => {
         try {
@@ -161,6 +197,8 @@ export default function Admin() {
             console.error('Error al borrar el artículo', error);
         }
     };
+
+
 
 
     const itemsPerPage = 10;
@@ -210,23 +248,143 @@ export default function Admin() {
                 <table className="w-full border-collapse bg-white text-left text-sm text-gray-500  ">
                     <thead className="bg-gray-50">
                         <tr>
-                            <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447" }}>
+                            <th
+                                scope="col"
+                                className="px-6 py-4 font-bold text-md"
+                                style={{ color: '#1e2447', cursor: 'pointer' }}
+                                onClick={() => handleSort('title')}
+                            >
                                 Nombre
+                                {sortColumn.column === 'title' && (
+                                    <span className="ml-1">
+                                        {sortColumn.type === 'asc' ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                className="h-4 w-4 inline-block mb-1 ml-1"
+                                                viewBox="0 0 384 512"
+                                                fill="#1e2447"
+
+                                            >
+                                                <path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z" />
+                                            </svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 384 512"
+                                                fill="#1e2447"
+                                                className="h-4 w-4 inline-block mb-1 ml-1"
+                                            ><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z" /></svg>
+                                        )}
+                                    </span>
+                                )}
                             </th>
-                            <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447" }}>
-                                Descripcion
+                            <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447", cursor: 'pointer' }} onClick={() => handleSort('description')}>
+                                Descripcion   {sortColumn.column === 'description' && (
+                                    <span className="ml-1">
+                                        {sortColumn.type === 'asc' ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                className="h-4 w-4 inline-block mb-1 ml-1"
+                                                viewBox="0 0 384 512"
+                                                fill="#1e2447"
+
+                                            >
+                                                <path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z" />
+                                            </svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 384 512"
+                                                fill="#1e2447"
+                                                className="h-4 w-4 inline-block mb-1 ml-1"
+                                            ><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z" /></svg>
+                                        )}
+                                    </span>
+                                )}
                             </th>
-                            <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447" }}>
-                                Stock
+                            <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447", cursor: 'pointer' }} onClick={() => handleSort('stock')}>
+                                Stock  {sortColumn.column === 'stock' && (
+                                    <span className="ml-1">
+                                        {sortColumn.type === 'asc' ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                className="h-4 w-4 inline-block mb-1 ml-1"
+                                                viewBox="0 0 384 512"
+                                                fill="#1e2447"
+
+                                            >
+                                                <path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z" />
+                                            </svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 384 512"
+                                                fill="#1e2447"
+                                                className="h-4 w-4 inline-block mb-1 ml-1"
+                                            ><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z" /></svg>
+                                        )}
+                                    </span>
+                                )}
                             </th>
-                            <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447" }}>
-                                Precio
+                            <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447", cursor: 'pointer' }} onClick={() => handleSort('price')}>
+                                Precio  {sortColumn.column === 'price' && (
+                                    <span className="ml-1">
+                                        {sortColumn.type === 'asc' ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                className="h-4 w-4 inline-block mb-1 ml-1"
+                                                viewBox="0 0 384 512"
+                                                fill="#1e2447"
+
+                                            >
+                                                <path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z" />
+                                            </svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 384 512"
+                                                fill="#1e2447"
+                                                className="h-4 w-4 inline-block mb-1 ml-1"
+                                            ><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z" /></svg>
+                                        )}
+                                    </span>
+                                )}
                             </th>
-                            <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447" }}>
-                                Categoria
+                            <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447", cursor: 'pointer' }} onClick={() => handleSort('category')}>
+                                Categoria  {sortColumn.column === 'category' && (
+                                    <span className="ml-1">
+                                        {sortColumn.type === 'category' ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                className="h-4 w-4 inline-block mb-1 ml-1"
+                                                viewBox="0 0 384 512"
+                                                fill="#1e2447"
+
+                                            >
+                                                <path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z" />
+                                            </svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 384 512"
+                                                fill="#1e2447"
+                                                className="h-4 w-4 inline-block mb-1 ml-1"
+                                            ><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z" /></svg>
+                                        )}
+                                    </span>
+                                )}
                             </th>
-                            <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447" }}>
-                                Brand
+                            <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447", cursor: 'pointer' }} onClick={() => handleSort('brand')}>
+                                Brand  {sortColumn.column === 'brand' && (
+                                    <span className="ml-1">
+                                        {sortColumn.type === 'asc' ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                className="h-4 w-4 inline-block mb-1 ml-1"
+                                                viewBox="0 0 384 512"
+                                                fill="#1e2447"
+
+                                            >
+                                                <path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z" />
+                                            </svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 384 512"
+                                                fill="#1e2447"
+                                                className="h-4 w-4 inline-block mb-1 ml-1"
+                                            ><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z" /></svg>
+                                        )}
+                                    </span>
+                                )}
                             </th>
                             <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447" }}>
                                 Acciones
