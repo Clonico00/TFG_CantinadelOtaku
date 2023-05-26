@@ -8,7 +8,7 @@ import { db, auth } from '../firebase';
 import { collection, where, getDocs, query } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 
-function Navbar({ activeLink, handleLinkClick }) {
+function Navbar({ activeLink, handleLinkClick, cartItems }) {
     const [showMenu, setShowMenu] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [userData, setUserData] = useState(null);
@@ -19,7 +19,7 @@ function Navbar({ activeLink, handleLinkClick }) {
     const [filteredArticles, setFilteredArticles] = useState([]);
     const [isFocused, setIsFocused] = useState(false);
     const navigate = useNavigate();
-
+    const totalQuantity = cartItems.reduce((total, item) => total + item.cantidad, 0);
     useEffect(() => {
         const fetchUserData = async () => {
             if (currentUser) {
@@ -345,7 +345,7 @@ function Navbar({ activeLink, handleLinkClick }) {
                                     </button>
                                     <button
                                         type="button"
-                                        className="text-gray-700 hover:text-gray-900 py-1 px-1 md:px-4"
+                                        className="text-gray-700 hover:text-gray-900 py-1 px-1 md:px-4 flex items-center relative"
                                     >
                                         <Link to="/carrito">
                                             <img
@@ -355,8 +355,13 @@ function Navbar({ activeLink, handleLinkClick }) {
                                                 style={{ minWidth: "20px", minHeight: "20px" }}
                                             />
                                         </Link>
-
+                                        {totalQuantity > 0 && (
+                                            <div className="flex items-center justify-center mb-4 bg-red-500 text-white rounded-full w-6 h-6 text-xs">
+                                                {totalQuantity}
+                                            </div>
+                                        )}
                                     </button>
+
                                 </>
                             )}
 
@@ -377,21 +382,33 @@ function Navbar({ activeLink, handleLinkClick }) {
 
                                     {currentUser ? (
                                         <>
-                                            <div className="px-3 py-2">
-                                                <div className="px-3 py-2 flex flex-col">
-                                                    <div className="font-bold text-md " style={{
-                                                        backfaceVisibility: "hidden",
-                                                        color: "#1e2447",
-                                                    }}
-                                                    >
-                                                        {userData ? userData.name : ''}
+                                            <div className="flex items-center">
+                                                <img
+                                                    src={image}
+                                                    alt="Logo"
+                                                    className="h-10 w-10 md:h-10 md:w-10 mb-2 object-contain rounded-full"
+                                                    style={{ minWidth: "20px", minHeight: "20px" }}
+                                                    referrerPolicy="no-referrer"
+                                                />
+                                                <div className="px-3 py-2">
+                                                    <div className=" py-2 flex flex-col">
+                                                        <div
+                                                            className="font-bold text-md"
+                                                            style={{
+                                                                backfaceVisibility: "hidden",
+                                                                color: "#1e2447",
+                                                            }}
+                                                        >
+                                                            {userData ? userData.name : ""}
+                                                        </div>
+                                                        <div className="text-gray-600 text-sm">
+                                                            {userData && userData.email ? `${userData.email}` : ""}
+                                                        </div>
                                                     </div>
-                                                    <div className="text-gray-600 text-sm mt-2">
-                                                        {userData && userData.username ? `@${userData.username}` : ''}
-                                                    </div>
+                                                    <hr className="border-gray-400 mt-2" />
                                                 </div>
-                                                <hr className="border-gray-400 mt-4" />
                                             </div>
+
 
 
                                             <button
