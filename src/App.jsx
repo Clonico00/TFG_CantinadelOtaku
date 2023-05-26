@@ -45,7 +45,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/carrito" element={<Carrito cartItems={cartItems} setCartItems={setCartItems} />} />
-                    <Route path="/:category/detail/:id" element={<Detail />} />
+                    <Route path="/:category/detail/:id" element={<Detail  cartItems={cartItems} setCartItems={setCartItems}/>} />
                     <Route path="/admin/add" element={<AddArticle />} />
                     <Route path="/admin/edit/:id" element={<EditArticle />} />
                 </Routes>

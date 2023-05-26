@@ -3,6 +3,7 @@ import { collection, query, onSnapshot, deleteDoc, doc } from 'firebase/firestor
 import { db } from "../firebase";
 import { Link } from "react-router-dom";
 import { Dialog, Transition } from '@headlessui/react'
+import { toast, Toaster } from 'react-hot-toast';
 
 // const articles = [
 //     {
@@ -193,6 +194,7 @@ export default function Admin() {
             setArticleToDelete('');
 
             closeModal(); // Cerrar el diálogo
+            toast.success('Artículo borrado exitosamente');
         } catch (error) {
             console.error('Error al borrar el artículo', error);
         }
@@ -227,7 +229,13 @@ export default function Admin() {
 
     return (
         <>
-
+            <Toaster
+                position="bottom-center" 
+                reverseOrder={false}
+                toastStyle={{
+                    width: '50%', // Ajusta el ancho del contenido del toast
+                }}
+            />
             <div
                 className="flex justify-between items-center px-6 py-4 mt-10 bg-gray-50 border border-gray-200 rounded  custom-margin ">
                 <h2 className="text-center text-2xl font-bold" style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>

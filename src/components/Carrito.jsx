@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import { provincias } from "../data";
 import { provinciasConCiudades } from "../data";
 import { Dialog, Transition } from "@headlessui/react";
+import { toast, Toaster } from 'react-hot-toast';
 
 export function Carrito({ cartItems, setCartItems }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -39,6 +40,7 @@ export function Carrito({ cartItems, setCartItems }) {
         //lo guardamos en el localstorage
         localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
       closeModal();
+      toast.success('Artículo eliminado del carrito');
     };
   
     const subtotal = cartItems.reduce(
@@ -70,6 +72,14 @@ export function Carrito({ cartItems, setCartItems }) {
    
     return (
         <>
+         <Toaster
+                position="top-right"
+                reverseOrder={false}
+
+                toastStyle={{
+                    width: '50%', // Ajusta el ancho del contenido del toast
+                }}
+            />
             <div className=" pt-20 mb-24 overflow-auto">
                 <h2 className="text-center text-2xl font-extrabold mb-12 mt-1"
                     style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>Carrito</h2>

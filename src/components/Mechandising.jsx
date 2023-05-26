@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from "../firebase";
-import { Link, useNavigate } from "react-router-dom";
-
+import { Link } from "react-router-dom";
+import { toast, Toaster } from 'react-hot-toast';
 function Mechandising({ addToCart, cartItems, setCartItems }) {
     const [page, setPage] = useState(1);
     const section = "merchandising"; // Actualiza la sección aquí
-    const navigate = useNavigate();
     const articlesPerPage = 6;
-
     const [articles, setArticles] = useState([]);
 
     useEffect(() => {
@@ -30,26 +28,24 @@ function Mechandising({ addToCart, cartItems, setCartItems }) {
 
     const handleAddToCart = (article) => {
         const existingItem = cartItems.find((item) => item.id === article.id);
-    
-        if (existingItem) {
-          // El artículo ya está en el carrito, incrementar la cantidad
-          const updatedCartItems = cartItems.map((item) =>
-            item.id === article.id ? { ...item, cantidad: item.cantidad + 1 } : item
-          );
-          setCartItems(updatedCartItems);
-          //lo guardamos en el localstorage
-            localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
 
+        if (existingItem) {
+            // El artículo ya está en el carrito, incrementar la cantidad
+            const updatedCartItems = cartItems.map((item) =>
+                item.id === article.id ? { ...item, cantidad: item.cantidad + 1 } : item
+            );
+            setCartItems(updatedCartItems);
+            localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
         } else {
-          // El artículo no está en el carrito, agregarlo con cantidad 1
-          const newItem = { ...article, cantidad: 1 };
-          setCartItems([...cartItems, newItem]);
-            //lo guardamos en el localstorage
-            localStorage.setItem("cartItems", JSON.stringify([...cartItems, newItem]));
+            // El artículo no está en el carrito, agregarlo con cantidad 1
+            const newItem = { ...article, cantidad: 1 };
+            setCartItems([...cartItems, newItem]);
+            localStorage.setItem('cartItems', JSON.stringify([...cartItems, newItem]));
         }
-    
-        navigate("/carrito");
-      };
+
+        // Mostrar el toast de éxito
+        toast.success(` ${article.title} se ha añadido al carrito`);
+    };
 
 
     const startIndex = (page - 1) * articlesPerPage;
@@ -66,7 +62,14 @@ function Mechandising({ addToCart, cartItems, setCartItems }) {
                     Merchandising
                 </h2>
             </div>
+            <Toaster
+                position="top-right"
+                reverseOrder={false}
 
+                toastStyle={{
+                    width: '50%', // Ajusta el ancho del contenido del toast
+                }}
+            />
             <section className="pt-6 pb-12">
                 <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {displayedArticles.map((article) => (
@@ -125,8 +128,8 @@ function Mechandising({ addToCart, cartItems, setCartItems }) {
                                         className="text-sm inline-flex"
                                         onClick={() => {
                                             handleAddToCart(article);
-                                          }}
-                                        >
+                                        }}
+                                    >
                                         Añadir
                                     </button>
                                 </div>

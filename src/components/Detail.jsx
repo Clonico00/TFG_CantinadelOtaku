@@ -2,51 +2,84 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from "../firebase";
+import { toast, Toaster } from 'react-hot-toast';
 
-export function Detail() {
-  const location = useLocation();
-  const path = location.pathname;
+export function Detail({ cartItems, setCartItems }) {
+    const location = useLocation();
+    const path = location.pathname;
 
-  // Obtener la categoría de la URL
-  let category = '';
-  if (path.includes('Merchandising') || path.includes('merchandising')) {
-    category = 'Merchandising';
-  } else if (path.includes('Comic') || path.includes('comic')) {
-    category = 'Comics';
-  } else if (path.includes('Manga') || path.includes('manga')) {
-    category = 'Mangas';
-  }
+    // Obtener la categoría de la URL
+    let category = '';
+    if (path.includes('Merchandising') || path.includes('merchandising')) {
+        category = 'Merchandising';
+    } else if (path.includes('Comic') || path.includes('comic')) {
+        category = 'Comics';
+    } else if (path.includes('Manga') || path.includes('manga')) {
+        category = 'Mangas';
+    }
 
-  // Obtener el ID del artículo de la URL
-  let id = path.substring(path.lastIndexOf('/') + 1);
+    // Obtener el ID del artículo de la URL
+    let id = path.substring(path.lastIndexOf('/') + 1);
 
-  const [article, setArticle] = useState(null);
+    const [article, setArticle] = useState(null);
 
-  useEffect(() => {
-    const fetchArticle = async (id) => {
-      const articleRef = doc(db, 'articles', id);
-      const snapshot = await getDoc(articleRef);
-      if (snapshot.exists()) {
-        const articleData = { id: snapshot.id, ...snapshot.data() };
-        setArticle(articleData);
-      } else {
-        // El documento no existe
-        setArticle(null);
-      }
+    useEffect(() => {
+        const fetchArticle = async (id) => {
+            const articleRef = doc(db, 'articles', id);
+            const snapshot = await getDoc(articleRef);
+            if (snapshot.exists()) {
+                const articleData = { id: snapshot.id, ...snapshot.data() };
+                setArticle(articleData);
+            } else {
+                // El documento no existe
+                setArticle(null);
+            }
+        };
+
+        fetchArticle(id);
+    }, [id]);
+
+    const handleAddToCart = (article) => {
+        const existingItem = cartItems.find((item) => item.id === article.id);
+
+        if (existingItem) {
+            // El artículo ya está en el carrito, incrementar la cantidad
+            const updatedCartItems = cartItems.map((item) =>
+                item.id === article.id ? { ...item, cantidad: item.cantidad + 1 } : item
+            );
+            setCartItems(updatedCartItems);
+            //lo guardamos en el localstorage
+            localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+
+        } else {
+            // El artículo no está en el carrito, agregarlo con cantidad 1
+            const newItem = { ...article, cantidad: 1 };
+            setCartItems([...cartItems, newItem]);
+            //lo guardamos en el localstorage
+            localStorage.setItem("cartItems", JSON.stringify([...cartItems, newItem]));
+        }
+        // Mostrar el toast de éxito
+        toast.success(` ${article.title} se ha añadido al carrito`);
+
     };
 
-    fetchArticle(id);
-  }, [id]);
+    if (!article) {
+        // Renderizar un mensaje de carga mientras se obtiene el artículo
+        return <p>Cargando artículo...</p>;
+    }
 
-  if (!article) {
-    // Renderizar un mensaje de carga mientras se obtiene el artículo
-    return <p>Cargando artículo...</p>;
-  }
-  
 
     return (
         <>
             {/* component */}
+            <Toaster
+                position="top-right"
+                reverseOrder={false}
+
+                toastStyle={{
+                    width: '50%', // Ajusta el ancho del contenido del toast
+                }}
+            />
             <section className="text-gray-700 body-font overflow-hidden bg-white">
                 <div className="container px-5 pt-8 pb-12 mb-8 mx-auto">
                     <div className="lg:w-4/5 mx-auto flex flex-wrap">
@@ -55,7 +88,7 @@ export function Detail() {
                                 <Link
                                     to={
 
-                                        "/"+category
+                                        "/" + category
                                     }
                                     className="text-slate-400 hover:text-slate-500 hover:underline"
                                 >
@@ -92,32 +125,35 @@ export function Detail() {
                             </div>
                             <div className="flex">
                                 <span className="title-font font-bold text-2xl text-gray-900"
-                                    style={{color: "#4a63ee"}}
+                                    style={{ color: "#4a63ee" }}
                                 >
                                     {article.price} €
                                 </span>
                                 <button
                                     className="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded hover:scale-105 transition-all duration-400"
                                     style={{ backfaceVisibility: "hidden", backgroundColor: "#4a63ee" }}
+                                    onClick={() => {
+                                        handleAddToCart(article);
+                                    }}
                                 >
-                                      <div className="flex items-center">
-                                      <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth="1.5"
-                                                stroke="currentColor"
-                                                className="h-5 w-5 mr-2"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                                                />
-                                            </svg>
-                                    Añadir al carrito
-                                      </div>
-                                     
+                                    <div className="flex items-center">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="1.5"
+                                            stroke="currentColor"
+                                            className="h-5 w-5 mr-2"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                                            />
+                                        </svg>
+                                        Añadir al carrito
+                                    </div>
+
                                 </button>
                             </div>
                         </div>

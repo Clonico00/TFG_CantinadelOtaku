@@ -1,12 +1,12 @@
 import React, {useState,useEffect} from "react";
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from "../firebase";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
+import { toast, Toaster } from 'react-hot-toast';
 
 function Comics({ addToCart, cartItems, setCartItems }) {
     const [page, setPage] = useState(1);
     const section = "comics"; // Actualiza la sección aquí
-    const navigate = useNavigate();
 
     const articlesPerPage = 6;
 
@@ -48,8 +48,8 @@ function Comics({ addToCart, cartItems, setCartItems }) {
             //lo guardamos en el localstorage
             localStorage.setItem("cartItems", JSON.stringify([...cartItems, newItem]));
         }
-    
-        navigate("/carrito");
+            // Mostrar el toast de éxito
+            toast.success(` ${article.title} se ha añadido al carrito`);
       };
     const startIndex = (page - 1) * articlesPerPage;
     const endIndex = startIndex + articlesPerPage;
@@ -65,7 +65,14 @@ function Comics({ addToCart, cartItems, setCartItems }) {
                     Comics
                 </h2>
             </div>
+            <Toaster
+                position="top-right"
+                reverseOrder={false}
 
+                toastStyle={{
+                    width: '50%', // Ajusta el ancho del contenido del toast
+                }}
+            />
             <section className="pt-6 pb-12">
                 <div
                     className="mx-auto grid max-w-6xl grid-cols-1 gap-6 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
