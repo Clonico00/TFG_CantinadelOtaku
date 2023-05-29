@@ -25,7 +25,6 @@ export default function Register() {
         e.preventDefault();
         try {
             // Comprobar si el nombre de usuario ya existe en la base de datos
-            console.log(image)
             const usersCollection = collection(db, 'users');
             const usernameQuery = query(usersCollection, where('username', '==', username));
             const usernameSnapshot = await getDocs(usernameQuery);
@@ -38,9 +37,9 @@ export default function Register() {
             // const { user } = await createUserWithEmailAndPassword(auth, email, password);
             // await signOut(auth);
             //haz que despues createUserWithEmailAndPassword se desloguee automaticamente
-            const { user } = await createUserWithEmailAndPassword(auth, email, password);
-            await signOut(auth);
-
+            const { user } = await createUserWithEmailAndPassword(auth, email, password).then(() => {
+                signOut(auth);
+            });
 
             // Sube la foto de perfil a Firebase Storage
             const storageRef = ref(storage, `profile_pictures/${user.uid}`);
