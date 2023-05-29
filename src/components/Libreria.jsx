@@ -13,7 +13,7 @@ function Libreria() {
             image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
             price: 100,
             category: "Libros",
-            urlPDF: "../pdf/Análisis y diseño.pdf"
+            urlPDF: "zzzzzzzzzzzzzzzzzzz"
         },
         {
             id: 2,

@@ -58,7 +58,7 @@ function App() {
     return (
         <Router>
             <div className="flex flex-col min-h-screen">
-                <Navbar activeLink={activeLink} handleLinkClick={handleLinkClick} cartItems={cartItems} />
+                <Navbar activeLink={activeLink} handleLinkClick={handleLinkClick} cartItems={cartItems} setCartItems={setCartItems} />
                 <Routes>
                     <Route path="/" element={<Inicio />} />
                     <Route path="/admin" element={<Admin />} />

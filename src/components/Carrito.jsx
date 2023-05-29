@@ -61,22 +61,17 @@ export function Carrito({ cartItems, setCartItems }) {
   function openModal() {
     setIsOpen(true);
   }
-
   useEffect(() => {
     const loadCartFromDatabase = async () => {
       try {
-        const cartItemsLocalStorage = JSON.parse(localStorage.getItem("cartItems"));
-        if (cartItemsLocalStorage) {
-          setCartItems(cartItemsLocalStorage);
-        } else {
-          localStorage.setItem("cartItems", JSON.stringify(cartItems));
-        }
-
+        // Eliminar el carrito existente en el localStorage
+        localStorage.removeItem("cartItems");
+  
         if (currentUser) {
           const userEmail = currentUser.email;
           const cartDocRef = doc(db, 'carts', userEmail);
           const cartDocSnap = await getDoc(cartDocRef);
-
+  
           if (cartDocSnap.exists()) {
             const cartData = cartDocSnap.data();
             setCartItems(cartData.cartItems);
@@ -86,10 +81,10 @@ export function Carrito({ cartItems, setCartItems }) {
         console.error('Error al cargar el carrito desde la base de datos:', error);
       }
     };
-
+  
     loadCartFromDatabase();
   }, [currentUser]);
-  
+
     return (
         <>
             <Toaster

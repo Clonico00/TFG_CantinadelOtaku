@@ -8,7 +8,7 @@ import { db, auth } from '../firebase';
 import { collection, where, getDocs, query } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 
-function Navbar({ activeLink, handleLinkClick, cartItems }) {
+function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
     const [showMenu, setShowMenu] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [userData, setUserData] = useState(null);
@@ -20,7 +20,7 @@ function Navbar({ activeLink, handleLinkClick, cartItems }) {
     const [isFocused, setIsFocused] = useState(false);
     const navigate = useNavigate();
     const totalQuantity = cartItems.reduce((total, item) => total + item.cantidad, 0);
-    
+
     useEffect(() => {
         const fetchUserData = async () => {
             if (currentUser) {
@@ -78,6 +78,8 @@ function Navbar({ activeLink, handleLinkClick, cartItems }) {
                 setImage(UsuarioIconDefault); // Restablecer la imagen a la imagen predeterminada al cerrar sesión
                 navigate('/');
                 closeMenu();
+                setCartItems([]); // Vaciar el carrito al cerrar sesión
+                localStorage.removeItem("cartItems");
             })
             .catch((error) => {
                 console.error('Error al cerrar sesión:', error);
