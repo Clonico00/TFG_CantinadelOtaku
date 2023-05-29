@@ -1,11 +1,10 @@
-import React, { useState, Fragment, useContext } from "react";
+import React, { useState, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { auth, db } from "../firebase";
 import { signInWithEmailAndPassword, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 import { collection, where, getDocs, query, addDoc } from "firebase/firestore";
 import { Dialog, Transition } from "@headlessui/react";
-import { AuthContext } from "./AuthContext";
 
 const Modal = ({ isOpen, onClose, onSubmit }) => {
     const [email, setEmail] = useState("");
@@ -102,7 +101,6 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const { setCurrentUser } = useContext(AuthContext);
 
     const closeModal = () => {
         setIsOpen(false);
