@@ -97,38 +97,63 @@ export function Carrito({ cartItems, setCartItems }) {
 
     const sendEmail = (e) => {
         e.preventDefault();
-
+        const nombre = form.current.nombre.value;
+        const email = form.current.email.value;
+        const calle = form.current.calle.value;
+        const numero = form.current.numero.value;
+        const piso = form.current.piso.value;
+        const letra = form.current.letra.value;
+        const provincia = form.current.provincia.value;
+        const ciudad = form.current.ciudad.value;
+        const cp = form.current.cp.value;
         const ticketMessage = `
-            Aquí está tu ticket de compra:
+        Datos del formulario:
+        Nombre: ${nombre}
+        Email: ${email}
+        
+        Dirección de envío:
+        Calle: ${calle}
+        Número: ${numero}
+        Piso: ${piso !== '' ? piso : '-'}
+        Letra: ${letra !== '' ? letra : '-'}
+        Provincia: ${provincia}
+        Ciudad: ${ciudad}
+        Código Postal: ${cp}
+        
 
-            ${cartItems
-                            .map(
-                                (item) => `
-                ${item.title}
-                Cantidad: ${item.cantidad}
-                Precio: ${item.price} €
-                `
-                            )
-                            .join('\n\n')}
-
-            Subtotal: ${subtotal.toFixed(2)} €
-            Impuestos: ${taxes.toFixed(2)} €
-            Total: ${total.toFixed(2)} €
-
-            Gracias por tu compra!
-            `;
+        Artículos:
+        ${cartItems.map((item) => `
+        - ${item.title}
+          Cantidad: ${item.cantidad}
+          Precio: ${(item.price * item.cantidad).toFixed(2)} €`).join('\n')}
+        
+        Subtotal: ${subtotal.toFixed(2)} €
+        Impuestos: ${taxes.toFixed(2)} €
+        Total: ${total.toFixed(2)} €
+        `;
 
         const templateParams = {
-            to_name: 'Destinatario',
-            from_name: 'Remitente',
+            to_name: nombre,
+            to_email: email,
+            from_name: 'Cantina del Otaku',
             message: ticketMessage,
         };
 
 
 
+
+
         emailjs.send('service_2iahr5w', '1', templateParams, 'EFIEuOyWXXiQw7h4n')
             .then((result) => {
-                console.log(result.text);
+                // if (currentUser) {
+                //     const userEmail = currentUser.email;
+                //     const cartDocRef = doc(db, 'carts', userEmail);
+                //     cartDocRef.delete();
+                // }
+                // setCartItems([]);
+                // localStorage.removeItem("cartItems");
+                toast.success('Compra realizada con éxito');
+
             }, (error) => {
                 console.log(error.text);
             });
@@ -137,7 +162,7 @@ export function Carrito({ cartItems, setCartItems }) {
     return (
         <>
             <Toaster
-                position="top-right"
+                position="bottom-center"
                 reverseOrder={false}
 
                 toastStyle={{
@@ -325,7 +350,7 @@ export function Carrito({ cartItems, setCartItems }) {
                                                 Email:
                                             </label>
                                             <div className="relative mb-6">
-                                                <input type="text" name="email" id="email"
+                                                <input type="email" name="email" id="email"
                                                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                                     required
                                                     defaultValue={currentUser.email}
@@ -530,7 +555,7 @@ export function Carrito({ cartItems, setCartItems }) {
                 </div>
             ) : (
 
-                <h2 className="text-center text-2xl font-extrabold my-56 "
+                <h2 className="text-center text-2xl font-extrabold my-80 "
                     style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>
                     No hay articulos en el carrito
                 </h2>
