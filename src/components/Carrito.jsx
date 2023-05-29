@@ -1,89 +1,138 @@
-import React, { Fragment, useState, useEffect, useContext } from "react";
+import React, { Fragment, useState, useEffect, useContext, useRef } from "react";
 import { provincias } from "../data";
 import { provinciasConCiudades } from "../data";
 import { Dialog, Transition } from "@headlessui/react";
 import { toast, Toaster } from 'react-hot-toast';
 import { AuthContext } from "./AuthContext";
 import { db } from "../firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
-
+import { doc, getDoc } from "firebase/firestore";
+import emailjs from '@emailjs/browser';
 export function Carrito({ cartItems, setCartItems }) {
     const [isOpen, setIsOpen] = useState(false);
-  const [articleToDelete, setArticleToDelete] = useState("");
-  const { currentUser } = useContext(AuthContext);
-
-  const handleDecrease = (itemId) => {
-    const updatedCartItems = cartItems.map((item) => {
-      if (item.id === itemId && item.cantidad > 1) {
-        return { ...item, cantidad: item.cantidad - 1 };
-      }
-      return item;
-    });
-    setCartItems(updatedCartItems);
-    // Guardar en el localStorage
-    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-  };
-
-  const handleIncrease = (itemId) => {
-    const updatedCartItems = cartItems.map((item) => {
-      if (item.id === itemId) {
-        return { ...item, cantidad: item.cantidad + 1 };
-      }
-      return item;
-    });
-    setCartItems(updatedCartItems);
-    // Guardar en el localStorage
-    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-  };
-
-  const handleDeleteItem = () => {
-    const updatedCartItems = cartItems.filter(
-      (item) => item.id !== articleToDelete
-    );
-    setCartItems(updatedCartItems);
-    // Guardar en el localStorage
-    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-    closeModal();
-    toast.success('Artículo eliminado del carrito');
-  };
-
-  const subtotal = cartItems.reduce(
-    (accumulator, item) => accumulator + item.precio * item.cantidad,
-    0
-  );
-  const taxes = subtotal * 0.1;
-  const total = subtotal + taxes;
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
-  useEffect(() => {
-    const loadCartFromDatabase = async () => {
-      try {
-        // Eliminar el carrito existente en el localStorage
-        localStorage.removeItem("cartItems");
-  
-        if (currentUser) {
-          const userEmail = currentUser.email;
-          const cartDocRef = doc(db, 'carts', userEmail);
-          const cartDocSnap = await getDoc(cartDocRef);
-  
-          if (cartDocSnap.exists()) {
-            const cartData = cartDocSnap.data();
-            setCartItems(cartData.cartItems);
-          }
-        }
-      } catch (error) {
-        console.error('Error al cargar el carrito desde la base de datos:', error);
-      }
+    const [articleToDelete, setArticleToDelete] = useState("");
+    const { currentUser } = useContext(AuthContext);
+    const form = useRef();
+    const handleDecrease = (itemId) => {
+        const updatedCartItems = cartItems.map((item) => {
+            if (item.id === itemId && item.cantidad > 1) {
+                return { ...item, cantidad: item.cantidad - 1 };
+            }
+            return item;
+        });
+        setCartItems(updatedCartItems);
+        // Guardar en el localStorage
+        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     };
-  
-    loadCartFromDatabase();
-  }, [currentUser]);
+
+    const handleIncrease = (itemId) => {
+        const updatedCartItems = cartItems.map((item) => {
+            if (item.id === itemId) {
+                return { ...item, cantidad: item.cantidad + 1 };
+            }
+            return item;
+        });
+        setCartItems(updatedCartItems);
+        // Guardar en el localStorage
+        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+    };
+
+    const handleDeleteItem = () => {
+        const updatedCartItems = cartItems.filter(
+            (item) => item.id !== articleToDelete
+        );
+        setCartItems(updatedCartItems);
+        // Guardar en el localStorage
+        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+        closeModal();
+        toast.success('Artículo eliminado del carrito');
+    };
+
+    const subtotal = cartItems.reduce(
+        (accumulator, item) => accumulator + item.precio * item.cantidad,
+        0
+    );
+    const taxes = subtotal * 0.1;
+    const total = subtotal + taxes;
+
+    function closeModal() {
+        setIsOpen(false);
+    }
+
+    function openModal() {
+        setIsOpen(true);
+    }
+    useEffect(() => {
+        const loadCartFromDatabase = async () => {
+            try {
+                // Eliminar el carrito existente en el localStorage
+
+                if (currentUser) {
+                    localStorage.removeItem("cartItems");
+
+                    const userEmail = currentUser.email;
+                    const cartDocRef = doc(db, 'carts', userEmail);
+                    const cartDocSnap = await getDoc(cartDocRef);
+
+                    if (cartDocSnap.exists()) {
+                        const cartData = cartDocSnap.data();
+                        setCartItems(cartData.cartItems);
+                    }
+                } else {
+                    const cartItemsFromLocalStorage = JSON.parse(
+                        localStorage.getItem("cartItems")
+                    );
+                    if (cartItemsFromLocalStorage) {
+                        setCartItems(cartItemsFromLocalStorage);
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error al cargar el carrito desde la base de datos:', error);
+            }
+        };
+
+        loadCartFromDatabase();
+    }, [currentUser]);
+
+
+    const sendEmail = (e) => {
+        e.preventDefault();
+
+        const ticketMessage = `
+            Aquí está tu ticket de compra:
+
+            ${cartItems
+                            .map(
+                                (item) => `
+                ${item.title}
+                Cantidad: ${item.cantidad}
+                Precio: ${item.price} €
+                `
+                            )
+                            .join('\n\n')}
+
+            Subtotal: ${subtotal.toFixed(2)} €
+            Impuestos: ${taxes.toFixed(2)} €
+            Total: ${total.toFixed(2)} €
+
+            Gracias por tu compra!
+            `;
+
+        const templateParams = {
+            to_name: 'Destinatario',
+            from_name: 'Remitente',
+            message: ticketMessage,
+        };
+
+
+
+        emailjs.send('service_2iahr5w', '1', templateParams, 'EFIEuOyWXXiQw7h4n')
+            .then((result) => {
+                console.log(result.text);
+            }, (error) => {
+                console.log(error.text);
+            });
+    };
 
     return (
         <>
@@ -249,232 +298,233 @@ export function Carrito({ cartItems, setCartItems }) {
                                     style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>Resumen</h3>
                             </div>
                             <hr />
-                            {currentUser ? (
-                                <>
-                                    <div className="mb-2 flex justify-between mt-4 flex-col">
-                                        <label htmlFor="nombre"
-                                            className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
-                                            style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
-                                        >
-                                            Nombre:
-                                        </label>
-                                        <div className="relative mb-6">
-                                            <input type="text" name="nombre" id="nombre"
-                                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                                required
-                                                defaultValue={currentUser.displayName}
+                            <form ref={form} onSubmit={sendEmail} >
+                                {currentUser ? (
+                                    <>
+                                        <div className="mb-2 flex justify-between mt-4 flex-col">
+                                            <label htmlFor="nombre"
+                                                className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
+                                                style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                            >
+                                                Nombre:
+                                            </label>
+                                            <div className="relative mb-6">
+                                                <input type="text" name="nombre" id="nombre"
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                                    required
+                                                    defaultValue={currentUser.displayName}
 
-                                            />
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="mb-2 flex justify-between mt-4 flex-col">
-                                        <label htmlFor="email"
-                                            className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
-                                            style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
-                                        >
-                                            Email:
-                                        </label>
-                                        <div className="relative mb-6">
-                                            <input type="text" name="email" id="email"
-                                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                                required
-                                                defaultValue={currentUser.email}
+                                        <div className="mb-2 flex justify-between mt-4 flex-col">
+                                            <label htmlFor="email"
+                                                className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
+                                                style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                            >
+                                                Email:
+                                            </label>
+                                            <div className="relative mb-6">
+                                                <input type="text" name="email" id="email"
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                                    required
+                                                    defaultValue={currentUser.email}
 
-                                            />
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                </>
+                                    </>
 
-                            ) : (
-                                <>
-                                    <div className="mb-2 flex justify-between mt-4 flex-col">
-                                        <label htmlFor="nombre"
-                                            className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
-                                            style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
-                                        >
-                                            Nombre:
-                                        </label>
-                                        <div className="relative mb-6">
-                                            <input type="text" name="nombre" id="nombre"
-                                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                                required
-                                                placeholder="Nombre"
+                                ) : (
+                                    <>
+                                        <div className="mb-2 flex justify-between mt-4 flex-col">
+                                            <label htmlFor="nombre"
+                                                className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
+                                                style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                            >
+                                                Nombre:
+                                            </label>
+                                            <div className="relative mb-6">
+                                                <input type="text" name="nombre" id="nombre"
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                                    required
+                                                    placeholder="Nombre"
 
-                                            />
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="mb-2 flex justify-between mt-4 flex-col">
-                                        <label htmlFor="email"
-                                            className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
-                                            style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
-                                        >
-                                            Email:
-                                        </label>
-                                        <div className="relative mb-6">
-                                            <input type="text" name="email" id="email"
-                                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                                required
-                                                placeholder="Email"
+                                        <div className="mb-2 flex justify-between mt-4 flex-col">
+                                            <label htmlFor="email"
+                                                className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
+                                                style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                            >
+                                                Email:
+                                            </label>
+                                            <div className="relative mb-6">
+                                                <input type="text" name="email" id="email"
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                                    required
+                                                    placeholder="Email"
 
-                                            />
+                                                />
+                                            </div>
                                         </div>
+                                    </>
+                                )
+                                }
+
+                                <div className="mb-2 flex justify-between mt-4 flex-col">
+                                    <label htmlFor="calle"
+                                        className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                    >
+                                        Calle:
+                                    </label>
+                                    <div className="relative mb-6">
+                                        <input type="text" name="calle" id="calle"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required
+                                            placeholder="Calle Recogidas"
+
+                                        />
                                     </div>
-                                </>
-
-                            )
-                            }
-
-
-                            <div className="mb-2 flex justify-between mt-4 flex-col">
-                                <label htmlFor="calle"
-                                    className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
-                                    style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
-                                >
-                                    Calle:
-                                </label>
-                                <div className="relative mb-6">
-                                    <input type="text" name="calle" id="calle"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                        required
-                                        placeholder="Calle Recogidas"
-
-                                    />
                                 </div>
-                            </div>
-                            <div className="mb-2 flex justify-between mt-2 flex-col">
-                                <label htmlFor="numero"
-                                    className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
-                                    style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
-                                >
-                                    Numero:
-                                </label>
-                                <div className="relative mb-6">
-                                    <input type="text" name="numero" id="numero"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                        required
-                                        placeholder="Numero 11º"
+                                <div className="mb-2 flex justify-between mt-2 flex-col">
+                                    <label htmlFor="numero"
+                                        className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                    >
+                                        Numero:
+                                    </label>
+                                    <div className="relative mb-6">
+                                        <input type="text" name="numero" id="numero"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required
+                                            placeholder="Numero 11º"
 
-                                    />
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="mb-2 flex justify-between mt-2 flex-col">
-                                <label htmlFor="piso"
-                                    className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
-                                    style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
-                                >
-                                    Piso:
-                                </label>
-                                <div className="relative mb-6">
-                                    <input type="text" name="piso" id="piso"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                        required
-                                        placeholder="5"
+                                <div className="mb-2 flex justify-between mt-2 flex-col">
+                                    <label htmlFor="piso"
+                                        className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                    >
+                                        Piso:
+                                    </label>
+                                    <div className="relative mb-6">
+                                        <input type="text" name="piso" id="piso"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required
+                                            placeholder="5"
 
-                                    />
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="mb-2 flex justify-between mt-2 flex-col">
-                                <label htmlFor="letra"
-                                    className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
-                                    style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
-                                >
-                                    Letra:
-                                </label>
-                                <div className="relative mb-6">
-                                    <input type="text" name="letra" id="letra"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                        required
-                                        placeholder="F"
+                                <div className="mb-2 flex justify-between mt-2 flex-col">
+                                    <label htmlFor="letra"
+                                        className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                    >
+                                        Letra:
+                                    </label>
+                                    <div className="relative mb-6">
+                                        <input type="text" name="letra" id="letra"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required
+                                            placeholder="F"
 
-                                    />
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="mb-2 flex justify-between mt-2 flex-col">
-                                <label htmlFor="provincia"
-                                    className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
-                                    style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>
-                                    Provincia:
-                                </label>
-                                <div className="relative mb-6">
-                                    <select name="provincia" id="provincia"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                        required onChange={(e) => {
-                                            const provinciaSeleccionada = e.target.value;
-                                            const seleccion = provinciasConCiudades.find((provincia) => provincia.provincia === provinciaSeleccionada);
-                                            if (seleccion) {
-                                                const ciudadesDeProvincia = seleccion.ciudades;
-                                                const ciudadSelect = document.getElementById('ciudad');
-                                                ciudadSelect.innerHTML = '';
-                                                ciudadesDeProvincia.forEach((ciudad) => {
-                                                    const opcion = document.createElement('option');
-                                                    opcion.value = ciudad;
-                                                    opcion.text = ciudad;
-                                                    ciudadSelect.appendChild(opcion);
-                                                });
-                                            }
-                                        }}>
-                                        {provincias.map((provincia, index) => (
-                                            <option key={index} value={provincia}>
-                                                {provincia}
-                                            </option>
-                                        ))}
-                                    </select>
+                                <div className="mb-2 flex justify-between mt-2 flex-col">
+                                    <label htmlFor="provincia"
+                                        className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>
+                                        Provincia:
+                                    </label>
+                                    <div className="relative mb-6">
+                                        <select name="provincia" id="provincia"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required onChange={(e) => {
+                                                const provinciaSeleccionada = e.target.value;
+                                                const seleccion = provinciasConCiudades.find((provincia) => provincia.provincia === provinciaSeleccionada);
+                                                if (seleccion) {
+                                                    const ciudadesDeProvincia = seleccion.ciudades;
+                                                    const ciudadSelect = document.getElementById('ciudad');
+                                                    ciudadSelect.innerHTML = '';
+                                                    ciudadesDeProvincia.forEach((ciudad) => {
+                                                        const opcion = document.createElement('option');
+                                                        opcion.value = ciudad;
+                                                        opcion.text = ciudad;
+                                                        ciudadSelect.appendChild(opcion);
+                                                    });
+                                                }
+                                            }}>
+                                            {provincias.map((provincia, index) => (
+                                                <option key={index} value={provincia}>
+                                                    {provincia}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="mb-2 flex justify-between mt-2 flex-col">
-                                <label htmlFor="ciudad"
-                                    className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
-                                    style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>
-                                    Ciudad:
-                                </label>
-                                <div className="relative mb-6">
-                                    <select name="ciudad" id="ciudad"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                        required></select>
+                                <div className="mb-2 flex justify-between mt-2 flex-col">
+                                    <label htmlFor="ciudad"
+                                        className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>
+                                        Ciudad:
+                                    </label>
+                                    <div className="relative mb-6">
+                                        <select name="ciudad" id="ciudad"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required></select>
+                                    </div>
                                 </div>
-                            </div>
 
 
-                            <div className="mb-2 flex justify-between mt-2 flex-col">
-                                <label htmlFor="cp"
-                                    className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
-                                    style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
-                                >
-                                    Codigo Postal:
-                                </label>
-                                <div className="relative mb-6">
-                                    <input type="text" name="cp" id="cp"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                        required
-                                        placeholder="18001"
+                                <div className="mb-2 flex justify-between mt-2 flex-col">
+                                    <label htmlFor="cp"
+                                        className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                    >
+                                        Codigo Postal:
+                                    </label>
+                                    <div className="relative mb-6">
+                                        <input type="text" name="cp" id="cp"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required
+                                            placeholder="18001"
 
-                                    />
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            <hr className="my-4" />
-                            <div className="flex justify-between mt-4">
-                                <p className="text-gray-700">Subtotal</p>
-                                <p className="text-gray-700">{subtotal.toFixed(2)} €</p>
-                            </div>
-                            <div className="flex justify-between mt-1">
-                                <p className="text-gray-700">Impuestos  </p>
-                                <p className="text-gray-700">{taxes.toFixed(2)} €</p>
-                            </div>
-                            <div className="flex justify-between mt-2">
-                                <p className="text-xl font-bold" style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>
-                                    Total
-                                </p>
-                                <div className="">
-                                    <p className="mb-1 text-lg font-bold" style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>
-                                        {total.toFixed(2)} €
+                                <hr className="my-4" />
+                                <div className="flex justify-between mt-4">
+                                    <p className="text-gray-700">Subtotal</p>
+                                    <p className="text-gray-700">{subtotal.toFixed(2)} €</p>
+                                </div>
+                                <div className="flex justify-between mt-1">
+                                    <p className="text-gray-700">Impuestos  </p>
+                                    <p className="text-gray-700">{taxes.toFixed(2)} €</p>
+                                </div>
+                                <div className="flex justify-between mt-2">
+                                    <p className="text-xl font-bold" style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>
+                                        Total
                                     </p>
+                                    <div className="">
+                                        <p className="mb-1 text-lg font-bold" style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>
+                                            {total.toFixed(2)} €
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <button
-                                className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600"
-                                style={{ backfaceVisibility: 'hidden', backgroundColor: '#4a63ee' }}>
-                                Realizar Compra
-                            </button>
+                                <button
+                                    className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600"
+                                    style={{ backfaceVisibility: 'hidden', backgroundColor: '#4a63ee' }}>
+                                    Realizar Compra
+                                </button>
+                            </form>
+
                         </div>
                     </div>
                 </div>
