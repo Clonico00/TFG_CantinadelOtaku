@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -16,18 +16,44 @@ import { Carrito } from "./components/Carrito";
 import Admin from "./components/Admin";
 import AddArticle from "./components/AddArticle";
 import EditArticle from "./components/EditArticle";
+import { AuthContext } from "./components/AuthContext";
+import { db } from "./firebase";
+import { doc, getDoc } from "firebase/firestore";
+
 function App() {
-    const [activeLink, setActiveLink] = useState('/');
-    const [cartItems, setCartItems] = useState([]);
+    const { currentUser } = useContext(AuthContext);
+  const [activeLink, setActiveLink] = useState('/');
+  const [cartItems, setCartItems] = useState([]);
 
-    const handleLinkClick = (path) => {
-        setActiveLink(path);
+  const handleLinkClick = (path) => {
+    setActiveLink(path);
+  };
+
+  const addToCart = (article) => {
+    // Lógica para añadir el artículo al carrito
+    setCartItems([...cartItems, article]);
+  };
+
+  useEffect(() => {
+    const loadCartFromDatabase = async () => {
+      try {
+        if (currentUser) {
+          const userEmail = currentUser.email;
+          const cartDocRef = doc(db, 'carts', userEmail);
+          const cartDocSnap = await getDoc(cartDocRef);
+
+          if (cartDocSnap.exists()) {
+            const cartData = cartDocSnap.data();
+            setCartItems(cartData.cartItems);
+          }
+        }
+      } catch (error) {
+        console.error('Error al cargar el carrito desde la base de datos:', error);
+      }
     };
 
-    const addToCart = (article) => {
-        // Lógica para añadir el artículo al carrito
-        setCartItems([...cartItems, article]);
-    };
+    loadCartFromDatabase();
+  }, [currentUser]);
     
     return (
         <Router>

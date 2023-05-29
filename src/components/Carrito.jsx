@@ -4,74 +4,92 @@ import { provinciasConCiudades } from "../data";
 import { Dialog, Transition } from "@headlessui/react";
 import { toast, Toaster } from 'react-hot-toast';
 import { AuthContext } from "./AuthContext";
+import { db } from "../firebase";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+
 export function Carrito({ cartItems, setCartItems }) {
     const [isOpen, setIsOpen] = useState(false);
-    const [articleToDelete, setArticleToDelete] = useState("");
-    const { currentUser } = useContext(AuthContext);
+  const [articleToDelete, setArticleToDelete] = useState("");
+  const { currentUser } = useContext(AuthContext);
 
-    const handleDecrease = (itemId) => {
-        const updatedCartItems = cartItems.map((item) => {
-            if (item.id === itemId && item.cantidad > 1) {
-                return { ...item, cantidad: item.cantidad - 1 };
-            }
-            return item;
-        });
-        setCartItems(updatedCartItems);
-        //lo guardamos en el localstorage
-        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-    };
+  const handleDecrease = (itemId) => {
+    const updatedCartItems = cartItems.map((item) => {
+      if (item.id === itemId && item.cantidad > 1) {
+        return { ...item, cantidad: item.cantidad - 1 };
+      }
+      return item;
+    });
+    setCartItems(updatedCartItems);
+    // Guardar en el localStorage
+    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+  };
 
-    const handleIncrease = (itemId) => {
-        const updatedCartItems = cartItems.map((item) => {
-            if (item.id === itemId) {
-                return { ...item, cantidad: item.cantidad + 1 };
-            }
-            return item;
-        });
-        setCartItems(updatedCartItems);
-        //lo guardamos en el localstorage
-        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-    };
+  const handleIncrease = (itemId) => {
+    const updatedCartItems = cartItems.map((item) => {
+      if (item.id === itemId) {
+        return { ...item, cantidad: item.cantidad + 1 };
+      }
+      return item;
+    });
+    setCartItems(updatedCartItems);
+    // Guardar en el localStorage
+    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+  };
 
-    const handleDeleteItem = () => {
-        const updatedCartItems = cartItems.filter(
-            (item) => item.id !== articleToDelete
-        );
-        setCartItems(updatedCartItems);
-        //lo guardamos en el localstorage
-        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-        closeModal();
-        toast.success('Artículo eliminado del carrito');
-    };
-
-    const subtotal = cartItems.reduce(
-        (accumulator, item) => accumulator + item.precio * item.cantidad,
-        0
+  const handleDeleteItem = () => {
+    const updatedCartItems = cartItems.filter(
+      (item) => item.id !== articleToDelete
     );
-    const taxes = subtotal * 0.1;
-    const total = subtotal + taxes;
+    setCartItems(updatedCartItems);
+    // Guardar en el localStorage
+    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+    closeModal();
+    toast.success('Artículo eliminado del carrito');
+  };
 
-    function closeModal() {
-        setIsOpen(false);
-    }
+  const subtotal = cartItems.reduce(
+    (accumulator, item) => accumulator + item.precio * item.cantidad,
+    0
+  );
+  const taxes = subtotal * 0.1;
+  const total = subtotal + taxes;
 
-    function openModal() {
-        setIsOpen(true);
-    }
+  function closeModal() {
+    setIsOpen(false);
+  }
 
-    useEffect(() => {
-        console.log(cartItems);
+  function openModal() {
+    setIsOpen(true);
+  }
 
+  useEffect(() => {
+    const loadCartFromDatabase = async () => {
+      try {
         const cartItemsLocalStorage = JSON.parse(localStorage.getItem("cartItems"));
         if (cartItemsLocalStorage) {
-            setCartItems(cartItemsLocalStorage);
+          setCartItems(cartItemsLocalStorage);
+        } else {
+          localStorage.setItem("cartItems", JSON.stringify(cartItems));
         }
-        else {
-            localStorage.setItem("cartItems", JSON.stringify(cartItems));
-        }
-        // eslint-disable-next-line 
-    }, []);
 
+        if (currentUser) {
+          const userEmail = currentUser.email;
+          const cartDocRef = doc(db, 'carts', userEmail);
+          const cartDocSnap = await getDoc(cartDocRef);
+
+          if (cartDocSnap.exists()) {
+            const cartData = cartDocSnap.data();
+            setCartItems(cartData.cartItems);
+          }
+        }
+      } catch (error) {
+        console.error('Error al cargar el carrito desde la base de datos:', error);
+      }
+    };
+
+    loadCartFromDatabase();
+  }, [currentUser]);
+  
     return (
         <>
             <Toaster
