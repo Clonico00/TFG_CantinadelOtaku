@@ -17,6 +17,7 @@ export default function AddArticle() {
         const stock = parseInt(e.target.stock.value);
         const brand = e.target.brand.value;
         const image = e.target.photo.files[0];
+        const pdf = e.target.pdf.files[0];
 
         try {
             // Comprobar si ya existe un artículo con el mismo título y categoría
@@ -38,6 +39,11 @@ export default function AddArticle() {
             const snapshot = await uploadBytes(fileRef, image);
             const imageUrl = await getDownloadURL(snapshot.ref);
 
+            // Subir el pdf a Firebase Storage
+            const fileRef2 = ref(storage, `pdfs/${title}/${pdf.name}`);
+            const snapshot2 = await uploadBytes(fileRef2, pdf);
+            const pdfUrl = await getDownloadURL(snapshot2.ref);
+
             // Crear el nuevo artículo
             const newArticle = {
                 title: title,
@@ -47,6 +53,7 @@ export default function AddArticle() {
                 stock: stock,
                 brand: brand,
                 image: imageUrl,
+                pdf: pdfUrl
             };
 
             // Agregar el artículo a la colección "articles"
@@ -116,6 +123,7 @@ export default function AddArticle() {
                                         </div>
                                     </div>
                                 </div>
+
                                 <div className="flex flex-col">
                                     <div>
                                         <label htmlFor="categoria"
@@ -190,13 +198,14 @@ export default function AddArticle() {
                                         </div>
                                     </div>
                                 </div>
+
                                 <div className="flex flex-col">
                                     <div className="relative">
                                         <label htmlFor="photo"
                                             className="text-sm font-bold mb-2 text-gray-900 block dark:text-gray-300"
                                             style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>Imagen del
                                             artículo: </label>
-                                        <div className="max-w-2xl mx-auto">
+                                        <div className="max-w-2xl mx-auto mb-6">
                                             <input
                                                 className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                                                 id="photo"
@@ -208,6 +217,22 @@ export default function AddArticle() {
                                     </div>
                                 </div>
 
+                                <div className="flex flex-col">
+                                    <div className="relative">
+                                        <label htmlFor="pdf"
+                                            className="text-sm font-bold mb-2 text-gray-900 block dark:text-gray-300"
+                                            style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>PDF: </label>
+                                        <div className="max-w-2xl mx-auto">
+                                            <input
+                                                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                                id="pdf"
+                                                type="file"
+                                                accept="file/*"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <button type="submit"
                                     className="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg px-4 py-3 mt-6"
