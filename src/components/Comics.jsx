@@ -4,27 +4,27 @@ import { db } from "../firebase";
 import { Link } from "react-router-dom";
 import { toast, Toaster } from 'react-hot-toast';
 import { AuthContext } from "./AuthContext";
-import {  doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 function Comics({ addToCart, cartItems, setCartItems }) {
     const [page, setPage] = useState(1);
     const section = "comics"; // Actualiza la sección aquí
-    const {currentUser} = useContext(AuthContext);
+    const { currentUser } = useContext(AuthContext);
 
     const articlesPerPage = 6;
 
     const [articles, setArticles] = useState([]);
 
     useEffect(() => {
-      const articlesRef = collection(db, 'articles');
-      const merchandisingQuery = query(articlesRef, where('category', '==', 'Comics'));
-    
-      const unsubscribe = onSnapshot(merchandisingQuery, (snapshot) => {
-        const merchandisingArticles = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setArticles(merchandisingArticles);
-      });
-    
-      return () => unsubscribe();
+        const articlesRef = collection(db, 'articles');
+        const merchandisingQuery = query(articlesRef, where('category', '==', 'Comics'));
+
+        const unsubscribe = onSnapshot(merchandisingQuery, (snapshot) => {
+            const merchandisingArticles = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            setArticles(merchandisingArticles);
+        });
+
+        return () => unsubscribe();
     }, []);
 
     const totalPages = Math.ceil(articles.length / articlesPerPage);
@@ -34,76 +34,76 @@ function Comics({ addToCart, cartItems, setCartItems }) {
     };
     const handleAddToCart = async (article) => {
         try {
-          // Verificar si hay stock disponible
-          if (article.stock === 0) {
-            toast.error(`El artículo ${article.title} no está disponible en stock`);
-            return;
-          }
-      
-          // Realizar la operación de agregado al carrito
-          if (!currentUser) {
-            // El usuario no está loggeado, guardar en el localStorage
-            const existingItem = cartItems.find((item) => item.id === article.id);
-      
-            if (existingItem) {
-              // El artículo ya está en el carrito, incrementar la cantidad
-              const updatedCartItems = cartItems.map((item) =>
-                item.id === article.id ? { ...item, cantidad: item.cantidad + 1 } : item
-              );
-              setCartItems(updatedCartItems);
-              localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
-            } else {
-              // El artículo no está en el carrito, agregarlo con cantidad 1
-              const newItem = { ...article, cantidad: 1 };
-              setCartItems([...cartItems, newItem]);
-              localStorage.setItem('cartItems', JSON.stringify([...cartItems, newItem]));
+            // Verificar si hay stock disponible
+            if (article.stock === 0) {
+                toast.error(`El artículo ${article.title} no está disponible en stock`);
+                return;
             }
-      
-            toast.success(`${article.title} se ha añadido al carrito`);
-          } else {
-            // El usuario está loggeado, guardar en la base de datos
-            const userEmail = currentUser.email;
-            const cartDocRef = doc(db, 'carts', userEmail);
-            const cartDocSnap = await getDoc(cartDocRef);
-      
-            if (cartDocSnap.exists()) {
-              // El usuario ya tiene un carrito, agregar el artículo sin borrar los demás
-              const cartData = cartDocSnap.data();
-              const existingItem = cartData.cartItems.find((item) => item.id === article.id);
-      
-              if (existingItem) {
-                // El artículo ya está en el carrito, incrementar la cantidad
-                const updatedCartItems = cartData.cartItems.map((item) =>
-                  item.id === article.id ? { ...item, cantidad: item.cantidad + 1 } : item
-                );
-                await setDoc(cartDocRef, { cartItems: updatedCartItems });
-                
-              } else {
-                // El artículo no está en el carrito, agregarlo con cantidad 1
-                const newItem = { ...article, cantidad: 1 };
-                const updatedCartItems = [...cartData.cartItems, newItem];
-                await setDoc(cartDocRef, { cartItems: updatedCartItems });
-              }
+
+            // Realizar la operación de agregado al carrito
+            if (!currentUser) {
+                // El usuario no está loggeado, guardar en el localStorage
+                const existingItem = cartItems.find((item) => item.id === article.id);
+
+                if (existingItem) {
+                    // El artículo ya está en el carrito, incrementar la cantidad
+                    const updatedCartItems = cartItems.map((item) =>
+                        item.id === article.id ? { ...item, cantidad: item.cantidad + 1 } : item
+                    );
+                    setCartItems(updatedCartItems);
+                    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+                } else {
+                    // El artículo no está en el carrito, agregarlo con cantidad 1
+                    const newItem = { ...article, cantidad: 1 };
+                    setCartItems([...cartItems, newItem]);
+                    localStorage.setItem('cartItems', JSON.stringify([...cartItems, newItem]));
+                }
+
+                toast.success(`${article.title} se ha añadido al carrito`);
             } else {
-              // El usuario no tiene un carrito, crear uno nuevo con el artículo
-              const newCart = { cartItems: [{ ...article, cantidad: 1 }] };
-              await setDoc(cartDocRef, newCart);
+                // El usuario está loggeado, guardar en la base de datos
+                const userEmail = currentUser.email;
+                const cartDocRef = doc(db, 'carts', userEmail);
+                const cartDocSnap = await getDoc(cartDocRef);
+
+                if (cartDocSnap.exists()) {
+                    // El usuario ya tiene un carrito, agregar el artículo sin borrar los demás
+                    const cartData = cartDocSnap.data();
+                    const existingItem = cartData.cartItems.find((item) => item.id === article.id);
+
+                    if (existingItem) {
+                        // El artículo ya está en el carrito, incrementar la cantidad
+                        const updatedCartItems = cartData.cartItems.map((item) =>
+                            item.id === article.id ? { ...item, cantidad: item.cantidad + 1 } : item
+                        );
+                        await setDoc(cartDocRef, { cartItems: updatedCartItems });
+
+                    } else {
+                        // El artículo no está en el carrito, agregarlo con cantidad 1
+                        const newItem = { ...article, cantidad: 1 };
+                        const updatedCartItems = [...cartData.cartItems, newItem];
+                        await setDoc(cartDocRef, { cartItems: updatedCartItems });
+                    }
+                } else {
+                    // El usuario no tiene un carrito, crear uno nuevo con el artículo
+                    const newCart = { cartItems: [{ ...article, cantidad: 1 }] };
+                    await setDoc(cartDocRef, newCart);
+                }
+
+                toast.success(`${article.title} se ha añadido al carrito`);
             }
-      
-            toast.success(`${article.title} se ha añadido al carrito`);
-          }
-      
-          // Actualizar el stock en la base de datos
-          const articleDocRef = doc(db, 'articles', article.id);
-          await updateDoc(articleDocRef, { stock: article.stock - 1 });
+
+            // Actualizar el stock en la base de datos
+            const articleDocRef = doc(db, 'articles', article.id);
+            await updateDoc(articleDocRef, { stock: article.stock - 1 });
         } catch (error) {
-          console.error('Error al añadir el artículo al carrito:', error);
+            console.error('Error al añadir el artículo al carrito:', error);
         }
-      };
-      
-    
-    
-;
+    };
+
+
+
+    ;
     const startIndex = (page - 1) * articlesPerPage;
     const endIndex = startIndex + articlesPerPage;
     const displayedArticles = articles.slice(startIndex, endIndex);
@@ -113,7 +113,7 @@ function Comics({ addToCart, cartItems, setCartItems }) {
             <div className="pt-16">
                 <h2
                     className="text-center text-2xl font-extrabold"
-                    style={{backfaceVisibility: "hidden", color: "#1e2447"}}
+                    style={{ backfaceVisibility: "hidden", color: "#1e2447" }}
                 >
                     Comics
                 </h2>
@@ -140,7 +140,7 @@ function Comics({ addToCart, cartItems, setCartItems }) {
                                         src={article.image}
                                         alt={article.title}
                                         className="object-cover object-center h-[250px] w-full"
-                                        style={{objectFit: "cover"}}
+                                        style={{ objectFit: "cover" }}
                                     />
                                 </div>
                                 <div className="mt-1 p-2 flex flex-col">
@@ -149,12 +149,12 @@ function Comics({ addToCart, cartItems, setCartItems }) {
                                             backfaceVisibility: "hidden",
                                             color: "#1e2447"
                                         }}>{article.title}</h2>
-                                        <p className="text-xl font-bold text-blue-500" style={{color: "#4a63ee"}}>
+                                        <p className="text-xl font-bold text-blue-500" style={{ color: "#4a63ee" }}>
                                             {article.price} €
                                         </p>
                                     </div>
                                     <p className="my-2 text-sm text-slate-400 items-end flex-grow-0">{article.description}</p>
-                                    
+
                                 </div>
                             </Link>
                             <div className="flex justify-end pt-5">
@@ -200,7 +200,7 @@ function Comics({ addToCart, cartItems, setCartItems }) {
                         >
                             <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20" >
                                 <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                      clip-rule="evenodd" fill-rule="evenodd">
+                                    clip-rule="evenodd" fill-rule="evenodd">
                                 </path>
                             </svg>
                         </button>
@@ -208,11 +208,10 @@ function Comics({ addToCart, cartItems, setCartItems }) {
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
                         <button
                             key={pageNum}
-                            className={`mx-1 md:mx-2 lg:mx-3 py-2 px-3 md:py-2 md:px-4 lg:py-3 lg:px-5 rounded-full ${
-                                pageNum === page
+                            className={`mx-1 md:mx-2 lg:mx-3 py-2 px-3 md:py-2 md:px-4 lg:py-3 lg:px-5 rounded-full ${pageNum === page
                                     ? "bg-blue-600 text-white"
                                     : "bg-white border border-white text-blue-600 hover:bg-blue-600 hover:text-white transition-colors duration-300"
-                            }`}
+                                }`}
                             onClick={() => handleClick(pageNum)}
                         >
                             {pageNum}
@@ -225,7 +224,7 @@ function Comics({ addToCart, cartItems, setCartItems }) {
                         >
                             <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
                                 <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                      clip-rule="evenodd" fill-rule="evenodd">
+                                    clip-rule="evenodd" fill-rule="evenodd">
 
                                 </path>
                             </svg>

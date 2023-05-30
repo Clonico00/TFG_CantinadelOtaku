@@ -5,7 +5,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { toast, Toaster } from 'react-hot-toast';
 import { AuthContext } from "./AuthContext";
 import { db } from "../firebase";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import emailjs from '@emailjs/browser';
 export function Carrito({ cartItems, setCartItems }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -21,107 +21,105 @@ export function Carrito({ cartItems, setCartItems }) {
 
     const handleDecrease = async (itemId) => {
         const existingItem = cartItems.find((item) => item.id === itemId);
-      
-        if (existingItem && existingItem.cantidad > 1) {
-          const updatedCartItems = cartItems.map((item) => {
-            if (item.id === itemId) {
-              return { ...item, cantidad: item.cantidad - 1 };
-            }
-            return item;
-          });
-          setCartItems(updatedCartItems);
-          if (currentUser) {
-            saveCartToDatabase(updatedCartItems);
-      
-            try {
-              const articleDocRef = doc(db, 'articles', itemId);
-              const articleDocSnap = await getDoc(articleDocRef);
-              if (articleDocSnap.exists()) {
-                const articleData = articleDocSnap.data();
-                const updatedStock = articleData.stock + 1;
-                await updateDoc(articleDocRef, { stock: updatedStock });
-                console.log(`Stock actualizado para el artículo ${existingItem.title}`);
-              } else {
-                console.error(`El artículo ${existingItem.title} no existe en la base de datos.`);
-              }
-            } catch (error) {
-              console.error('Error al actualizar el stock del artículo:', error);
-            }
-          } else {
-            updateLocalStorageCart(updatedCartItems);
-          }
-        } else {
-          toast.error('No se puede disminuir la cantidad del artículo, borre el articulo si no lo desea');
-        }
-      };
-      
-      
 
-      const handleIncrease = async (itemId) => {
+        if (existingItem && existingItem.cantidad > 1) {
+            const updatedCartItems = cartItems.map((item) => {
+                if (item.id === itemId) {
+                    return { ...item, cantidad: item.cantidad - 1 };
+                }
+                return item;
+            });
+            setCartItems(updatedCartItems);
+            if (currentUser) {
+                saveCartToDatabase(updatedCartItems);
+
+                try {
+                    const articleDocRef = doc(db, 'articles', itemId);
+                    const articleDocSnap = await getDoc(articleDocRef);
+                    if (articleDocSnap.exists()) {
+                        const articleData = articleDocSnap.data();
+                        const updatedStock = articleData.stock + 1;
+                        await updateDoc(articleDocRef, { stock: updatedStock });
+                        console.log(`Stock actualizado para el artículo ${existingItem.title}`);
+                    } else {
+                        console.error(`El artículo ${existingItem.title} no existe en la base de datos.`);
+                    }
+                } catch (error) {
+                    console.error('Error al actualizar el stock del artículo:', error);
+                }
+            } else {
+                updateLocalStorageCart(updatedCartItems);
+            }
+        } else {
+            toast.error('No se puede disminuir la cantidad del artículo, borre el articulo si no lo desea');
+        }
+    };
+
+    const handleIncrease = async (itemId) => {
         const article = cartItems.find((item) => item.id === itemId);
         if (article && article.cantidad < article.stock) {
-          const updatedCartItems = cartItems.map((item) => {
-            if (item.id === itemId) {
-              return { ...item, cantidad: item.cantidad + 1 };
+            const updatedCartItems = cartItems.map((item) => {
+                if (item.id === itemId) {
+                    return { ...item, cantidad: item.cantidad + 1 };
+                }
+                return item;
+            });
+            setCartItems(updatedCartItems);
+            if (currentUser) {
+                saveCartToDatabase(updatedCartItems);
+                try {
+                    const articleDocRef = doc(db, 'articles', itemId);
+                    const articleDocSnap = await getDoc(articleDocRef);
+                    if (articleDocSnap.exists()) {
+                        const articleData = articleDocSnap.data();
+                        const updatedStock = articleData.stock - 1;
+                        await updateDoc(articleDocRef, { stock: updatedStock });
+                        console.log(`Stock actualizado para el artículo ${article.title}`);
+                    } else {
+                        console.error(`El artículo con ID ${itemId} no existe en la base de datos.`);
+                    }
+                } catch (error) {
+                    console.error('Error al actualizar el stock del artículo:', error);
+                }
+            } else {
+                updateLocalStorageCart(updatedCartItems);
             }
-            return item;
-          });
-          setCartItems(updatedCartItems);
-          if (currentUser) {
-            saveCartToDatabase(updatedCartItems);
-            try {
-              const articleDocRef = doc(db, 'articles', itemId);
-              const articleDocSnap = await getDoc(articleDocRef);
-              if (articleDocSnap.exists()) {
-                const articleData = articleDocSnap.data();
-                const updatedStock = articleData.stock - 1;
-                await updateDoc(articleDocRef, { stock: updatedStock });
-                console.log(`Stock actualizado para el artículo ${article.title}`);
-              } else {
-                console.error(`El artículo con ID ${itemId} no existe en la base de datos.`);
-              }
-            } catch (error) {
-              console.error('Error al actualizar el stock del artículo:', error);
-            }
-          } else {
-            updateLocalStorageCart(updatedCartItems);
-          }
         } else {
-          toast.error('No hay suficiente stock disponible');
+            toast.error('No hay suficiente stock disponible');
         }
-      };
-      
+    };
 
-      const handleDeleteItem = async () => {
+
+    const handleDeleteItem = async () => {
         const updatedCartItems = cartItems.filter((item) => item.id !== articleToDelete);
         const deletedItem = cartItems.find((item) => item.id === articleToDelete);
         setCartItems(updatedCartItems);
         closeModal();
         toast.success('Artículo eliminado del carrito');
-      
+
         if (currentUser) {
-          saveCartToDatabase(updatedCartItems);
-          if (deletedItem) {
-            try {
-              const articleDocRef = doc(db, 'articles', deletedItem.id);
-              const articleDocSnap = await getDoc(articleDocRef);
-              if (articleDocSnap.exists()) {
-                const articleData = articleDocSnap.data();
-                const updatedStock = articleData.stock + deletedItem.cantidad;
-                await updateDoc(articleDocRef, { stock: updatedStock });
-                console.log(`Stock actualizado para el artículo ${deletedItem.title}`);
-              } else {
-                console.error(`El artículo ${deletedItem.title} no existe en la base de datos.`);
-              }
-            } catch (error) {
-              console.error('Error al actualizar el stock del artículo:', error);
+            saveCartToDatabase(updatedCartItems);
+            if (deletedItem) {
+                try {
+                    const articleDocRef = doc(db, 'articles', deletedItem.id);
+                    const articleDocSnap = await getDoc(articleDocRef);
+                    if (articleDocSnap.exists()) {
+                        const articleData = articleDocSnap.data();
+                        const updatedStock = articleData.stock + deletedItem.cantidad;
+                        await updateDoc(articleDocRef, { stock: updatedStock });
+                        console.log(`Stock actualizado para el artículo ${deletedItem.title}`);
+                    } else {
+                        console.error(`El artículo ${deletedItem.title} no existe en la base de datos.`);
+                    }
+                } catch (error) {
+                    console.error('Error al actualizar el stock del artículo:', error);
+                }
             }
-          }
         } else {
-          updateLocalStorageCart(updatedCartItems);
+            updateLocalStorageCart(updatedCartItems);
         }
-      };
-      
+    };
+
 
     const updateLocalStorageCart = (updatedCartItems) => {
         localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
@@ -178,9 +176,6 @@ export function Carrito({ cartItems, setCartItems }) {
         // eslint-disable-next-line
     }, [currentUser]);
 
-  
-
-
     function closeModal() {
         setIsOpen(false);
     }
@@ -189,7 +184,7 @@ export function Carrito({ cartItems, setCartItems }) {
         setIsOpen(true);
     }
 
-    const sendEmail = (e) => {
+    const sendEmail = async (e) => {
         e.preventDefault();
         const nombre = form.current.nombre.value;
         const email = form.current.email.value;
@@ -201,57 +196,58 @@ export function Carrito({ cartItems, setCartItems }) {
         const ciudad = form.current.ciudad.value;
         const cp = form.current.cp.value;
         const ticketMessage = `
-        Datos del formulario:
-        Nombre: ${nombre}
-        Email: ${email}
-        
-        Dirección de envío:
-        Calle: ${calle}
-        Número: ${numero}
-        Piso: ${piso !== '' ? piso : '-'}
-        Letra: ${letra !== '' ? letra : '-'}
-        Provincia: ${provincia}
-        Ciudad: ${ciudad}
-        Código Postal: ${cp}
-        
-
-        Artículos:
-        ${cartItems.map((item) => `
-        - ${item.title}
-          Cantidad: ${item.cantidad}
-          Precio: ${(item.price * item.cantidad).toFixed(2)} €`).join('\n')}
-        
-        Subtotal: ${subtotal.toFixed(2)} €
-        Impuestos: ${taxes.toFixed(2)} €
-        Total: ${total.toFixed(2)} €
+          Datos del formulario:
+          Nombre: ${nombre}
+          Email: ${email}
+          
+          Dirección de envío:
+          Calle: ${calle}
+          Número: ${numero}
+          Piso: ${piso !== '' ? piso : '-'}
+          Letra: ${letra !== '' ? letra : '-'}
+          Provincia: ${provincia}
+          Ciudad: ${ciudad}
+          Código Postal: ${cp}
+          
+      
+          Artículos:
+          ${cartItems
+            .map(
+              (item) => `
+            - ${item.title}
+              Cantidad: ${item.cantidad}
+              Precio: ${(item.price * item.cantidad).toFixed(2)} €`
+            )
+            .join('\n')}
+          
+          Subtotal: ${subtotal.toFixed(2)} €
+          Impuestos: ${taxes.toFixed(2)} €
+          Total: ${total.toFixed(2)} €
         `;
-
+      
         const templateParams = {
-            to_name: nombre,
-            to_email: email,
-            from_name: 'Cantina del Otaku',
-            message: ticketMessage,
+          to_name: nombre,
+          to_email: email,
+          from_name: 'Cantina del Otaku',
+          message: ticketMessage,
         };
-
-
-
-
-
-        emailjs.send('service_2iahr5w', '1', templateParams, 'EFIEuOyWXXiQw7h4n')
-            .then((result) => {
-                // if (currentUser) {
-                //     const userEmail = currentUser.email;
-                //     const cartDocRef = doc(db, 'carts', userEmail);
-                //     cartDocRef.delete();
-                // }
-                // setCartItems([]);
-                // localStorage.removeItem("cartItems");
-                toast.success('Compra realizada con éxito');
-
-            }, (error) => {
-                console.log(error.text);
-            });
-    };
+      
+        try {
+          await emailjs.send('service_2iahr5w', '1', templateParams, 'EFIEuOyWXXiQw7h4n');
+      
+          if (currentUser) {
+            const userEmail = currentUser.email;
+            const cartDocRef = doc(db, 'carts', userEmail);
+            await deleteDoc(cartDocRef);
+          }
+          setCartItems([]);
+          localStorage.removeItem('cartItems');
+          toast.success('Compra realizada con éxito');
+        } catch (error) {
+          console.log(error.text);
+        }
+      };
+      
 
     return (
         <>
