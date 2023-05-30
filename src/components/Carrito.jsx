@@ -5,7 +5,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { toast, Toaster } from 'react-hot-toast';
 import { AuthContext } from "./AuthContext";
 import { db } from "../firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import emailjs from '@emailjs/browser';
 export function Carrito({ cartItems, setCartItems }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -19,49 +19,109 @@ export function Carrito({ cartItems, setCartItems }) {
     const taxes = subtotal * 0.1;
     const total = subtotal + taxes;
 
-    const handleDecrease = (itemId) => {
-        const updatedCartItems = cartItems.map((item) => {
-            if (item.id === itemId && item.cantidad > 1) {
-                return { ...item, cantidad: item.cantidad - 1 };
-            }
-            return item;
-        });
-        setCartItems(updatedCartItems);
-        if (currentUser) {
-            saveCartToDatabase(updatedCartItems);
-        } else {
-            updateLocalStorageCart(updatedCartItems);
-        }
-    };
-
-    const handleIncrease = (itemId) => {
-        const updatedCartItems = cartItems.map((item) => {
+    const handleDecrease = async (itemId) => {
+        const existingItem = cartItems.find((item) => item.id === itemId);
+      
+        if (existingItem && existingItem.cantidad > 1) {
+          const updatedCartItems = cartItems.map((item) => {
             if (item.id === itemId) {
-                return { ...item, cantidad: item.cantidad + 1 };
+              return { ...item, cantidad: item.cantidad - 1 };
             }
             return item;
-        });
-        setCartItems(updatedCartItems);
-        if (currentUser) {
+          });
+          setCartItems(updatedCartItems);
+          if (currentUser) {
             saveCartToDatabase(updatedCartItems);
-        } else {
+      
+            try {
+              const articleDocRef = doc(db, 'articles', itemId);
+              const articleDocSnap = await getDoc(articleDocRef);
+              if (articleDocSnap.exists()) {
+                const articleData = articleDocSnap.data();
+                const updatedStock = articleData.stock + 1;
+                await updateDoc(articleDocRef, { stock: updatedStock });
+                console.log(`Stock actualizado para el artículo ${existingItem.title}`);
+              } else {
+                console.error(`El artículo ${existingItem.title} no existe en la base de datos.`);
+              }
+            } catch (error) {
+              console.error('Error al actualizar el stock del artículo:', error);
+            }
+          } else {
             updateLocalStorageCart(updatedCartItems);
+          }
+        } else {
+          toast.error('No se puede disminuir la cantidad del artículo, borre el articulo si no lo desea');
         }
-    };
+      };
+      
+      
 
-    const handleDeleteItem = () => {
-        const updatedCartItems = cartItems.filter(
-            (item) => item.id !== articleToDelete
-        );
+      const handleIncrease = async (itemId) => {
+        const article = cartItems.find((item) => item.id === itemId);
+        if (article && article.cantidad < article.stock) {
+          const updatedCartItems = cartItems.map((item) => {
+            if (item.id === itemId) {
+              return { ...item, cantidad: item.cantidad + 1 };
+            }
+            return item;
+          });
+          setCartItems(updatedCartItems);
+          if (currentUser) {
+            saveCartToDatabase(updatedCartItems);
+            try {
+              const articleDocRef = doc(db, 'articles', itemId);
+              const articleDocSnap = await getDoc(articleDocRef);
+              if (articleDocSnap.exists()) {
+                const articleData = articleDocSnap.data();
+                const updatedStock = articleData.stock - 1;
+                await updateDoc(articleDocRef, { stock: updatedStock });
+                console.log(`Stock actualizado para el artículo ${article.title}`);
+              } else {
+                console.error(`El artículo con ID ${itemId} no existe en la base de datos.`);
+              }
+            } catch (error) {
+              console.error('Error al actualizar el stock del artículo:', error);
+            }
+          } else {
+            updateLocalStorageCart(updatedCartItems);
+          }
+        } else {
+          toast.error('No hay suficiente stock disponible');
+        }
+      };
+      
+
+      const handleDeleteItem = async () => {
+        const updatedCartItems = cartItems.filter((item) => item.id !== articleToDelete);
+        const deletedItem = cartItems.find((item) => item.id === articleToDelete);
         setCartItems(updatedCartItems);
         closeModal();
         toast.success('Artículo eliminado del carrito');
+      
         if (currentUser) {
-            saveCartToDatabase(updatedCartItems);
+          saveCartToDatabase(updatedCartItems);
+          if (deletedItem) {
+            try {
+              const articleDocRef = doc(db, 'articles', deletedItem.id);
+              const articleDocSnap = await getDoc(articleDocRef);
+              if (articleDocSnap.exists()) {
+                const articleData = articleDocSnap.data();
+                const updatedStock = articleData.stock + deletedItem.cantidad;
+                await updateDoc(articleDocRef, { stock: updatedStock });
+                console.log(`Stock actualizado para el artículo ${deletedItem.title}`);
+              } else {
+                console.error(`El artículo ${deletedItem.title} no existe en la base de datos.`);
+              }
+            } catch (error) {
+              console.error('Error al actualizar el stock del artículo:', error);
+            }
+          }
         } else {
-            updateLocalStorageCart(updatedCartItems);
-        };
-    };
+          updateLocalStorageCart(updatedCartItems);
+        }
+      };
+      
 
     const updateLocalStorageCart = (updatedCartItems) => {
         localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
