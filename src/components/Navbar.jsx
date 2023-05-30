@@ -78,8 +78,7 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
                 setImage(UsuarioIconDefault); // Restablecer la imagen a la imagen predeterminada al cerrar sesión
                 navigate('/');
                 closeMenu();
-                setCartItems([]); // Vaciar el carrito al cerrar sesión
-                localStorage.removeItem("cartItems");
+                
             })
             .catch((error) => {
                 console.error('Error al cerrar sesión:', error);

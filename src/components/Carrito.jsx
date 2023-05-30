@@ -5,13 +5,20 @@ import { Dialog, Transition } from "@headlessui/react";
 import { toast, Toaster } from 'react-hot-toast';
 import { AuthContext } from "./AuthContext";
 import { db } from "../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import emailjs from '@emailjs/browser';
 export function Carrito({ cartItems, setCartItems }) {
     const [isOpen, setIsOpen] = useState(false);
     const [articleToDelete, setArticleToDelete] = useState("");
     const { currentUser } = useContext(AuthContext);
     const form = useRef();
+    const subtotal = cartItems.reduce(
+        (accumulator, item) => accumulator + item.precio * item.cantidad,
+        0
+    );
+    const taxes = subtotal * 0.1;
+    const total = subtotal + taxes;
+
     const handleDecrease = (itemId) => {
         const updatedCartItems = cartItems.map((item) => {
             if (item.id === itemId && item.cantidad > 1) {
@@ -20,8 +27,11 @@ export function Carrito({ cartItems, setCartItems }) {
             return item;
         });
         setCartItems(updatedCartItems);
-        // Guardar en el localStorage
-        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+        if (currentUser) {
+            saveCartToDatabase(updatedCartItems);
+        } else {
+            updateLocalStorageCart(updatedCartItems);
+        }
     };
 
     const handleIncrease = (itemId) => {
@@ -32,8 +42,11 @@ export function Carrito({ cartItems, setCartItems }) {
             return item;
         });
         setCartItems(updatedCartItems);
-        // Guardar en el localStorage
-        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+        if (currentUser) {
+            saveCartToDatabase(updatedCartItems);
+        } else {
+            updateLocalStorageCart(updatedCartItems);
+        }
     };
 
     const handleDeleteItem = () => {
@@ -41,18 +54,72 @@ export function Carrito({ cartItems, setCartItems }) {
             (item) => item.id !== articleToDelete
         );
         setCartItems(updatedCartItems);
-        // Guardar en el localStorage
-        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
         closeModal();
         toast.success('Artículo eliminado del carrito');
+        if (currentUser) {
+            saveCartToDatabase(updatedCartItems);
+        } else {
+            updateLocalStorageCart(updatedCartItems);
+        };
     };
 
-    const subtotal = cartItems.reduce(
-        (accumulator, item) => accumulator + item.precio * item.cantidad,
-        0
-    );
-    const taxes = subtotal * 0.1;
-    const total = subtotal + taxes;
+    const updateLocalStorageCart = (updatedCartItems) => {
+        localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+    };
+    useEffect(() => {
+        const loadCartFromLocalStorage = () => {
+            const cartItemsFromLocalStorage = JSON.parse(localStorage.getItem('cartItems'));
+            if (cartItemsFromLocalStorage) {
+                setCartItems(cartItemsFromLocalStorage);
+            }
+        };
+
+        loadCartFromLocalStorage();
+        // eslint-disable-next-line
+    }, []);
+    const loadCartFromDatabase = async () => {
+        try {
+            if (currentUser) {
+                const userEmail = currentUser.email;
+                const cartDocRef = doc(db, 'carts', userEmail);
+                const cartDocSnap = await getDoc(cartDocRef);
+
+                if (cartDocSnap.exists()) {
+                    const cartData = cartDocSnap.data();
+                    setCartItems(cartData.cartItems);
+                    updateLocalStorageCart(cartData.cartItems); // Actualizar localStorage con los datos de la base de datos
+                } else {
+                    setCartItems([]);
+                    localStorage.removeItem('cartItems'); // Eliminar el carrito del localStorage si no existe en la base de datos
+                }
+            }
+        } catch (error) {
+            console.error('Error al cargar el carrito desde la base de datos:', error);
+        }
+    };
+
+    const saveCartToDatabase = async (updatedCartItems) => {
+        try {
+            if (currentUser) {
+                const userEmail = currentUser.email;
+                const cartDocRef = doc(db, 'carts', userEmail);
+                await setDoc(cartDocRef, { cartItems: updatedCartItems });
+                updateLocalStorageCart(updatedCartItems); // Actualizar localStorage con los datos de la base de datos
+            }
+        } catch (error) {
+            console.error('Error al guardar el carrito en la base de datos:', error);
+        }
+    };
+
+
+
+    useEffect(() => {
+        loadCartFromDatabase();
+        // eslint-disable-next-line
+    }, [currentUser]);
+
+  
+
 
     function closeModal() {
         setIsOpen(false);
@@ -61,39 +128,6 @@ export function Carrito({ cartItems, setCartItems }) {
     function openModal() {
         setIsOpen(true);
     }
-    useEffect(() => {
-        const loadCartFromDatabase = async () => {
-            try {
-                // Eliminar el carrito existente en el localStorage
-
-                if (currentUser) {
-                    localStorage.removeItem("cartItems");
-
-                    const userEmail = currentUser.email;
-                    const cartDocRef = doc(db, 'carts', userEmail);
-                    const cartDocSnap = await getDoc(cartDocRef);
-
-                    if (cartDocSnap.exists()) {
-                        const cartData = cartDocSnap.data();
-                        setCartItems(cartData.cartItems);
-                    }
-                } else {
-                    const cartItemsFromLocalStorage = JSON.parse(
-                        localStorage.getItem("cartItems")
-                    );
-                    if (cartItemsFromLocalStorage) {
-                        setCartItems(cartItemsFromLocalStorage);
-                    }
-                }
-
-            } catch (error) {
-                console.error('Error al cargar el carrito desde la base de datos:', error);
-            }
-        };
-
-        loadCartFromDatabase();
-    }, [currentUser]);
-
 
     const sendEmail = (e) => {
         e.preventDefault();
@@ -194,9 +228,11 @@ export function Carrito({ cartItems, setCartItems }) {
 
                                                 <div className="mt-auto">
                                                     <p className="text-sm title-font font-bold" style={{ backfaceVisibility: "hidden", color: "#4a63ee" }}>
-                                                        <span className="text-gray-900 text-lg">{item.precio * item.cantidad} €</span> ({item.precio} € x {item.cantidad})
+                                                        <span className="text-gray-900 text-lg">{(parseFloat(item.precio) * item.cantidad).toFixed(2)} €</span> ({parseFloat(item.precio).toFixed(2)} € x {item.cantidad})
                                                     </p>
                                                 </div>
+
+
                                                 {(item.category === "Mangas" || item.category === "Comics") && (
                                                     <div className="mt-4">
                                                         <label className="flex items-center">

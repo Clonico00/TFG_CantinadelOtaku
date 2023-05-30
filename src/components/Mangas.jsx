@@ -1,12 +1,15 @@
-import React, {useState,useEffect} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from "../firebase";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast, Toaster } from 'react-hot-toast';
+import { AuthContext } from "./AuthContext";
+import {  doc, getDoc, setDoc } from 'firebase/firestore';
 
 function Mangas({ addToCart, cartItems, setCartItems }) {
     const [page, setPage] = useState(1);
     const section = "mangas"; // Actualiza la sección aquí
+    const { currentUser } = useContext(AuthContext);
 
     const articlesPerPage = 6;
     
@@ -28,29 +31,65 @@ function Mangas({ addToCart, cartItems, setCartItems }) {
     const handleClick = (pageNum) => {
         setPage(pageNum);
     };
-    const handleAddToCart = (article) => {
-        const existingItem = cartItems.find((item) => item.id === article.id);
+    const handleAddToCart = async (article) => {
+        try {
+          if (!currentUser) {
+            // El usuario no está loggeado, guardar en el localStorage
+            const existingItem = cartItems.find((item) => item.id === article.id);
     
-        if (existingItem) {
-          // El artículo ya está en el carrito, incrementar la cantidad
-          const updatedCartItems = cartItems.map((item) =>
-            item.id === article.id ? { ...item, cantidad: item.cantidad + 1 } : item
-          );
-          setCartItems(updatedCartItems);
-          //lo guardamos en el localstorage
-            localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-
-        } else {
-          // El artículo no está en el carrito, agregarlo con cantidad 1
-          const newItem = { ...article, cantidad: 1 };
-          setCartItems([...cartItems, newItem]);
-            //lo guardamos en el localstorage
-            localStorage.setItem("cartItems", JSON.stringify([...cartItems, newItem]));
+            if (existingItem) {
+              // El artículo ya está en el carrito, incrementar la cantidad
+              const updatedCartItems = cartItems.map((item) =>
+                item.id === article.id ? { ...item, cantidad: item.cantidad + 1 } : item
+              );
+              setCartItems(updatedCartItems);
+              localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+            } else {
+              // El artículo no está en el carrito, agregarlo con cantidad 1
+              const newItem = { ...article, cantidad: 1 };
+              setCartItems([...cartItems, newItem]);
+              localStorage.setItem('cartItems', JSON.stringify([...cartItems, newItem]));
+            }
+    
+            // Mostrar el toast de éxito
+            toast.success(`${article.title} se ha añadido al carrito`);
+          } else {
+            // El usuario está loggeado, guardar en la base de datos
+            const userEmail = currentUser.email;
+            const cartDocRef = doc(db, 'carts', userEmail);
+            const cartDocSnap = await getDoc(cartDocRef);
+    
+            if (cartDocSnap.exists()) {
+              // El usuario ya tiene un carrito, agregar el artículo sin borrar los demás
+              const cartData = cartDocSnap.data();
+              const existingItem = cartData.cartItems.find((item) => item.id === article.id);
+    
+              if (existingItem) {
+                // El artículo ya está en el carrito, incrementar la cantidad
+                const updatedCartItems = cartData.cartItems.map((item) =>
+                  item.id === article.id ? { ...item, cantidad: item.cantidad + 1 } : item
+                );
+                await setDoc(cartDocRef, { cartItems: updatedCartItems });
+                toast.success(`${article.title} se ha añadido al carrito`);
+              } else {
+                // El artículo no está en el carrito, agregarlo con cantidad 1
+                const newItem = { ...article, cantidad: 1 };
+                const updatedCartItems = [...cartData.cartItems, newItem];
+                await setDoc(cartDocRef, { cartItems: updatedCartItems });
+                toast.success(`${article.title} se ha añadido al carrito`);
+              }
+            } else {
+              // El usuario no tiene un carrito, crear uno nuevo con el artículo
+              const newCart = { cartItems: [{ ...article, cantidad: 1 }] };
+              await setDoc(cartDocRef, newCart);
+              toast.success(`${article.title} se ha añadido al carrito`);
+            }
+          }
+        } catch (error) {
+          console.error('Error al añadir el artículo al carrito:', error);
         }
-                // Mostrar el toast de éxito
-                toast.success(` ${article.title} se ha añadido al carrito`);
-    
       };
+    
 
     const startIndex = (page - 1) * articlesPerPage;
     const endIndex = startIndex + articlesPerPage;
