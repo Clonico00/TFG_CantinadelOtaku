@@ -24,46 +24,47 @@ export default function Register() {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            // Comprobar si el nombre de usuario ya existe en la base de datos
-            const usersCollection = collection(db, 'users');
-            const usernameQuery = query(usersCollection, where('username', '==', username));
-            const usernameSnapshot = await getDocs(usernameQuery);
-            if (!usernameSnapshot.empty) {
-                setError('El nombre de usuario ya está en uso.');
-                return;
-            }
-
-            // Si el nombre de usuario no existe, se crea el nuevo usuario
-            // const { user } = await createUserWithEmailAndPassword(auth, email, password);
-            // await signOut(auth);
-            //haz que despues createUserWithEmailAndPassword se desloguee automaticamente
-            const { user } = await createUserWithEmailAndPassword(auth, email, password).then(() => {
-                signOut(auth);
-            });
-
-            // Sube la foto de perfil a Firebase Storage
-            const storageRef = ref(storage, `profile_pictures/${user.uid}`);
-            await uploadBytes(storageRef, image);
-            const profilePictureURL = await getDownloadURL(storageRef);
-            // Guarda los datos del usuario en Firestore
-            await setDoc(doc(db, 'users', user.uid), {
-                name: name,
-                apellidos: apellidos,
-                username: username,
-                email: email,
-                image: profilePictureURL,
-                isAdmin: false,
-            });
-            navigate('/login'); // Redirigir a la página de login
+          // Comprobar si el nombre de usuario ya existe en la base de datos
+          const usersCollection = collection(db, 'users');
+          const usernameQuery = query(usersCollection, where('username', '==', username));
+          const usernameSnapshot = await getDocs(usernameQuery);
+          if (!usernameSnapshot.empty) {
+            setError('El nombre de usuario ya está en uso.');
+            return;
+          }
+      
+          // Si el nombre de usuario no existe, se crea el nuevo usuario
+          const { user } = await createUserWithEmailAndPassword(auth, email, password);
+      
+          // Cerrar sesión después de crear el usuario
+          await signOut(auth);
+      
+          // Subir la foto de perfil a Firebase Storage
+          const storageRef = ref(storage, `profile_pictures/${user.uid}`);
+          await uploadBytes(storageRef, image);
+          const profilePictureURL = await getDownloadURL(storageRef);
+      
+          // Guardar los datos del usuario en Firestore
+          await setDoc(doc(db, 'users', user.uid), {
+            name: name,
+            apellidos: apellidos,
+            username: username,
+            email: email,
+            image: profilePictureURL,
+            isAdmin: false,
+          });
+      
+          navigate('/login'); // Redirigir a la página de login
         } catch (error) {
-            // En caso de error, se maneja el error y se muestra una alerta correspondiente
-            if (error.code === 'auth/email-already-in-use') {
-                setError('El correo electrónico ya está en uso.');
-            } else {
-                setError('Ocurrió un error durante el registro.' + error.code);
-            }
+          // En caso de error, se maneja el error y se muestra una alerta correspondiente
+          if (error.code === 'auth/email-already-in-use') {
+            setError('El correo electrónico ya está en uso.');
+          } else {
+            setError('Ocurrió un error durante el registro. ' + error.code);
+          }
         }
-    };
+      };
+      
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
