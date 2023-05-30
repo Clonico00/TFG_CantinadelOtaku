@@ -25,21 +25,19 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
         const fetchUserData = async () => {
             if (currentUser) {
                 try {
-                    setTimeout(async () => {
-                        const usersRef = collection(db, 'users');
-                        const userQuery = query(usersRef, where('email', '==', currentUser.email));
-                        const snapshot = await getDocs(userQuery);
+                    const usersRef = collection(db, 'users');
+                    const userQuery = query(usersRef, where('email', '==', currentUser.email));
+                    const snapshot = await getDocs(userQuery);
 
-                        if (!snapshot.empty) {
-                            const userData = snapshot.docs[0].data();
-                            setUserData(userData);
+                    if (!snapshot.empty) {
+                        const userData = snapshot.docs[0].data();
+                        setUserData(userData);
 
-                            // Establecer el estado "image" después de obtener los datos del usuario
-                            const image = userData && userData.image ? userData.image : UsuarioIconDefault;
-                            setImage(image);
-                        }
+                        // Establecer el estado "image" después de obtener los datos del usuario
+                        const image = userData && userData.image ? userData.image : UsuarioIconDefault;
+                        setImage(image);
                     }
-                        , 1000);
+
 
                 } catch (error) {
                     console.error('Error al obtener los datos del usuario:', error);
@@ -78,7 +76,7 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
                 setImage(UsuarioIconDefault); // Restablecer la imagen a la imagen predeterminada al cerrar sesión
                 navigate('/');
                 closeMenu();
-                
+
             })
             .catch((error) => {
                 console.error('Error al cerrar sesión:', error);

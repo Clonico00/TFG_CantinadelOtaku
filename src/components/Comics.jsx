@@ -77,17 +77,22 @@ function Comics({ addToCart, cartItems, setCartItems }) {
                             item.id === article.id ? { ...item, cantidad: item.cantidad + 1 } : item
                         );
                         await setDoc(cartDocRef, { cartItems: updatedCartItems });
+                        setCartItems(updatedCartItems);
 
                     } else {
                         // El artículo no está en el carrito, agregarlo con cantidad 1
                         const newItem = { ...article, cantidad: 1 };
                         const updatedCartItems = [...cartData.cartItems, newItem];
                         await setDoc(cartDocRef, { cartItems: updatedCartItems });
+                        setCartItems(updatedCartItems);
                     }
                 } else {
                     // El usuario no tiene un carrito, crear uno nuevo con el artículo
                     const newCart = { cartItems: [{ ...article, cantidad: 1 }] };
                     await setDoc(cartDocRef, newCart);
+                    localStorage.setItem('cartItems', JSON.stringify(newCart));
+                    setCartItems(newCart);
+
                 }
 
                 toast.success(`${article.title} se ha añadido al carrito`);

@@ -30,28 +30,30 @@ export function Carrito({ cartItems, setCartItems }) {
                 return item;
             });
             setCartItems(updatedCartItems);
+
+            try {
+                const articleDocRef = doc(db, 'articles', itemId);
+                const articleDocSnap = await getDoc(articleDocRef);
+
+                if (articleDocSnap.exists()) {
+                    const articleData = articleDocSnap.data();
+                    const updatedStock = articleData.stock + 1;
+                    await updateDoc(articleDocRef, { stock: updatedStock });
+                    console.log(`Stock actualizado para el artículo ${existingItem.title}`);
+                } else {
+                    console.error(`El artículo ${existingItem.title} no existe en la base de datos.`);
+                }
+            } catch (error) {
+                console.error('Error al actualizar el stock del artículo:', error);
+            }
+
             if (currentUser) {
                 saveCartToDatabase(updatedCartItems);
-
-                try {
-                    const articleDocRef = doc(db, 'articles', itemId);
-                    const articleDocSnap = await getDoc(articleDocRef);
-                    if (articleDocSnap.exists()) {
-                        const articleData = articleDocSnap.data();
-                        const updatedStock = articleData.stock + 1;
-                        await updateDoc(articleDocRef, { stock: updatedStock });
-                        console.log(`Stock actualizado para el artículo ${existingItem.title}`);
-                    } else {
-                        console.error(`El artículo ${existingItem.title} no existe en la base de datos.`);
-                    }
-                } catch (error) {
-                    console.error('Error al actualizar el stock del artículo:', error);
-                }
             } else {
                 updateLocalStorageCart(updatedCartItems);
             }
         } else {
-            toast.error('No se puede disminuir la cantidad del artículo, borre el articulo si no lo desea');
+            toast.error('No se puede disminuir la cantidad del artículo, borre el artículo si no lo desea');
         }
     };
 
@@ -65,22 +67,25 @@ export function Carrito({ cartItems, setCartItems }) {
                 return item;
             });
             setCartItems(updatedCartItems);
+
+            try {
+                const articleDocRef = doc(db, 'articles', itemId);
+                const articleDocSnap = await getDoc(articleDocRef);
+
+                if (articleDocSnap.exists()) {
+                    const articleData = articleDocSnap.data();
+                    const updatedStock = articleData.stock - 1;
+                    await updateDoc(articleDocRef, { stock: updatedStock });
+                    console.log(`Stock actualizado para el artículo ${article.title}`);
+                } else {
+                    console.error(`El artículo con ID ${itemId} no existe en la base de datos.`);
+                }
+            } catch (error) {
+                console.error('Error al actualizar el stock del artículo:', error);
+            }
+
             if (currentUser) {
                 saveCartToDatabase(updatedCartItems);
-                try {
-                    const articleDocRef = doc(db, 'articles', itemId);
-                    const articleDocSnap = await getDoc(articleDocRef);
-                    if (articleDocSnap.exists()) {
-                        const articleData = articleDocSnap.data();
-                        const updatedStock = articleData.stock - 1;
-                        await updateDoc(articleDocRef, { stock: updatedStock });
-                        console.log(`Stock actualizado para el artículo ${article.title}`);
-                    } else {
-                        console.error(`El artículo con ID ${itemId} no existe en la base de datos.`);
-                    }
-                } catch (error) {
-                    console.error('Error al actualizar el stock del artículo:', error);
-                }
             } else {
                 updateLocalStorageCart(updatedCartItems);
             }
@@ -89,7 +94,6 @@ export function Carrito({ cartItems, setCartItems }) {
         }
     };
 
-
     const handleDeleteItem = async () => {
         const updatedCartItems = cartItems.filter((item) => item.id !== articleToDelete);
         const deletedItem = cartItems.find((item) => item.id === articleToDelete);
@@ -97,24 +101,24 @@ export function Carrito({ cartItems, setCartItems }) {
         closeModal();
         toast.success('Artículo eliminado del carrito');
 
+        try {
+            const articleDocRef = doc(db, 'articles', deletedItem.id);
+            const articleDocSnap = await getDoc(articleDocRef);
+
+            if (articleDocSnap.exists()) {
+                const articleData = articleDocSnap.data();
+                const updatedStock = articleData.stock + deletedItem.cantidad;
+                await updateDoc(articleDocRef, { stock: updatedStock });
+                console.log(`Stock actualizado para el artículo ${deletedItem.title}`);
+            } else {
+                console.error(`El artículo ${deletedItem.title} no existe en la base de datos.`);
+            }
+        } catch (error) {
+            console.error('Error al actualizar el stock del artículo:', error);
+        }
+
         if (currentUser) {
             saveCartToDatabase(updatedCartItems);
-            if (deletedItem) {
-                try {
-                    const articleDocRef = doc(db, 'articles', deletedItem.id);
-                    const articleDocSnap = await getDoc(articleDocRef);
-                    if (articleDocSnap.exists()) {
-                        const articleData = articleDocSnap.data();
-                        const updatedStock = articleData.stock + deletedItem.cantidad;
-                        await updateDoc(articleDocRef, { stock: updatedStock });
-                        console.log(`Stock actualizado para el artículo ${deletedItem.title}`);
-                    } else {
-                        console.error(`El artículo ${deletedItem.title} no existe en la base de datos.`);
-                    }
-                } catch (error) {
-                    console.error('Error al actualizar el stock del artículo:', error);
-                }
-            }
         } else {
             updateLocalStorageCart(updatedCartItems);
         }
@@ -124,6 +128,7 @@ export function Carrito({ cartItems, setCartItems }) {
     const updateLocalStorageCart = (updatedCartItems) => {
         localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
     };
+
     useEffect(() => {
         const loadCartFromLocalStorage = () => {
             const cartItemsFromLocalStorage = JSON.parse(localStorage.getItem('cartItems'));
@@ -135,6 +140,7 @@ export function Carrito({ cartItems, setCartItems }) {
         loadCartFromLocalStorage();
         // eslint-disable-next-line
     }, []);
+
     const loadCartFromDatabase = async () => {
         try {
             if (currentUser) {
@@ -168,8 +174,6 @@ export function Carrito({ cartItems, setCartItems }) {
             console.error('Error al guardar el carrito en la base de datos:', error);
         }
     };
-
-
 
     useEffect(() => {
         loadCartFromDatabase();
@@ -212,42 +216,42 @@ export function Carrito({ cartItems, setCartItems }) {
       
           Artículos:
           ${cartItems
-            .map(
-              (item) => `
+                .map(
+                    (item) => `
             - ${item.title}
               Cantidad: ${item.cantidad}
               Precio: ${(item.price * item.cantidad).toFixed(2)} €`
-            )
-            .join('\n')}
+                )
+                .join('\n')}
           
           Subtotal: ${subtotal.toFixed(2)} €
           Impuestos: ${taxes.toFixed(2)} €
           Total: ${total.toFixed(2)} €
         `;
-      
+
         const templateParams = {
-          to_name: nombre,
-          to_email: email,
-          from_name: 'Cantina del Otaku',
-          message: ticketMessage,
+            to_name: nombre,
+            to_email: email,
+            from_name: 'Cantina del Otaku',
+            message: ticketMessage,
         };
-      
+
         try {
-          await emailjs.send('service_2iahr5w', '1', templateParams, 'EFIEuOyWXXiQw7h4n');
-      
-          if (currentUser) {
-            const userEmail = currentUser.email;
-            const cartDocRef = doc(db, 'carts', userEmail);
-            await deleteDoc(cartDocRef);
-          }
-          setCartItems([]);
-          localStorage.removeItem('cartItems');
-          toast.success('Compra realizada con éxito');
+            await emailjs.send('service_2iahr5w', '1', templateParams, 'EFIEuOyWXXiQw7h4n');
+
+            if (currentUser) {
+                const userEmail = currentUser.email;
+                const cartDocRef = doc(db, 'carts', userEmail);
+                await deleteDoc(cartDocRef);
+            }
+            setCartItems([]);
+            localStorage.removeItem('cartItems');
+            toast.success('Compra realizada con éxito');
         } catch (error) {
-          console.log(error.text);
+            console.log(error.text);
         }
-      };
-      
+    };
+
 
     return (
         <>
