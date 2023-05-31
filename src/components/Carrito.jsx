@@ -6,17 +6,16 @@ import { toast, Toaster } from 'react-hot-toast';
 import { AuthContext } from "./AuthContext";
 import { db } from "../firebase";
 import { doc, getDoc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { collection,  where , getDocs, query} from "firebase/firestore";
+import { collection, where, getDocs, query } from "firebase/firestore";
 import emailjs from '@emailjs/browser';
 export function Carrito({ cartItems, setCartItems }) {
     const [isOpen, setIsOpen] = useState(false);
     const [articleToDelete, setArticleToDelete] = useState("");
     const { currentUser } = useContext(AuthContext);
     const form = useRef();
-    const subtotal = cartItems.reduce(
-        (accumulator, item) => accumulator + item.precio * item.cantidad,
-        0
-    );
+    const subtotal = Array.isArray(cartItems)
+    ? cartItems.reduce((accumulator, item) => accumulator + item.precio * item.cantidad, 0)
+    : 0;
     const taxes = subtotal * 0.1;
     const total = subtotal + taxes;
     const [fullName, setFullName] = useState('');
@@ -180,28 +179,28 @@ export function Carrito({ cartItems, setCartItems }) {
     useEffect(() => {
         loadCartFromDatabase();
         if (currentUser) {
-          const usersCollection = collection(db, 'users');
-          const userQuery = query(usersCollection, where('email', '==', currentUser.email));
-          getDocs(userQuery)
-            .then((querySnapshot) => {
-              if (!querySnapshot.empty) {
-                const userData = querySnapshot.docs[0].data();
-                if (userData.name === undefined) {
-                  setFullName(currentUser.displayName);
-                } else {
-                  setFullName(userData.name + ' ' + userData.apellidos);
-                }
-              } else {
-                console.log('No matching documents found!');
-              }
-            })
-            .catch((error) => {
-              console.log('Error querying user document:', error);
-            });
+            const usersCollection = collection(db, 'users');
+            const userQuery = query(usersCollection, where('email', '==', currentUser.email));
+            getDocs(userQuery)
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        const userData = querySnapshot.docs[0].data();
+                        if (userData.name === undefined || userData.apellidos === undefined) {
+                            setFullName(currentUser.displayName);
+                        } else {
+                            setFullName(userData.name + ' ' + userData.apellidos);
+                        }
+                    } else {
+                        console.log('No matching documents found!');
+                    }
+                })
+                .catch((error) => {
+                    console.log('Error querying user document:', error);
+                });
         }
         // eslint-disable-next-line
-      }, [currentUser]);
-      
+    }, [currentUser]);
+
 
     function closeModal() {
         setIsOpen(false);
@@ -260,13 +259,76 @@ export function Carrito({ cartItems, setCartItems }) {
         };
 
         try {
-            await emailjs.send('service_2iahr5w', '1', templateParams, 'EFIEuOyWXXiQw7h4n');
 
             if (currentUser) {
                 const userEmail = currentUser.email;
                 const cartDocRef = doc(db, 'carts', userEmail);
+                const cartDocSnap = await getDoc(cartDocRef);
+
+                if (cartDocSnap.exists()) {
+                    const cartData = cartDocSnap.data();
+                    const cartItems = cartData.cartItems;
+            
+                    // Agregar la información de los artículos a la colección 'library'
+                    const libraryCollection = collection(db, 'library');
+                    const userDocRef = doc(libraryCollection, userEmail);
+                    const userDocSnap = await getDoc(userDocRef);
+            
+                    if (userDocSnap.exists()) {
+                      const userData = userDocSnap.data();
+            
+                      if (!userData.library) {
+                        userData.library = [];
+                      }
+            
+                      const existingTitles = userData.library.map((item) => item.title);
+            
+                      for (const item of cartItems) {
+                        const checkbox = document.getElementById(`checkbox-${item.id}`);
+                        if (checkbox.checked) { // Verificar si el checkbox está marcado
+                          if (existingTitles.includes(item.title)) {
+                            toast.error(`No se pudo completar la compra. El artículo "${item.title}" ya está en la biblioteca.`);
+                            return;
+                          }
+            
+                          const newItem = {
+                            title: item.title,
+                            pdf: item.pdf
+                          };
+            
+                          userData.library.push(newItem);
+                        }
+                      }
+            
+                      await setDoc(userDocRef, userData);
+
+                    } else {
+                      const libraryData = {
+                        library: []
+                      };
+            
+                      for (const item of cartItems) {
+                        const checkbox = document.getElementById(`checkbox-${item.id}`);
+                        if (checkbox.checked) { // Verificar si el checkbox está marcado
+                          const newItem = {
+                            title: item.title,
+                            pdf: item.pdf
+                          };
+            
+                          libraryData.library.push(newItem);
+                        }
+                      }
+            
+                      await setDoc(userDocRef, libraryData);
+                    }
+                  }
+
+                // Eliminar el documento de carrito del usuario
+                await emailjs.send('service_2iahr5w', '1', templateParams, 'EFIEuOyWXXiQw7h4n');
+
                 await deleteDoc(cartDocRef);
             }
+
             setCartItems([]);
             localStorage.removeItem('cartItems');
             toast.success('Compra realizada con éxito');
@@ -275,10 +337,6 @@ export function Carrito({ cartItems, setCartItems }) {
         }
     };
 
-  
-      
-      
-      
     return (
         <>
             <Toaster
@@ -318,13 +376,18 @@ export function Carrito({ cartItems, setCartItems }) {
                                                     </p>
                                                 </div>
 
-
                                                 {(item.category === "Mangas" || item.category === "Comics") && (
                                                     <div className="mt-4">
                                                         <label className="flex items-center">
-                                                            <input type="checkbox" className="form-checkbox h-4 w-4 text-indigo-600" />
+                                                            <input
+                                                                id={`checkbox-${item.id}`}
+                                                                type="checkbox"
+                                                                className="form-checkbox h-4 w-4 text-indigo-600"
+                                                            />
                                                             <span className="ml-2 text-gray-700">
-                                                                {item.category === "Comics" ? "¿Desea agregar este cómic a su librería?" : "¿Desea agregar este manga a su librería?"}
+                                                                {item.category === "Comics"
+                                                                    ? "¿Desea agregar este cómic a su librería?"
+                                                                    : "¿Desea agregar este manga a su librería?"}
                                                             </span>
                                                         </label>
                                                     </div>

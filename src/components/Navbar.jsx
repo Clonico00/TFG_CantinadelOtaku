@@ -19,7 +19,7 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
     const [filteredArticles, setFilteredArticles] = useState([]);
     const [isFocused, setIsFocused] = useState(false);
     const navigate = useNavigate();
-    const totalQuantity = cartItems.reduce((total, item) => total + item.cantidad, 0);
+    const totalQuantity = Array.isArray(cartItems) ? cartItems.reduce((total, item) => total + item.cantidad, 0) || 0 : 0;
 
     useEffect(() => {
         const fetchUserData = async () => {
