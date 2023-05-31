@@ -6,6 +6,7 @@ import { db, storage } from '../firebase';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { where, getDocs, query, onSnapshot, orderBy, doc, deleteDoc } from "firebase/firestore";
 import UsuarioIconDefault from '../img/usuario_icon.png';
+import { toast, Toaster } from 'react-hot-toast';
 
 const Forum = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -61,7 +62,12 @@ const Forum = () => {
 
         // Verificar si se seleccionó una imagen
         const imageInputElement = document.getElementById('image-input');
-        const imageFile = imageInputElement.files[0];
+        //comprueba que que el tipo de archivo sea una imagen y no peso mas de 5mb
+        const imageFile = imageInputElement.files[0] && imageInputElement.files[0].type.includes('image/') && imageInputElement.files[0].size < 5000000 ? imageInputElement.files[0] : null;
+        if (!imageFile) {
+            toast.error('Error al enviar el mensaje: La imagen no es válida o es demasiado grande');
+            return;
+        }
 
         try {
             let profilePictureURL = null; // Inicializa la URL de la imagen como null
@@ -124,7 +130,7 @@ const Forum = () => {
     const getTimeDifference = (timestamp) => {
         const currentDate = new Date(); // Fecha actual
         // const messageDate = timestamp.toDate(); // Fecha del mensaje
-       //hacemos la conversion si timestamp es no nulo
+        //hacemos la conversion si timestamp es no nulo
         const messageDate = timestamp ? timestamp.toDate() : new Date(); // Fecha del mensaje 
         const difference = Math.abs(currentDate - messageDate); // Diferencia en milisegundos
 
@@ -158,12 +164,21 @@ const Forum = () => {
 
 
     return (
+
         <div className="flex justify-center">
             <div className="container mx-auto p-4">
                 <div className="pt-8">
                     <h2 className="text-center text-2xl font-extrabold"
                         style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>Foro</h2>
                 </div>
+                <Toaster
+                    position="bottom-center"
+                    reverseOrder={false}
+
+                    toastStyle={{
+                        width: '50%', // Ajusta el ancho del contenido del toast
+                    }}
+                />
                 <div
                     className="custom-max-height overflow-auto bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 mt-5 max-w-7xl mb-8">
                     <div className="grid gap-4">
@@ -184,7 +199,7 @@ const Forum = () => {
                                     <div className="text mt-2">
                                         <span className="text-lg">{msg.message}</span>
                                         {msg.message_img &&
-                                        // eslint-disable-next-line
+                                            // eslint-disable-next-line
                                             <img src={msg.message_img} alt="Message Image" className="mt-4" />}
                                         <span className="date text-sm text-gray-500 flex items-center mt-1" style={{ backfaceVisibility: "hidden" }}>
                                             <span className="ml-2 text-gray-500">

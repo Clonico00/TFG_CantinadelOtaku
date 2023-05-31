@@ -14,8 +14,8 @@ export function Carrito({ cartItems, setCartItems }) {
     const { currentUser } = useContext(AuthContext);
     const form = useRef();
     const subtotal = Array.isArray(cartItems)
-    ? cartItems.reduce((accumulator, item) => accumulator + item.precio * item.cantidad, 0)
-    : 0;
+        ? cartItems.reduce((accumulator, item) => accumulator + item.precio * item.cantidad, 0)
+        : 0;
     const taxes = subtotal * 0.1;
     const total = subtotal + taxes;
     const [fullName, setFullName] = useState('');
@@ -268,60 +268,60 @@ export function Carrito({ cartItems, setCartItems }) {
                 if (cartDocSnap.exists()) {
                     const cartData = cartDocSnap.data();
                     const cartItems = cartData.cartItems;
-            
+
                     // Agregar la información de los artículos a la colección 'library'
                     const libraryCollection = collection(db, 'library');
                     const userDocRef = doc(libraryCollection, userEmail);
                     const userDocSnap = await getDoc(userDocRef);
-            
+
                     if (userDocSnap.exists()) {
-                      const userData = userDocSnap.data();
-            
-                      if (!userData.library) {
-                        userData.library = [];
-                      }
-            
-                      const existingTitles = userData.library.map((item) => item.title);
-            
-                      for (const item of cartItems) {
-                        const checkbox = document.getElementById(`checkbox-${item.id}`);
-                        if (checkbox.checked) { // Verificar si el checkbox está marcado
-                          if (existingTitles.includes(item.title)) {
-                            toast.error(`No se pudo completar la compra. El artículo "${item.title}" ya está en la biblioteca.`);
-                            return;
-                          }
-            
-                          const newItem = {
-                            title: item.title,
-                            pdf: item.pdf
-                          };
-            
-                          userData.library.push(newItem);
+                        const userData = userDocSnap.data();
+
+                        if (!userData.library) {
+                            userData.library = [];
                         }
-                      }
-            
-                      await setDoc(userDocRef, userData);
+
+                        const existingTitles = userData.library.map((item) => item.title);
+
+                        for (const item of cartItems) {
+                            const checkbox = document.getElementById(`checkbox-${item.id}`);
+                            if (checkbox.checked) { // Verificar si el checkbox está marcado
+                                if (existingTitles.includes(item.title)) {
+                                    toast.error(`No se pudo completar la compra. El artículo "${item.title}" ya está en la biblioteca.`);
+                                    return;
+                                }
+
+                                const newItem = {
+                                    title: item.title,
+                                    pdf: item.pdf
+                                };
+
+                                userData.library.push(newItem);
+                            }
+                        }
+
+                        await setDoc(userDocRef, userData);
 
                     } else {
-                      const libraryData = {
-                        library: []
-                      };
-            
-                      for (const item of cartItems) {
-                        const checkbox = document.getElementById(`checkbox-${item.id}`);
-                        if (checkbox.checked) { // Verificar si el checkbox está marcado
-                          const newItem = {
-                            title: item.title,
-                            pdf: item.pdf
-                          };
-            
-                          libraryData.library.push(newItem);
+                        const libraryData = {
+                            library: []
+                        };
+
+                        for (const item of cartItems) {
+                            const checkbox = document.getElementById(`checkbox-${item.id}`);
+                            if (checkbox.checked) { // Verificar si el checkbox está marcado
+                                const newItem = {
+                                    title: item.title,
+                                    pdf: item.pdf
+                                };
+
+                                libraryData.library.push(newItem);
+                            }
                         }
-                      }
-            
-                      await setDoc(userDocRef, libraryData);
+
+                        await setDoc(userDocRef, libraryData);
                     }
-                  }
+                }
 
                 // Eliminar el documento de carrito del usuario
                 await emailjs.send('service_2iahr5w', '1', templateParams, 'EFIEuOyWXXiQw7h4n');
@@ -348,7 +348,7 @@ export function Carrito({ cartItems, setCartItems }) {
                 }}
             />
             {/*eslint-disable-next-line */}
-            {cartItems && cartItems != 0 ? (
+            {Array.isArray(cartItems) && cartItems.length !== 0 ? (
                 <div className=" pt-20 mb-24 overflow-auto">
                     <h2 className="text-center text-2xl font-extrabold mb-12 mt-1"
                         style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>Carrito</h2>
