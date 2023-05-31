@@ -199,6 +199,7 @@ export function Carrito({ cartItems, setCartItems }) {
               console.log('Error querying user document:', error);
             });
         }
+        // eslint-disable-next-line
       }, [currentUser]);
       
 
