@@ -6,6 +6,7 @@ import { toast, Toaster } from 'react-hot-toast';
 import { AuthContext } from "./AuthContext";
 import { db } from "../firebase";
 import { doc, getDoc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection,  where , getDocs, query} from "firebase/firestore";
 import emailjs from '@emailjs/browser';
 export function Carrito({ cartItems, setCartItems }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,7 @@ export function Carrito({ cartItems, setCartItems }) {
     );
     const taxes = subtotal * 0.1;
     const total = subtotal + taxes;
+    const [fullName, setFullName] = useState('');
 
     const handleDecrease = async (itemId) => {
         const existingItem = cartItems.find((item) => item.id === itemId);
@@ -177,8 +179,28 @@ export function Carrito({ cartItems, setCartItems }) {
 
     useEffect(() => {
         loadCartFromDatabase();
-        // eslint-disable-next-line
-    }, [currentUser]);
+        if (currentUser) {
+          const usersCollection = collection(db, 'users');
+          const userQuery = query(usersCollection, where('email', '==', currentUser.email));
+          getDocs(userQuery)
+            .then((querySnapshot) => {
+              if (!querySnapshot.empty) {
+                const userData = querySnapshot.docs[0].data();
+                if (userData.name === undefined) {
+                  setFullName(currentUser.displayName);
+                } else {
+                  setFullName(userData.name + ' ' + userData.apellidos);
+                }
+              } else {
+                console.log('No matching documents found!');
+              }
+            })
+            .catch((error) => {
+              console.log('Error querying user document:', error);
+            });
+        }
+      }, [currentUser]);
+      
 
     function closeModal() {
         setIsOpen(false);
@@ -252,7 +274,10 @@ export function Carrito({ cartItems, setCartItems }) {
         }
     };
 
-
+  
+      
+      
+      
     return (
         <>
             <Toaster
@@ -433,8 +458,7 @@ export function Carrito({ cartItems, setCartItems }) {
                                                 <input type="text" name="nombre" id="nombre"
                                                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                                     required
-                                                    defaultValue={currentUser.displayName}
-
+                                                    defaultValue={fullName || currentUser.displayName}
                                                 />
                                             </div>
                                         </div>
