@@ -293,7 +293,8 @@ export function Carrito({ cartItems, setCartItems }) {
 
                                 const newItem = {
                                     title: item.title,
-                                    pdf: item.pdf
+                                    pdf: item.pdf,
+                                    image: item.image
                                 };
 
                                 userData.library.push(newItem);
@@ -312,7 +313,8 @@ export function Carrito({ cartItems, setCartItems }) {
                             if (checkbox.checked) { // Verificar si el checkbox está marcado
                                 const newItem = {
                                     title: item.title,
-                                    pdf: item.pdf
+                                    pdf: item.pdf,
+                                    image: item.image
                                 };
 
                                 libraryData.library.push(newItem);

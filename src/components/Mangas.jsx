@@ -31,6 +31,7 @@ function Mangas({ addToCart, cartItems, setCartItems }) {
     const handleClick = (pageNum) => {
         setPage(pageNum);
     };
+    
     const handleAddToCart = async (article) => {
         try {
             // Verificar si hay stock disponible
