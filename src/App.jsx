@@ -89,7 +89,7 @@ function App() {
           <Route path="/Comics" element={<Comics addToCart={addToCart} cartItems={cartItems} setCartItems={setCartItems} />} />
           <Route path="/foro" element={<Foro />} />
           <Route path="/libreria" element={<Libreria />} />
-          <Route path="/libreria/:user" element={<LibreriaDetail />} />
+          <Route path="/libreria/detail/:user/:id" element={<LibreriaDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/carrito" element={<Carrito cartItems={cartItems} setCartItems={setCartItems} />} />
