@@ -6,7 +6,6 @@ import { db, storage } from '../firebase';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { where, getDocs, query, onSnapshot, orderBy, doc, deleteDoc } from "firebase/firestore";
 import UsuarioIconDefault from '../img/usuario_icon.png';
-import { toast, Toaster } from 'react-hot-toast';
 
 const Forum = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -15,6 +14,21 @@ const Forum = () => {
     // eslint-disable-next-line
     const [image, setImage] = useState(UsuarioIconDefault);
     const [messages, setMessages] = useState([]);
+    const [messageIdtoDelete, setMessageIdtoDelete] = useState("");
+    const [selectedImage, setSelectedImage] = useState(null);
+    const handlePhotoSelect = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const imageURL = URL.createObjectURL(file);
+            setSelectedImage(imageURL);
+        } else {
+            setSelectedImage(null);
+        }
+    };
+    const handlePhotoClear = () => {
+        setSelectedImage(null);
+    };
+
 
     const formatTimestamp = (timestamp) => {
         // const date = timestamp.toDate(); 
@@ -56,18 +70,14 @@ const Forum = () => {
 
         fetchUserData();
     }, [currentUser]);
+
     const sendMessage = async () => {
         const inputElement = document.getElementById('nombre');
         const message = inputElement.value;
 
         // Verificar si se seleccionó una imagen
         const imageInputElement = document.getElementById('image-input');
-        //comprueba que que el tipo de archivo sea una imagen y no peso mas de 5mb
-        const imageFile = imageInputElement.files[0] && imageInputElement.files[0].type.includes('image/') && imageInputElement.files[0].size < 5000000 ? imageInputElement.files[0] : null;
-        if (!imageFile) {
-            toast.error('Error al enviar el mensaje: La imagen no es válida o es demasiado grande');
-            return;
-        }
+        const imageFile = imageInputElement.files[0];
 
         try {
             let profilePictureURL = null; // Inicializa la URL de la imagen como null
@@ -99,7 +109,6 @@ const Forum = () => {
         }
     };
 
-
     useEffect(() => {
         const unsubscribe = onSnapshot(
             query(collection(db, 'forum'), orderBy('message_date')),
@@ -115,9 +124,9 @@ const Forum = () => {
         return () => unsubscribe();
     }, []);
 
-    const deleteMessage = async (messageId) => {
+    const deleteMessage = async () => {
         try {
-            await deleteDoc(doc(db, 'forum', messageId));
+            await deleteDoc(doc(db, 'forum', messageIdtoDelete));
             console.log('Mensaje eliminado correctamente');
             closeModal();
         } catch (error) {
@@ -125,8 +134,8 @@ const Forum = () => {
         }
     };
 
+
     // Función para calcular la diferencia de tiempo entre la fecha del mensaje y el momento actual
-    // Función para calcular la diferencia de tiempo
     const getTimeDifference = (timestamp) => {
         const currentDate = new Date(); // Fecha actual
         // const messageDate = timestamp.toDate(); // Fecha del mensaje
@@ -153,7 +162,6 @@ const Forum = () => {
         }
     };
 
-
     function closeModal() {
         setIsOpen(false)
     }
@@ -164,23 +172,14 @@ const Forum = () => {
 
 
     return (
-
         <div className="flex justify-center">
-            <div className="container mx-auto p-4">
+            <div className="container mx-auto p-4 mt-10">
                 <div className="pt-8">
                     <h2 className="text-center text-2xl font-extrabold"
                         style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>Foro</h2>
                 </div>
-                <Toaster
-                    position="bottom-center"
-                    reverseOrder={false}
-
-                    toastStyle={{
-                        width: '50%', // Ajusta el ancho del contenido del toast
-                    }}
-                />
                 <div
-                    className="custom-max-height overflow-auto bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 mt-5 max-w-7xl mb-8">
+                    className="custom-max-height overflow-auto bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 max-w-7xl mb-28 mt-12">
                     <div className="grid gap-4">
                         {messages.map((msg, index) => (
                             <div key={index} className="card bg-white rounded-lg p-4 mt-4 shadow mx-2 hover:bg-gray-50">
@@ -216,7 +215,10 @@ const Forum = () => {
                                         <button
                                             className="text-sm send-button
                                              rounded-lg px-4 py-2"
-                                            onClick={openModal}
+                                            onClick={() => {
+                                                setMessageIdtoDelete(msg.id);
+                                                openModal();
+                                            }}
                                             style={{
                                                 color: "#d73544"
                                             }}>
@@ -272,7 +274,7 @@ const Forum = () => {
                                                                     <button
                                                                         type="button"
                                                                         className="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                                                                        onClick={() => deleteMessage(msg.id)} // Llama a la función deleteMessage con el ID del mensaje
+                                                                        onClick={() => deleteMessage()} // Llama a la función deleteMessage con el ID del mensaje
                                                                         style={{ backgroundColor: '#4a63ee' }}
                                                                     >
                                                                         Si, estoy seguro
@@ -298,7 +300,9 @@ const Forum = () => {
                     </div>
                 </div>
                 {currentUser && (
-                    <div className="forum-label flex items-center justify-center mt-4">
+                    <div className="forum-label flex items-center justify-center">
+
+
                         <input
                             type="text"
                             name="nombre"
@@ -309,7 +313,37 @@ const Forum = () => {
                             pattern="[A-Za-z0-9\s!@#$%^&*()_+=\-[\]{}|\\:;<>,.?/]*"
                             title="Solo se permiten letras, números y símbolos comunes."
                         />
-                        <input type="file" accept="image/*" className="hidden" id="image-input" />
+                        {selectedImage && (
+                            <div className="flex items-center relative">
+                                <img
+                                    src={selectedImage}
+                                    alt="Imagen previa"
+                                    className="w-16 h-16 mr-2 rounded-lg"
+                                />
+                                <button
+                                    className="text-sm send-button rounded-full px-2 py-1 bg-white absolute top-0 right-0  mr-1"
+                                    onClick={handlePhotoClear}
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        height="1em"
+                                        viewBox="0 0 384 512"
+                                        fill="red"
+                                    >
+                                        <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        )}
+
+
+                        <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            id="image-input"
+                            onChange={handlePhotoSelect}
+                        />
                         <label
                             htmlFor="image-input"
                             className="text-sm send-button bg-blue-500 text-white rounded-lg px-4 py-2 mr-2"

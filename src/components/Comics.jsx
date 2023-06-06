@@ -155,7 +155,7 @@ function Comics({ addToCart, cartItems, setCartItems }) {
                                             color: "#1e2447"
                                         }}>{article.title}</h2>
                                         <p className="text-xl font-bold text-blue-500" style={{ color: "#4a63ee" }}>
-                                            {article.price} €
+                                            {article.precio} €
                                         </p>
                                     </div>
                                     <p className="my-2 text-sm text-slate-400 items-end flex-grow-0">{article.description}</p>

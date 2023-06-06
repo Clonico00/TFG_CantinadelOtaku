@@ -156,7 +156,7 @@ function Mechandising({ cartItems, setCartItems }) {
                                             {article.title}
                                         </h2>
                                         <p className="text-xl font-bold text-blue-500" style={{ color: "#4a63ee" }}>
-                                            ${article.price}
+                                            {article.precio}€
                                         </p>
                                     </div>
                                     <p className="my-2 text-sm text-slate-400 items-end flex-grow-0">{article.description}</p>
@@ -169,7 +169,7 @@ function Mechandising({ cartItems, setCartItems }) {
                                     style={{ backgroundColor: "#4a63ee", width: "fit-content" }}
                                 >
                                     <svg
-                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlns="http://www.w3.org/2000/svg" 
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         strokeWidth="1.5"

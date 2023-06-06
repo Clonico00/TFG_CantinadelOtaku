@@ -182,7 +182,7 @@ const Footer = ({ handleLinkClick }) => {
             <hr className="border-gray-600 my-8" />
             <div className="text-center mt-8">
                 <p className="transition-all duration-400 px-3 py-2 text-md font-extrabold"
-                    style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>&copy; 2023 Mi sitio web. Todos los derechos
+                    style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>&copy; 2023 Cantina del Otaku. Todos los derechos
                     reservados.</p>
             </div>
         </div>

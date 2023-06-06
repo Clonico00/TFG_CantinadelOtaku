@@ -6,6 +6,19 @@ import { useNavigate } from "react-router-dom";
 export default function AddArticle() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [showPdfInput, setShowPdfInput] = useState(false);
+
+    const handleCategoryChange = (event) => {
+        const category = event.target.value;
+        setSelectedCategory(category);
+
+        if (category === "Mangas" || category === "Comics") {
+            setShowPdfInput(true);
+        } else {
+            setShowPdfInput(false);
+        }
+    };
     const handleAdd = async (e) => {
         e.preventDefault();
 
@@ -17,8 +30,10 @@ export default function AddArticle() {
         const stock = parseInt(e.target.stock.value);
         const brand = e.target.brand.value;
         const image = e.target.photo.files[0];
-        const pdf = e.target.pdf.files[0];
-
+        //el pdf puede estar o no
+        const pdfFile = e.target.elements.pdf && e.target.elements.pdf.files[0];
+        const pdf = pdfFile ? pdfFile.name : "";
+        
         try {
             // Comprobar si ya existe un artículo con el mismo título y categoría
             const articlesCollection = collection(db, 'articles');
@@ -42,14 +57,14 @@ export default function AddArticle() {
             // Subir el pdf a Firebase Storage
             const fileRef2 = ref(storage, `pdfs/${title}/${pdf.name}`);
             const snapshot2 = await uploadBytes(fileRef2, pdf);
-            const pdfUrl = await getDownloadURL(snapshot2.ref);
+            const pdfUrl = pdfFile ? await getDownloadURL(snapshot2.ref) : "";
 
             // Crear el nuevo artículo
             const newArticle = {
                 title: title,
                 description: description,
                 category: category,
-                price: precio,
+                precio: precio,
                 stock: stock,
                 brand: brand,
                 image: imageUrl,
@@ -126,13 +141,21 @@ export default function AddArticle() {
 
                                 <div className="flex flex-col">
                                     <div>
-                                        <label htmlFor="categoria"
+                                        <label
+                                            htmlFor="categoria"
                                             className="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300"
-                                            style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>Categoria: </label>
+                                            style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                        >
+                                            Categoria:
+                                        </label>
                                         <div className="relative mb-6">
-                                            <select name="categoria" id="categoria"
+                                            <select
+                                                name="categoria"
+                                                id="categoria"
                                                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                                required>
+                                                required
+                                                onChange={handleCategoryChange}
+                                            >
                                                 <option value="">Seleccione una categoría</option>
                                                 <option value="Merchandising">Merchandising</option>
                                                 <option value="Mangas">Mangas</option>
@@ -217,22 +240,28 @@ export default function AddArticle() {
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col">
-                                    <div className="relative">
-                                        <label htmlFor="pdf"
-                                            className="text-sm font-bold mb-2 text-gray-900 block dark:text-gray-300"
-                                            style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>PDF: </label>
-                                        <div className="max-w-2xl mx-auto">
-                                            <input
-                                                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                                id="pdf"
-                                                type="file"
-                                                accept="file/*"
-                                                required
-                                            />
+                                {showPdfInput && (
+                                    <div className="flex flex-col">
+                                        <div className="relative">
+                                            <label
+                                                htmlFor="pdf"
+                                                className="text-sm font-bold mb-2 text-gray-900 block dark:text-gray-300"
+                                                style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                            >
+                                                PDF:
+                                            </label>
+                                            <div className="max-w-2xl mx-auto">
+                                                <input
+                                                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                                    id="pdf"
+                                                    type="file"
+                                                    accept="file/*"
+                                                    required
+                                                />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                )}
 
                                 <button type="submit"
                                     className="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg px-4 py-3 mt-6"

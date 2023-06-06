@@ -179,7 +179,7 @@ export function Detail({ cartItems, setCartItems }) {
                                 <span className="title-font font-bold text-2xl text-gray-900"
                                     style={{ color: "#4a63ee" }}
                                 >
-                                    {article.price} €
+                                    {article.precio} €
                                 </span>
                                 <button
                                     className="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded hover:scale-105 transition-all duration-400"

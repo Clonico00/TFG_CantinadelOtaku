@@ -74,7 +74,7 @@ export default function Register() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen my-24 mx-2">
+        <div className="flex items-center justify-center min-h-screen my-6 mx-2">
             <div className="bg-white dark:bg-gray-800 w-full max-w-md shadow-md rounded-lg border border-gray-200">
                 <div className="md:flex">
                     <div className="w-full p-4 py-5">

@@ -9,10 +9,22 @@ export default function EditArticle() {
     const path = location.pathname;
     const navigate = useNavigate();
     const [error, setError] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [showPdfInput, setShowPdfInput] = useState(false);
 
     let id = path.substring(path.lastIndexOf('/') + 1);
     const [article, setArticle] = useState(null);
 
+    const handleCategoryChange = (event) => {
+        const category = event.target.value;
+        setSelectedCategory(category);
+
+        if (category === "Mangas" || category === "Comics") {
+            setShowPdfInput(true);
+        } else {
+            setShowPdfInput(false);
+        }
+    };
     useEffect(() => {
         const fetchArticle = async (id) => {
             const articleRef = doc(db, 'articles', id);
@@ -44,7 +56,7 @@ export default function EditArticle() {
             title: event.target.title.value,
             description: event.target.description.value,
             category: event.target.category.value !== '' ? event.target.category.value : article.category,
-            price: event.target.price.value,
+            precio: event.target.precio.value,
             stock: parseInt(event.target.stock.value),
             brand: event.target.brand.value,
             image: event.target.photo.files[0] ? event.target.photo.files[0] : null,
@@ -94,7 +106,7 @@ export default function EditArticle() {
                 title: '',
                 description: '',
                 category: '',
-                price: '',
+                precio: '',
                 stock: '',
                 brand: '',
                 image: '',
@@ -173,12 +185,19 @@ export default function EditArticle() {
                             </div>
                             <div className="flex flex-col">
                                 <div>
-                                    <label htmlFor="category"
+                                    <label
+                                        htmlFor="category"
                                         className="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300"
-                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>Categoria: </label>
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                    >
+                                        Categoria:
+                                    </label>
                                     <div className="relative mb-6">
-                                        <select name="category" id="category"
+                                        <select
+                                            name="category"
+                                            id="category"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                            onChange={handleCategoryChange}
                                         >
                                             <option value="">Seleccione una categoría</option>
                                             <option value="Merchandising">Merchandising</option>
@@ -191,16 +210,16 @@ export default function EditArticle() {
 
                             <div className="flex flex-col">
                                 <div>
-                                    <label htmlFor="price"
+                                    <label htmlFor="precio"
                                         className="block text-sm font-bold text-gray-900 dark:text-gray-300"
                                         style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>Precio: </label>
                                     <div className="relative mb-6">
                                         <input
                                             type="text"
-                                            name="price"
-                                            id="price"
+                                            name="precio"
+                                            id="precio"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            value={article.price}
+                                            value={article.precio}
                                             onChange={handleChange} // Agrega el evento onChange para actualizar el estado
                                             pattern="[0-9]+(\.[0-9]+)?"
                                             title="Ingrese un número decimal válido, Ej: 9.99"
@@ -265,22 +284,27 @@ export default function EditArticle() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex flex-col">
-                                <div className="relative">
-                                    <label htmlFor="pdf"
-                                        className="text-sm font-bold mb-2 text-gray-900 block dark:text-gray-300"
-                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>PDF: </label>
-                                    <div className="max-w-2xl mx-auto">
-                                        <input
-                                            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                            id="pdf"
-                                            type="file"
-                                            accept="image/*"
-
-                                        />
+                            {(selectedCategory === "Mangas" || selectedCategory === "Comics" || showPdfInput) && (
+                                <div className="flex flex-col">
+                                    <div className="relative">
+                                        <label
+                                            htmlFor="pdf"
+                                            className="text-sm font-bold mb-2 text-gray-900 block dark:text-gray-300"
+                                            style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                        >
+                                            PDF:
+                                        </label>
+                                        <div className="max-w-2xl mx-auto">
+                                            <input
+                                                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                                id="pdf"
+                                                type="file"
+                                                accept="image/*"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
 
                             <button type="submit"
                                 className="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg px-4 py-3 mt-6"

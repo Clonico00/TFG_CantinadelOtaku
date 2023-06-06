@@ -203,8 +203,8 @@ export default function Admin() {
                                     </span>
                                 )}
                             </th>
-                            <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447", cursor: 'pointer' }} onClick={() => handleSort('price')}>
-                                Precio  {sortColumn.column === 'price' && (
+                            <th scope="col" className="px-6 py-4 font-bold text-md" style={{ color: "#1e2447", cursor: 'pointer' }} onClick={() => handleSort('precio')}>
+                                Precio  {sortColumn.column === 'precio' && (
                                     <span className="ml-1">
                                         {sortColumn.type === 'asc' ? (
                                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -313,18 +313,23 @@ export default function Admin() {
                                 </td>
                                 <td className="px-6 py-4">{articulo.description}</td>
                                 <td className="px-6 py-4">{articulo.stock}</td>
-                                <td className="px-6 py-4">{articulo.price}$</td>
+                                <td className="px-6 py-4">{articulo.precio} €</td>
                                 <td className="px-6 py-4">{articulo.category}</td>
                                 <td className="px-6 py-4">{articulo.brand}</td>
                                 <td className="flex gap-3 px-6 py-4 text-gray-500">
-                                    <div className="relative h-10 w-10">
-                                        <img
-                                            className="h-full w-full rounded-full object-cover object-center"
-                                            src={articulo.pdf}
-                                            alt={articulo.title}
-                                        />
-                                    </div>
+                                    {articulo.pdf ? (
+                                        <div className="relative h-10 w-10">
+                                            <img
+                                                className="h-full w-full rounded-full object-cover object-center"
+                                                src={articulo.pdf}
+                                                alt={articulo.title}
+                                            />
+                                        </div>
+                                    ) : (
+                                        <span>No</span>
+                                    )}
                                 </td>
+
                                 <td className="px-6 py-4">
                                     <div className="flex justify-start gap-4 ">
                                         <Link to={`/admin/edit/${articulo.id}`}>
