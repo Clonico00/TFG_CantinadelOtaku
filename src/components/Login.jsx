@@ -210,7 +210,7 @@ export default function Login() {
     };
     return (
         <>
-            <div className="flex items-center justify-center min-h-screen mx-2 my-8">
+            <div className="flex items-center justify-center min-h-screen mx-2">
                 <div className="bg-white dark:bg-gray-800 w-full max-w-md shadow-md rounded-lg border border-gray-200 py-2">
                     <div className="md:flex">
                         <div className="w-full p-4 py-5">
@@ -302,20 +302,6 @@ export default function Login() {
                                 >
                                     Iniciar Sesión
                                 </button>
-                                <hr className="my-6 border-gray-300 w-full" />
-
-
-                                <button
-                                    type="button"
-                                    className="w-full  bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg px-4 py-3 mt-6 flex items-center justify-center"
-                                    style={{ backgroundColor: "#4a63ee" }}
-                                    onClick={handleGoogleSignIn}
-                                >
-                                    <img className="h-5 w-5 mr-2"
-                                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google Logo" />
-                                    Inicia Sesion con Google
-                                </button>
-
 
                                 <div className="text-sm font-medium text-gray-500 dark:text-gray-300 mt-4">
                                     ¿No tienes cuenta?{" "}
