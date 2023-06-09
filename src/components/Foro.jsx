@@ -79,6 +79,8 @@ const Forum = () => {
 
         // Verificar si se seleccionó una imagen
         const imageInputElement = document.getElementById('image-input');
+
+
         //comprueba que que el tipo de archivo sea una imagen y no peso mas de 5mb
         const imageFile = imageInputElement.files[0] && imageInputElement.files[0].type.includes('image/') && imageInputElement.files[0].size < 5000000 ? imageInputElement.files[0] : null;
         if (!imageFile) {
@@ -186,13 +188,13 @@ const Forum = () => {
                         style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>Foro</h2>
                 </div>
                 <Toaster
-                position="bottom-center"
-                reverseOrder={false}
+                    position="bottom-center"
+                    reverseOrder={false}
 
-                toastStyle={{
-                    width: '50%', // Ajusta el ancho del contenido del toast
-                }}
-            />
+                    toastStyle={{
+                        width: '50%', // Ajusta el ancho del contenido del toast
+                    }}
+                />
                 <div
                     className="custom-max-height overflow-auto bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 max-w-7xl mb-28 mt-12">
                     <div className="grid gap-4">
@@ -316,8 +318,6 @@ const Forum = () => {
                 </div>
                 {currentUser && (
                     <div className="forum-label flex items-center justify-center">
-
-
                         <input
                             type="text"
                             name="nombre"
@@ -328,56 +328,57 @@ const Forum = () => {
                             pattern="[A-Za-z0-9\s!@#$%^&*()_+=\-[\]{}|\\:;<>,.?/]*"
                             title="Solo se permiten letras, números y símbolos comunes."
                         />
-                        {selectedImage && (
-                            <div className="flex items-center relative">
-                                <img
-                                    src={selectedImage}
-                                    alt="Imagen previa"
-                                    className="w-16 h-16 mr-2 rounded-lg"
-                                />
-                                <button
-                                    className="text-sm send-button rounded-full px-2 py-1 bg-white absolute top-0 right-0  mr-1"
-                                    onClick={handlePhotoClear}
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        height="1em"
-                                        viewBox="0 0 384 512"
-                                        fill="red"
+                        <div className="flex items-center relative">
+                            {selectedImage && (
+                                <div className="flex items-center relative mr-2">
+                                    <img
+                                        src={selectedImage}
+                                        alt="Imagen previa"
+                                        className="w-16 h-16 rounded-lg"
+                                    />
+                                    <button
+                                        className="text-sm send-button rounded-full px-2 py-1 bg-white absolute top-0 right-0  mr-1"
+                                        onClick={handlePhotoClear}
                                     >
-                                        <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
-                                    </svg>
-                                </button>
-                            </div>
-                        )}
-
-
-                        <input
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            id="image-input"
-                            onChange={handlePhotoSelect}
-                        />
-                        <label
-                            htmlFor="image-input"
-                            className="text-sm send-button bg-blue-500 text-white rounded-lg px-4 py-2 mr-2"
-                            style={{ backgroundColor: "#4a63ee" }}
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 512 512"
-                                height="20"
-                                width="20"
-                                fill="currentColor"
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            height="1em"
+                                            viewBox="0 0 384 512"
+                                            fill="red"
+                                        >
+                                            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            )}
+                            <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                id="image-input"
+                                onChange={handlePhotoSelect}
+                            />
+                            <label
+                                htmlFor="image-input"
+                                className={`text-sm send-button bg-blue-500 text-white rounded-lg px-4 py-2 mr-2 ${selectedImage ? 'hidden' : ''}`}
+                                style={{ backgroundColor: "#4a63ee" }}
                             >
-                                <path
-                                    d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"
-                                />
-                            </svg>
-                        </label>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 512 512"
+                                    height="20"
+                                    width="20"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"
+                                    />
+                                </svg>
+                            </label>
+                        </div>
+
                         <button
-                            className="text-sm send-button bg-blue-500 text-white rounded-lg px-4 py-2"
+                            className="text-sm send-button bg-blue-500 text-white rounded-lg px-4 py-2 mr-1"
                             style={{ backgroundColor: "#4a63ee" }}
                             onClick={sendMessage}
                         >

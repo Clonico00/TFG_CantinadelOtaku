@@ -37,6 +37,17 @@ function App() {
     // Lógica para añadir el artículo al carrito
     setCartItems([...cartItems, article]);
   };
+  useEffect(() => {
+    const loadCartFromLocalStorage = () => {
+        const cartItemsFromLocalStorage = JSON.parse(localStorage.getItem('cartItems'));
+        if (cartItemsFromLocalStorage) {
+            setCartItems(cartItemsFromLocalStorage);
+        }
+    };
+
+    loadCartFromLocalStorage();
+    // eslint-disable-next-line
+}, []);
 
   const loadCartFromDatabase = async () => {
     try {

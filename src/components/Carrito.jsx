@@ -611,7 +611,7 @@ export function Carrito({ cartItems, setCartItems }) {
                                         <input type="text" name="calle" id="calle"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                             required
-                                            placeholder="Calle Recogidas"
+                                            placeholder="Introducte la calle..."
 
                                         />
                                     </div>
@@ -627,7 +627,7 @@ export function Carrito({ cartItems, setCartItems }) {
                                         <input type="text" name="numero" id="numero"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                             required
-                                            placeholder="Numero 11º"
+                                            placeholder="Introducte el numero..."
 
                                         />
                                     </div>
@@ -643,7 +643,7 @@ export function Carrito({ cartItems, setCartItems }) {
                                         <input type="text" name="piso" id="piso"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                             required
-                                            placeholder="5"
+                                            placeholder="Introducte el piso..."
 
                                         />
                                     </div>
@@ -659,7 +659,7 @@ export function Carrito({ cartItems, setCartItems }) {
                                         <input type="text" name="letra" id="letra"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                             required
-                                            placeholder="F"
+                                            placeholder="Introducte la letra..."
 
                                         />
                                     </div>
@@ -721,7 +721,7 @@ export function Carrito({ cartItems, setCartItems }) {
                                         <input type="text" name="cp" id="cp"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                             required
-                                            placeholder="18001"
+                                            placeholder="Introducte el codigo postal..."
 
                                         />
                                     </div>

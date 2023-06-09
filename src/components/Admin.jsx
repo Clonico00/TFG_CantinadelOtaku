@@ -112,7 +112,7 @@ export default function Admin() {
                 }}
             />
             <div
-                className="flex justify-between items-center px-6 py-4 mt-10 bg-gray-50 border border-gray-200 rounded  custom-margin ">
+                className="flex justify-between items-center px-6 py-4 mt-10 bg-gray-50 border border-gray-200 rounded  custom-margin overflow-x-auto">
                 <h2 className="text-center text-2xl font-bold" style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>
                     Inventario
                 </h2>
