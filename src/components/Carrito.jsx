@@ -335,7 +335,7 @@ export function Carrito({ cartItems, setCartItems }) {
             localStorage.removeItem('cartItems');
             toast.success('Compra realizada con éxito');
         } catch (error) {
-            console.log(error.text);
+            console.log(error);
         }
     };
 
