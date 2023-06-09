@@ -19,7 +19,7 @@ export function Carrito({ cartItems, setCartItems }) {
     const taxes = subtotal * 0.1;
     const total = subtotal + taxes;
     const [fullName, setFullName] = useState('');
-
+    const [checkboxes, setCheckboxes] = useState({});
     const handleDecrease = async (itemId) => {
         const existingItem = cartItems.find((item) => item.id === itemId);
 
@@ -242,7 +242,7 @@ export function Carrito({ cartItems, setCartItems }) {
                     (item) => `
             - ${item.title}
               Cantidad: ${item.cantidad}
-              Precio: ${(item.price * item.cantidad).toFixed(2)} €`
+              Precio: ${(item.precio * item.cantidad).toFixed(2)} €`
                 )
                 .join('\n')}
           
@@ -283,9 +283,9 @@ export function Carrito({ cartItems, setCartItems }) {
 
                         const existingTitles = userData.library.map((item) => item.title);
 
-                        for (const item of cartItems) {
-                            const checkbox = document.getElementById(`checkbox-${item.id}`);
-                            if (checkbox.checked) { // Verificar si el checkbox está marcado
+                       for (const item of cartItems) {
+  const isChecked = checkboxes[item.id];
+  if (isChecked) { // Verificar si el checkbox está marcado
                                 if (existingTitles.includes(item.title)) {
                                     toast.error(`No se pudo completar la compra. El artículo "${item.title}" ya está en la biblioteca.`);
                                     return;
@@ -309,8 +309,8 @@ export function Carrito({ cartItems, setCartItems }) {
                         };
 
                         for (const item of cartItems) {
-                            const checkbox = document.getElementById(`checkbox-${item.id}`);
-                            if (checkbox.checked) { // Verificar si el checkbox está marcado
+                            const isChecked = checkboxes[item.id];
+                            if (isChecked) { //// Verificar si el checkbox está marcado
                                 const newItem = {
                                     title: item.title,
                                     pdf: item.pdf,
@@ -338,7 +338,13 @@ export function Carrito({ cartItems, setCartItems }) {
             console.log(error);
         }
     };
-
+    const handleCheckboxChange = (itemId, checked) => {
+        setCheckboxes((prevCheckboxes) => ({
+          ...prevCheckboxes,
+          [itemId]: checked,
+        }));
+      };
+      
     return (
         <>
             <Toaster
@@ -381,11 +387,14 @@ export function Carrito({ cartItems, setCartItems }) {
                                                 {(item.category === "Mangas" || item.category === "Comics") && (
                                                     <div className="mt-4">
                                                         <label className="flex items-center">
-                                                            <input
-                                                                id={`checkbox-${item.id}`}
-                                                                type="checkbox"
-                                                                className="form-checkbox h-4 w-4 text-indigo-600"
-                                                            />
+                                                        <input
+  id={`checkbox-${item.id}`}
+  type="checkbox"
+  className="form-checkbox h-4 w-4 text-indigo-600"
+  checked={checkboxes[item.id]}
+  onChange={(e) => handleCheckboxChange(item.id, e.target.checked)}
+/>
+
                                                             <span className="ml-2 text-gray-700">
                                                                 {item.category === "Comics"
                                                                     ? "¿Desea agregar este cómic a su librería?"
