@@ -5,6 +5,8 @@ import { signInWithEmailAndPassword, sendPasswordResetEmail, GoogleAuthProvider,
 import { useNavigate } from 'react-router-dom';
 import { collection, where, getDocs, query, addDoc } from "firebase/firestore";
 import { Dialog, Transition } from "@headlessui/react";
+import { useAtom } from 'jotai';
+import { userDataAtom } from "../atoms/userAtom";
 
 const Modal = ({ isOpen, onClose, onSubmit }) => {
     const [email, setEmail] = useState("");
@@ -101,6 +103,7 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const [userAtom, setUserAtom] = useAtom(userDataAtom);
 
     const closeModal = () => {
         setIsOpen(false);
@@ -124,7 +127,8 @@ export default function Login() {
 
             if (!snapshot.empty) {
                 const userData = snapshot.docs[0].data();
-
+                setUserAtom(userData);
+                localStorage.setItem('userDataAtom', JSON.stringify(userData));
                 // Verificar si el usuario es administrador
                 if (userData.isAdmin) {
                     navigate('/admin'); // Redirigir a la página de administrador
@@ -154,9 +158,11 @@ export default function Login() {
                 const email = user.email;
                 const usersRef = collection(db, 'users');
                 const userQuery = query(usersRef, where('email', '==', email));
-                const snapshot = await getDocs(userQuery);
+                let snapshot = await getDocs(userQuery);
 
                 if (!snapshot.empty) {
+                    setUserAtom(snapshot.docs[0].data());
+                    localStorage.setItem('userDataAtom', JSON.stringify(snapshot.docs[0].data()));
                     navigate('/merchandising'); // Redirigir a la página de inicio del usuario
 
                 } else {
@@ -168,8 +174,13 @@ export default function Login() {
                         image: user.photoURL,
                     });
 
+                    snapshot = await getDocs(userQuery);
+                    setUserAtom(snapshot.docs[0].data());
+                    localStorage.setItem('userDataAtom', JSON.stringify(snapshot.docs[0].data()));
                     navigate('/merchandising'); // Redirigir a la página de inicio del usuario
                 }
+
+                
             })
             .catch((error) => {
                 // Error durante la autenticación con Google

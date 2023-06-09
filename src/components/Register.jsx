@@ -6,6 +6,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { Link } from "react-router-dom";
+import { toast, Toaster } from 'react-hot-toast';
 
 
 export default function Register() {
@@ -24,6 +25,14 @@ export default function Register() {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
+             // Subir la foto de perfil a Firebase Storage
+          const imageInputElement = document.getElementById('photo');
+          const imageFile = imageInputElement.files[0];
+          
+          if (!imageFile || !imageFile.type.includes('image/') || imageFile.size >= 5000000) {
+            setError('Error al enviar el mensaje: La imagen no es válida o es demasiado grande');
+            return;
+          }
           // Comprobar si el nombre de usuario ya existe en la base de datos
           const usersCollection = collection(db, 'users');
           const usernameQuery = query(usersCollection, where('username', '==', username));
@@ -39,10 +48,12 @@ export default function Register() {
           // Cerrar sesión después de crear el usuario
           await signOut(auth);
       
-          // Subir la foto de perfil a Firebase Storage
+         
+          
           const storageRef = ref(storage, `profile_pictures/${user.uid}`);
-          await uploadBytes(storageRef, image);
+          await uploadBytes(storageRef, imageFile);
           const profilePictureURL = await getDownloadURL(storageRef);
+          
       
           // Guardar los datos del usuario en Firestore
           await setDoc(doc(db, 'users', user.uid), {
@@ -205,8 +216,8 @@ export default function Register() {
                                             placeholder="••••••••"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
-                                            pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\p{P}\p{S}]).{8,}$"
-                                            title="La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, un número y un símbolo especial"
+                                            pattern ="^(?=[A-Za-z0-9@#%^&+!=¿¡]+$)^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#%^&+!=¿¡])(?=.{8,}).*$"
+                                            title="La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, un número y un símbolo especial como @#%^&+!=¿¡"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                             required
                                         />

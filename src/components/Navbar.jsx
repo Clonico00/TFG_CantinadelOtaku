@@ -7,6 +7,8 @@ import { AuthContext } from './AuthContext';
 import { db, auth } from '../firebase';
 import { collection, where, getDocs, query } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { userDataAtom } from '../atoms/userAtom';
 
 function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
     const [showMenu, setShowMenu] = useState(false);
@@ -21,32 +23,42 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
     const navigate = useNavigate();
     const totalQuantity = Array.isArray(cartItems) ? cartItems.reduce((total, item) => total + item.cantidad, 0) || 0 : 0;
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            if (currentUser) {
-                try {
-                    const usersRef = collection(db, 'users');
-                    const userQuery = query(usersRef, where('email', '==', currentUser.email));
-                    const snapshot = await getDocs(userQuery);
+    const [userAtom, setUserAtom] = useAtom(userDataAtom);
 
-                    if (!snapshot.empty) {
-                        const userData = snapshot.docs[0].data();
-                        setUserData(userData);
+    // useEffect(() => {
+    //     const fetchUserData = async () => {
+    //         if (currentUser) {
+    //             try {
+    //                 const usersRef = collection(db, 'users');
+    //                 const userQuery = query(usersRef, where('email', '==', currentUser.email));
+    //                 const snapshot = await getDocs(userQuery);
 
-                        // Establecer el estado "image" después de obtener los datos del usuario
-                        const image = userData && userData.image ? userData.image : UsuarioIconDefault;
-                        setImage(image);
-                    }
+    //                 if (!snapshot.empty) {
+    //                     const userData = snapshot.docs[0].data();
+    //                     setUserData(userData);
+
+    //                     // Establecer el estado "image" después de obtener los datos del usuario
+    //                     const image = userData && userData.image ? userData.image : UsuarioIconDefault;
+    //                     setImage(image);
+    //                 }
 
 
-                } catch (error) {
-                    console.error('Error al obtener los datos del usuario:', error);
-                }
-            }
-        };
+    //             } catch (error) {
+    //                 console.error('Error al obtener los datos del usuario:', error);
+    //             }
+    //         }
+    //     };
 
-        fetchUserData();
-    }, [currentUser]);
+    //     fetchUserData();
+    // }, [currentUser]);
+
+    useEffect(()=>{
+        if (userAtom){
+        // Establecer el estado "image" después de obtener los datos del usuario
+          const image = userAtom.image ? userAtom.image : UsuarioIconDefault;
+          setImage(image);
+        }
+    }, [userAtom]);
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
@@ -73,6 +85,9 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
         auth
             .signOut()
             .then(() => {
+                setUserAtom(null);    
+                setCartItems([]);
+                localStorage.clear();
                 setImage(UsuarioIconDefault); // Restablecer la imagen a la imagen predeterminada al cerrar sesión
                 navigate('/');
                 closeMenu();
@@ -158,10 +173,9 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
                         </Link>
                     </div>
                     <div className="hidden md:block">
-
-                        <div
-                            className={`${currentUser && userData && userData.isAdmin === true ? 'pr-20 mr-20' : ''} ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item `}>
-                            {currentUser && userData && userData.isAdmin === true ? (
+                            <div
+                            className={`${userAtom && userAtom.isAdmin === true ? 'pr-20 mr-20' : ''} ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item `}>
+                            {userAtom && userAtom.isAdmin  === true ? (
                                 <>
                                     <Link
                                         to="/admin"
@@ -310,7 +324,7 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
                     </div>
                     <div className="flex md:flex-row">
                         <div className={`flex items-center relative `}>
-                            {currentUser && userData && userData.isAdmin === true ? (
+                            {userAtom && userAtom.isAdmin === true ? (
                                 <>
                                     <button
                                         type="button"
@@ -368,7 +382,7 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
 
                             {isMenuOpen && (
                                 <div
-                                    className={`${!currentUser && !userData ? 'mt-5' : 'mt-6'} absolute z-10 bg-white rounded-md shadow-xl flex flex-col `}
+                                    className={`${!userAtom ? 'mt-5' : 'mt-6'} absolute z-10 bg-white rounded-md shadow-xl flex flex-col `}
                                     style={{
                                         borderRadius: "0.375rem",
                                         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.25)",
@@ -380,7 +394,7 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
                                     }}
                                 >
 
-                                    {currentUser ? (
+                                    {userAtom ? (
                                         <>
                                             <div className="flex items-center">
                                                 <img
@@ -399,10 +413,10 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
                                                                 color: "#1e2447",
                                                             }}
                                                         >
-                                                            {userData ? userData.name : ""}
+                                                            {userAtom ? userAtom.name : ""}
                                                         </div>
                                                         <div className="text-gray-600 text-sm">
-                                                            {userData && userData.email ? `${userData.email}` : ""}
+                                                            {userAtom && userAtom.email ? `${userAtom.email}` : ""}
                                                         </div>
                                                     </div>
                                                     <hr className="border-gray-400 mt-2" />

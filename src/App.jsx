@@ -19,12 +19,15 @@ import EditArticle from "./components/EditArticle";
 import { AuthContext } from "./components/AuthContext";
 import { db } from "./firebase";
 import { doc, getDoc, collection, where, query, getDocs } from "firebase/firestore";
+import { useAtomValue } from "jotai";
+import { userDataAtom } from "./atoms/userAtom";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
   const [activeLink, setActiveLink] = useState('/');
   const [cartItems, setCartItems] = useState([]);
   const [userData, setUserData] = useState(null);
+  const userAtom = useAtomValue(userDataAtom);
 
   const handleLinkClick = (path) => {
     setActiveLink(path);
@@ -35,49 +38,28 @@ function App() {
     setCartItems([...cartItems, article]);
   };
 
-  useEffect(() => {
-    const loadCartFromDatabase = async () => {
-      try {
-        if (currentUser) {
-          const userEmail = currentUser.email;
-          const cartDocRef = doc(db, 'carts', userEmail);
-          const cartDocSnap = await getDoc(cartDocRef);
+  const loadCartFromDatabase = async () => {
+    try {
+      if (userAtom) {
+        const userEmail = userAtom.email;
+        const cartDocRef = doc(db, 'carts', userEmail);
+        const cartDocSnap = await getDoc(cartDocRef);
 
-          if (cartDocSnap.exists()) {
-            const cartData = cartDocSnap.data();
-            setCartItems(cartData.cartItems);
-          }
+        if (cartDocSnap.exists()) {
+          const cartData = cartDocSnap.data();
+          setCartItems(cartData.cartItems);
         }
-      } catch (error) {
-        console.error('Error al cargar el carrito desde la base de datos:', error);
       }
-    };
+    } catch (error) {
+      console.error('Error al cargar el carrito desde la base de datos:', error);
+    }
+  };
 
+  useEffect(() => {    
     loadCartFromDatabase();
-  }, [currentUser]);
+  }, [userAtom]);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (currentUser) {
-        try {
-          const usersRef = collection(db, 'users');
-          const userQuery = query(usersRef, where('email', '==', currentUser.email));
-          const snapshot = await getDocs(userQuery);
-
-          if (!snapshot.empty) {
-            const userData = snapshot.docs[0].data();
-            setUserData(userData);
-
-          }
-
-        } catch (error) {
-          console.error('Error al obtener los datos del usuario:', error);
-        }
-      }
-    };
-
-    fetchUserData();
-  }, [currentUser]);
+  
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
@@ -94,7 +76,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/carrito" element={<Carrito cartItems={cartItems} setCartItems={setCartItems} />} />
           <Route path="/:category/detail/:id" element={<Detail cartItems={cartItems} setCartItems={setCartItems} />} />
-          {currentUser != null && userData && userData.isAdmin ? (
+          {userAtom && userAtom.isAdmin ? (
             <>
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/add" element={<AddArticle />} />

@@ -87,7 +87,7 @@ const LibreriaDetail = () => {
 
   return (
     <div style={{ height: "100vh" }} className="mb-20 border border-gray-200 rounded">
-      <Worker workerUrl="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.worker.min.js">
+      <Worker workerUrl="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.7.107/pdf.worker.min.js">
         <div className="rpv-core__viewer bg-gray-50 border border-gray-200 rounded">
           <Toolbar>{renderDefaultToolbar(transform)}</Toolbar>
         </div>

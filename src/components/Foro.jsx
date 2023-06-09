@@ -6,6 +6,7 @@ import { db, storage } from '../firebase';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { where, getDocs, query, onSnapshot, orderBy, doc, deleteDoc } from "firebase/firestore";
 import UsuarioIconDefault from '../img/usuario_icon.png';
+import { toast, Toaster } from 'react-hot-toast';
 
 const Forum = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -16,6 +17,7 @@ const Forum = () => {
     const [messages, setMessages] = useState([]);
     const [messageIdtoDelete, setMessageIdtoDelete] = useState("");
     const [selectedImage, setSelectedImage] = useState(null);
+
     const handlePhotoSelect = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -77,7 +79,12 @@ const Forum = () => {
 
         // Verificar si se seleccionó una imagen
         const imageInputElement = document.getElementById('image-input');
-        const imageFile = imageInputElement.files[0];
+        //comprueba que que el tipo de archivo sea una imagen y no peso mas de 5mb
+        const imageFile = imageInputElement.files[0] && imageInputElement.files[0].type.includes('image/') && imageInputElement.files[0].size < 5000000 ? imageInputElement.files[0] : null;
+        if (!imageFile) {
+            toast.error('Error al enviar el mensaje: La imagen no es válida o es demasiado grande');
+            return;
+        }
 
         try {
             let profilePictureURL = null; // Inicializa la URL de la imagen como null
@@ -178,6 +185,14 @@ const Forum = () => {
                     <h2 className="text-center text-2xl font-extrabold"
                         style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>Foro</h2>
                 </div>
+                <Toaster
+                position="bottom-center"
+                reverseOrder={false}
+
+                toastStyle={{
+                    width: '50%', // Ajusta el ancho del contenido del toast
+                }}
+            />
                 <div
                     className="custom-max-height overflow-auto bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 max-w-7xl mb-28 mt-12">
                     <div className="grid gap-4">

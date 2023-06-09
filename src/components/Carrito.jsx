@@ -3,15 +3,20 @@ import { provincias } from "../data";
 import { provinciasConCiudades } from "../data";
 import { Dialog, Transition } from "@headlessui/react";
 import { toast, Toaster } from 'react-hot-toast';
-import { AuthContext } from "./AuthContext";
+//import { AuthContext } from "./AuthContext";
 import { db } from "../firebase";
 import { doc, getDoc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { collection, where, getDocs, query } from "firebase/firestore";
 import emailjs from '@emailjs/browser';
+import { useAtomValue } from "jotai";
+import { userDataAtom } from "../atoms/userAtom";
+
+
 export function Carrito({ cartItems, setCartItems }) {
     const [isOpen, setIsOpen] = useState(false);
     const [articleToDelete, setArticleToDelete] = useState("");
-    const { currentUser } = useContext(AuthContext);
+    //const { currentUser } = useContext(AuthContext);
+    const [checkboxes, setCheckboxes] = useState({});
     const form = useRef();
     const subtotal = Array.isArray(cartItems)
         ? cartItems.reduce((accumulator, item) => accumulator + item.precio * item.cantidad, 0)
@@ -19,7 +24,9 @@ export function Carrito({ cartItems, setCartItems }) {
     const taxes = subtotal * 0.1;
     const total = subtotal + taxes;
     const [fullName, setFullName] = useState('');
-    const [checkboxes, setCheckboxes] = useState({});
+
+    const userAtom = useAtomValue(userDataAtom);
+
     const handleDecrease = async (itemId) => {
         const existingItem = cartItems.find((item) => item.id === itemId);
 
@@ -48,7 +55,7 @@ export function Carrito({ cartItems, setCartItems }) {
                 console.error('Error al actualizar el stock del artículo:', error);
             }
 
-            if (currentUser) {
+            if (userAtom) {
                 saveCartToDatabase(updatedCartItems);
             } else {
                 updateLocalStorageCart(updatedCartItems);
@@ -58,6 +65,13 @@ export function Carrito({ cartItems, setCartItems }) {
         }
     };
 
+    const handleCheckboxChange = (itemId, checked) => {
+        setCheckboxes((prevCheckboxes) => ({
+          ...prevCheckboxes,
+          [itemId]: checked,
+        }));
+      };
+      
     const handleIncrease = async (itemId) => {
         const article = cartItems.find((item) => item.id === itemId);
         if (article && article.cantidad < article.stock) {
@@ -85,7 +99,7 @@ export function Carrito({ cartItems, setCartItems }) {
                 console.error('Error al actualizar el stock del artículo:', error);
             }
 
-            if (currentUser) {
+            if (userAtom) {
                 saveCartToDatabase(updatedCartItems);
             } else {
                 updateLocalStorageCart(updatedCartItems);
@@ -118,7 +132,7 @@ export function Carrito({ cartItems, setCartItems }) {
             console.error('Error al actualizar el stock del artículo:', error);
         }
 
-        if (currentUser) {
+        if (userAtom) {
             saveCartToDatabase(updatedCartItems);
         } else {
             updateLocalStorageCart(updatedCartItems);
@@ -144,8 +158,8 @@ export function Carrito({ cartItems, setCartItems }) {
 
     const loadCartFromDatabase = async () => {
         try {
-            if (currentUser) {
-                const userEmail = currentUser.email;
+            if (userAtom) {
+                const userEmail = userAtom.email;
                 const cartDocRef = doc(db, 'carts', userEmail);
                 const cartDocSnap = await getDoc(cartDocRef);
 
@@ -165,8 +179,8 @@ export function Carrito({ cartItems, setCartItems }) {
 
     const saveCartToDatabase = async (updatedCartItems) => {
         try {
-            if (currentUser) {
-                const userEmail = currentUser.email;
+            if (userAtom) {
+                const userEmail = userAtom.email;
                 const cartDocRef = doc(db, 'carts', userEmail);
                 await setDoc(cartDocRef, { cartItems: updatedCartItems });
                 updateLocalStorageCart(updatedCartItems); // Actualizar localStorage con los datos de la base de datos
@@ -178,28 +192,28 @@ export function Carrito({ cartItems, setCartItems }) {
 
     useEffect(() => {
         loadCartFromDatabase();
-        if (currentUser) {
-            const usersCollection = collection(db, 'users');
-            const userQuery = query(usersCollection, where('email', '==', currentUser.email));
-            getDocs(userQuery)
-                .then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        const userData = querySnapshot.docs[0].data();
-                        if (userData.name === undefined || userData.apellidos === undefined) {
-                            setFullName(currentUser.displayName);
-                        } else {
-                            setFullName(userData.name + ' ' + userData.apellidos);
-                        }
-                    } else {
-                        console.log('No matching documents found!');
-                    }
-                })
-                .catch((error) => {
-                    console.log('Error querying user document:', error);
-                });
-        }
+        // if (currentUser) {
+        //     const usersCollection = collection(db, 'users');
+        //     const userQuery = query(usersCollection, where('email', '==', currentUser.email));
+        //     getDocs(userQuery)
+        //         .then((querySnapshot) => {
+        //             if (!querySnapshot.empty) {
+        //                 const userData = querySnapshot.docs[0].data();
+        //                 if (userData.name === undefined || userData.apellidos === undefined) {
+        //                     setFullName(currentUser.displayName);
+        //                 } else {
+        //                     setFullName(userData.name + ' ' + userData.apellidos);
+        //                 }
+        //             } else {
+        //                 console.log('No matching documents found!');
+        //             }
+        //         })
+        //         .catch((error) => {
+        //             console.log('Error querying user document:', error);
+        //         });
+        // }
         // eslint-disable-next-line
-    }, [currentUser]);
+    }, [userAtom]);
 
 
     function closeModal() {
@@ -242,7 +256,7 @@ export function Carrito({ cartItems, setCartItems }) {
                     (item) => `
             - ${item.title}
               Cantidad: ${item.cantidad}
-              Precio: ${(item.precio * item.cantidad).toFixed(2)} €`
+              Precio: ${(item.price * item.cantidad).toFixed(2)} €`
                 )
                 .join('\n')}
           
@@ -260,8 +274,8 @@ export function Carrito({ cartItems, setCartItems }) {
 
         try {
 
-            if (currentUser) {
-                const userEmail = currentUser.email;
+            if (userAtom) {
+                const userEmail = userAtom.email;
                 const cartDocRef = doc(db, 'carts', userEmail);
                 const cartDocSnap = await getDoc(cartDocRef);
 
@@ -283,9 +297,9 @@ export function Carrito({ cartItems, setCartItems }) {
 
                         const existingTitles = userData.library.map((item) => item.title);
 
-                       for (const item of cartItems) {
-  const isChecked = checkboxes[item.id];
-  if (isChecked) { // Verificar si el checkbox está marcado
+                        for (const item of cartItems) {
+                            const isChecked = checkboxes[item.id];
+                            if (isChecked) { // Verificar si el checkbox está marcado
                                 if (existingTitles.includes(item.title)) {
                                     toast.error(`No se pudo completar la compra. El artículo "${item.title}" ya está en la biblioteca.`);
                                     return;
@@ -310,7 +324,7 @@ export function Carrito({ cartItems, setCartItems }) {
 
                         for (const item of cartItems) {
                             const isChecked = checkboxes[item.id];
-                            if (isChecked) { //// Verificar si el checkbox está marcado
+                            if (isChecked) { // Verificar si el checkbox está marcado
                                 const newItem = {
                                     title: item.title,
                                     pdf: item.pdf,
@@ -338,13 +352,7 @@ export function Carrito({ cartItems, setCartItems }) {
             console.log(error);
         }
     };
-    const handleCheckboxChange = (itemId, checked) => {
-        setCheckboxes((prevCheckboxes) => ({
-          ...prevCheckboxes,
-          [itemId]: checked,
-        }));
-      };
-      
+
     return (
         <>
             <Toaster
@@ -388,13 +396,12 @@ export function Carrito({ cartItems, setCartItems }) {
                                                     <div className="mt-4">
                                                         <label className="flex items-center">
                                                         <input
-  id={`checkbox-${item.id}`}
-  type="checkbox"
-  className="form-checkbox h-4 w-4 text-indigo-600"
-  checked={checkboxes[item.id]}
-  onChange={(e) => handleCheckboxChange(item.id, e.target.checked)}
-/>
-
+                                                            id={`checkbox-${item.id}`}
+                                                            type="checkbox"
+                                                            className="form-checkbox h-4 w-4 text-indigo-600"
+                                                            checked={checkboxes[item.id]}
+                                                            onChange={(e) => handleCheckboxChange(item.id, e.target.checked)}
+                                                            />
                                                             <span className="ml-2 text-gray-700">
                                                                 {item.category === "Comics"
                                                                     ? "¿Desea agregar este cómic a su librería?"
@@ -520,7 +527,7 @@ export function Carrito({ cartItems, setCartItems }) {
                             </div>
                             <hr />
                             <form ref={form} onSubmit={sendEmail} >
-                                {currentUser ? (
+                                {userAtom ? (
                                     <>
                                         <div className="mb-2 flex justify-between mt-4 flex-col">
                                             <label htmlFor="nombre"
@@ -533,7 +540,7 @@ export function Carrito({ cartItems, setCartItems }) {
                                                 <input type="text" name="nombre" id="nombre"
                                                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                                     required
-                                                    defaultValue={fullName || currentUser.displayName}
+                                                    defaultValue={fullName || userAtom.displayName}
                                                 />
                                             </div>
                                         </div>
@@ -548,7 +555,7 @@ export function Carrito({ cartItems, setCartItems }) {
                                                 <input type="email" name="email" id="email"
                                                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                                     required
-                                                    defaultValue={currentUser.email}
+                                                    defaultValue={userAtom.email}
 
                                                 />
                                             </div>
