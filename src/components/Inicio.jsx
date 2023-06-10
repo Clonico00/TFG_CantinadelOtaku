@@ -47,6 +47,35 @@ function Inicio() {
             </div>
 
             <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", marginBottom: '100px', flexDirection, marginTop }}>
+            <div className='mc-div'>
+                    <img
+                        src={Merch}
+                        alt="Fondo"
+                        style={{ width: '100%', height: 'auto', margin: '30px' }}
+                    />
+
+                    <button className='mc-button font-extrabold shadow-2xl border border-gray-400 '>
+                        <Link to="/Merchandising">
+                            Merchandising
+                        </Link>
+
+                    </button>
+                </div>
+                <div className='mc-div'>
+                    <img
+                        src={Manga}
+                        alt="Fondo"
+                        style={{ width: '100%', height: 'auto', margin: '30px' }}
+                    />
+
+                    <button className='mc-button font-extrabold shadow-2xl border border-gray-400'>
+                        <Link to="/Mangas">
+                            Mangas
+                        </Link>
+                    </button>
+
+                </div>
+
                 <div className='mc-div'>
                     <img
                         src={Comic}
@@ -55,40 +84,17 @@ function Inicio() {
                         style={{ width: '100%', height: 'auto', margin: '30px' }}
                     />
 
-                    <Link to="/Comics">
-                        <button className='mc-button font-extrabold drop-shadow-2xl border border-gray-400'>
+                    <button className='mc-button font-extrabold shadow-2xl border border-gray-400'>
+                        <Link to="/Comics">
+
                             Comics
-                        </button>
-                    </Link>
+                        </Link>
+
+                    </button>
                 </div>
 
-                <div className='mc-div'>
-                    <img
-                        src={Manga}
-                        alt="Fondo"
-                        style={{ width: '100%', height: 'auto', margin: '30px' }}
-                    />
-
-                    <Link to="/Mangas">
-                        <button className='mc-button font-extrabold drop-shadow-2xl border border-gray-400'>
-                            Mangas
-                        </button>
-                    </Link>
-                </div>
-
-                <div className='mc-div'>
-                    <img
-                        src={Merch}
-                        alt="Fondo"
-                        style={{ width: '100%', height: 'auto', margin: '30px' }}
-                    />
-
-                    <Link to="/Merchandising">
-                        <button className='mc-button font-extrabold drop-shadow-2xl border border-gray-400 '>
-                            Merchandising
-                        </button>
-                    </Link>
-                </div>
+                
+               
             </div>
 
             <img
