@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@emailjs/browser": "^3.11.0",
     "@fontsource/gorditas": "^4.5.8",
     "@fontsource/inter": "^4.5.15",
