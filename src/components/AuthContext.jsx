@@ -1,5 +1,5 @@
-import { createContext, useState, useEffect } from 'react';
-import { auth } from '../firebase'; // Ruta a tu archivo firebase.js
+import { createContext, useState, useEffect } from "react";
+import { auth } from "../firebase"; // Ruta a tu archivo firebase.js
 
 // Crea el contexto de autenticación
 export const AuthContext = createContext();
@@ -11,7 +11,7 @@ export const AuthContext = createContext();
 /**
  * 
 * @class
- */export const AuthProvider = ({ children }) => {
+ */ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 

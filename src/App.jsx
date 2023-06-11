@@ -18,14 +18,16 @@ import AddArticle from "./components/AddArticle";
 import EditArticle from "./components/EditArticle";
 import { AuthContext } from "./components/AuthContext";
 import { db } from "./firebase";
-import { doc, getDoc, collection, where, query, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { useAtomValue } from "jotai";
 import { userDataAtom } from "./atoms/userAtom";
 
 function App() {
+  // eslint-disable-next-line
   const { currentUser } = useContext(AuthContext);
   const [activeLink, setActiveLink] = useState('/');
   const [cartItems, setCartItems] = useState([]);
+  // eslint-disable-next-line
   const [userData, setUserData] = useState(null);
   const userAtom = useAtomValue(userDataAtom);
 
@@ -68,6 +70,7 @@ function App() {
 
   useEffect(() => {    
     loadCartFromDatabase();
+    // eslint-disable-next-line
   }, [userAtom]);
 
   
