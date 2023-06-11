@@ -17,20 +17,24 @@ import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 function Mangas({ addToCart, cartItems, setCartItems }) {
   const [page, setPage] = useState(1);
   const section = "mangas"; // Actualiza la sección aquí
-  const { currentUser } = useContext(AuthContext);
-
   const articlesPerPage = 6;
-
   const [articles, setArticles] = useState([]);
+  const { currentUser } = useContext(AuthContext);
+  const startIndex = (page - 1) * articlesPerPage;
+  const endIndex = startIndex + articlesPerPage;
+  const displayedArticles = articles.slice(startIndex, endIndex);
 
   useEffect(() => {
     /**
      * Carga los artículos de la categoría de mangas desde la base de datos.
      * @returns {Function} Función de limpieza para cancelar la suscripción a los cambios en la base de datos.
      */
-    const loadMangasArticles = () => {
+    const loadmangasArticles = () => {
       const articlesRef = collection(db, "articles");
-      const mangasQuery = query(articlesRef, where("category", "==", "Mangas"));
+      const mangasQuery = query(
+        articlesRef,
+        where("category", "==", "Mangas")
+      );
 
       const unsubscribe = onSnapshot(mangasQuery, (snapshot) => {
         const mangasArticles = snapshot.docs.map((doc) => ({
@@ -43,7 +47,7 @@ function Mangas({ addToCart, cartItems, setCartItems }) {
       return unsubscribe;
     };
 
-    return () => loadMangasArticles();
+    return loadmangasArticles();
   }, []);
 
   const totalPages = Math.ceil(articles.length / articlesPerPage);
@@ -141,9 +145,7 @@ function Mangas({ addToCart, cartItems, setCartItems }) {
     }
   };
 
-  const startIndex = (page - 1) * articlesPerPage;
-  const endIndex = startIndex + articlesPerPage;
-  const displayedArticles = articles.slice(startIndex, endIndex);
+  
 
   return (
     <>
@@ -162,7 +164,7 @@ function Mangas({ addToCart, cartItems, setCartItems }) {
           width: "50%", // Ajusta el ancho del contenido del toast
         }}
       />
-      <section className="pt-6 pb-12">
+     <section className="pt-6 pb-12">
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {displayedArticles.map((article) => (
             <article
@@ -243,8 +245,8 @@ function Mangas({ addToCart, cartItems, setCartItems }) {
               <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
                 <path
                   d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                  clip-rule="evenodd"
-                  fill-rule="evenodd"
+                  clipRule="evenodd"
+                  fillRule="evenodd"
                 ></path>
               </svg>
             </button>
@@ -272,8 +274,8 @@ function Mangas({ addToCart, cartItems, setCartItems }) {
               <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
                 <path
                   d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  clip-rule="evenodd"
-                  fill-rule="evenodd"
+                  clipRule="evenodd"
+                  fillRule="evenodd"
                 ></path>
               </svg>
             </button>
