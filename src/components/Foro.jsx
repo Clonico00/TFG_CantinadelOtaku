@@ -126,7 +126,7 @@ const Forum = () => {
       let profilePictureURL = null; // Inicializa la URL de la imagen como null
 
       if (imageFile) {
-        const storageRef = ref(storage, `forum_images/${currentUser.id}`);
+        const storageRef = ref(storage, `forum_images/${imageFile.name}_${currentUser.u}`);
         await uploadBytes(storageRef, imageFile);
         profilePictureURL = await getDownloadURL(storageRef);
       }
@@ -160,9 +160,9 @@ const Forum = () => {
           ...doc.data(),
         }));
         setMessages(messageData);
+        console.log(messageData);
       }
     );
-
     return () => unsubscribe();
   }, []);
 
@@ -247,6 +247,9 @@ const Forum = () => {
                 key={index}
                 className="card bg-white rounded-lg p-4 mt-4 shadow mx-2 hover:bg-gray-50"
               >
+                <>
+                {console.log(msg)}
+                </>
                 <div className="flex flex-col">
                   <div className="flex items-center space-x-4">
                     <img
