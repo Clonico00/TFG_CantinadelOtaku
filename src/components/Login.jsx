@@ -96,7 +96,11 @@ const Modal = ({ isOpen, onClose, onSubmit }) => {
     );
 };
 
-export default function Login() {
+/**
+ * 
+* @class
+ */
+ function Login() {
     const [isOpen, setIsOpen] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -105,15 +109,24 @@ export default function Login() {
     const navigate = useNavigate();
     const [userAtom, setUserAtom] = useAtom(userDataAtom);
 
+    /**
+     * Cierra el modal.
+     */
     const closeModal = () => {
         setIsOpen(false);
     };
 
+    /**
+     * Abre el modal.
+     */
     const openModal = () => {
         setIsOpen(true);
     };
 
-
+    /**
+     * Maneja el inicio de sesión.
+     * @param {object} e - El evento del formulario.
+     */
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -146,6 +159,9 @@ export default function Login() {
         }
     };
 
+    /**
+     * Maneja el inicio de sesión con Google.
+     */
     const handleGoogleSignIn = () => {
         const provider = new GoogleAuthProvider();
 
@@ -180,7 +196,7 @@ export default function Login() {
                     navigate('/merchandising'); // Redirigir a la página de inicio del usuario
                 }
 
-                
+
             })
             .catch((error) => {
                 // Error durante la autenticación con Google
@@ -191,11 +207,13 @@ export default function Login() {
                 } else {
                     setError('Ocurrió un error durante la autenticación con Google. ' + errorMessage);
                 }
-
-
             });
     };
 
+    /**
+     * Restablece la contraseña.
+     * @param {string} email - El correo electrónico para restablecer la contraseña.
+     */
     const resetPassword = (email) => {
         sendPasswordResetEmail(auth, email)
             .then(() => {
@@ -210,15 +228,16 @@ export default function Login() {
                     setError('Ocurrió un error al enviar el correo electrónico. ' + error);
                     closeModal();
                 }
-
-
             });
     };
 
-
+    /**
+     * Alterna la visibilidad de la contraseña.
+     */
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
+
     return (
         <>
             <div className="flex items-center justify-center min-h-screen mx-2">
@@ -343,3 +362,5 @@ export default function Login() {
 
     );
 }
+
+export default Login;

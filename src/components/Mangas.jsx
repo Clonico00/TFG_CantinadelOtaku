@@ -6,6 +6,14 @@ import { toast, Toaster } from 'react-hot-toast';
 import { AuthContext } from "./AuthContext";
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
+/**
+ * Componente para mostrar y gestionar los artículos de mangas.
+ *  @class
+ * @param {Function} addToCart - Función para agregar un artículo al carrito.
+ * @param {Object[]} cartItems - Los artículos actualmente en el carrito.
+ * @param {Function} setCartItems - Función para actualizar los artículos en el carrito.
+ * @returns {JSX.Element} El componente Mangas.
+ */
 function Mangas({ addToCart, cartItems, setCartItems }) {
     const [page, setPage] = useState(1);
     const section = "mangas"; // Actualiza la sección aquí
@@ -16,21 +24,39 @@ function Mangas({ addToCart, cartItems, setCartItems }) {
     const [articles, setArticles] = useState([]);
 
     useEffect(() => {
-        const articlesRef = collection(db, 'articles');
-        const merchandisingQuery = query(articlesRef, where('category', '==', 'Mangas'));
+        /**
+         * Carga los artículos de la categoría de mangas desde la base de datos.
+         * @returns {Function} Función de limpieza para cancelar la suscripción a los cambios en la base de datos.
+         */
+        const loadMangasArticles = () => {
+            const articlesRef = collection(db, 'articles');
+            const mangasQuery = query(articlesRef, where('category', '==', 'Mangas'));
 
-        const unsubscribe = onSnapshot(merchandisingQuery, (snapshot) => {
-            const merchandisingArticles = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-            setArticles(merchandisingArticles);
-        });
+            const unsubscribe = onSnapshot(mangasQuery, (snapshot) => {
+                const mangasArticles = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+                setArticles(mangasArticles);
+            });
 
-        return () => unsubscribe();
+            return unsubscribe;
+        };
+
+        return () => loadMangasArticles();
     }, []);
+
     const totalPages = Math.ceil(articles.length / articlesPerPage);
 
+    /**
+     * Maneja el clic en un número de página.
+     * @param {number} pageNum - El número de página seleccionado.
+     */
     const handleClick = (pageNum) => {
         setPage(pageNum);
     };
+
+    /**
+     * Maneja la acción de agregar un artículo al carrito.
+     * @param {Object} article - El artículo a agregar al carrito.
+     */
     const handleAddToCart = async (article) => {
         try {
             // Verificar si hay stock disponible
@@ -77,7 +103,6 @@ function Mangas({ addToCart, cartItems, setCartItems }) {
                         );
                         await setDoc(cartDocRef, { cartItems: updatedCartItems });
                         setCartItems(updatedCartItems);
-
                     } else {
                         // El artículo no está en el carrito, agregarlo con cantidad 1
                         const newItem = { ...article, cantidad: 1 };
@@ -91,7 +116,6 @@ function Mangas({ addToCart, cartItems, setCartItems }) {
                     await setDoc(cartDocRef, newCart);
                     localStorage.setItem('cartItems', JSON.stringify(newCart));
                     setCartItems(newCart);
-
                 }
 
                 toast.success(`${article.title} se ha añadido al carrito`);
@@ -105,15 +129,10 @@ function Mangas({ addToCart, cartItems, setCartItems }) {
         }
     };
 
-
-
-
-
-
-
     const startIndex = (page - 1) * articlesPerPage;
     const endIndex = startIndex + articlesPerPage;
     const displayedArticles = articles.slice(startIndex, endIndex);
+
 
     return (
         <>
@@ -217,8 +236,8 @@ function Mangas({ addToCart, cartItems, setCartItems }) {
                         <button
                             key={pageNum}
                             className={`mx-1 md:mx-2 lg:mx-3 py-2 px-3 md:py-2 md:px-4 lg:py-3 lg:px-5 rounded-full ${pageNum === page
-                                    ? "bg-blue-600 text-white"
-                                    : "bg-white border border-white text-blue-600 hover:bg-blue-600 hover:text-white transition-colors duration-300"
+                                ? "bg-blue-600 text-white"
+                                : "bg-white border border-white text-blue-600 hover:bg-blue-600 hover:text-white transition-colors duration-300"
                                 }`}
                             onClick={() => handleClick(pageNum)}
                         >

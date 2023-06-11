@@ -10,6 +10,15 @@ import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { userDataAtom } from '../atoms/userAtom';
 
+/**
+ * Componente de la barra de navegación.
+ *
+ * @param {Object} props - Propiedades del componente.
+ * @param {string} props.activeLink - Ruta activa.
+ * @param {Function} props.handleLinkClick - Función de manejo de clic en enlace.
+ * @param {Array} props.cartItems - Elementos del carrito.
+ * @param {Function} props.setCartItems - Función para establecer los elementos del carrito.
+* @class */
 function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
     const [showMenu, setShowMenu] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,88 +34,89 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
 
     const [userAtom, setUserAtom] = useAtom(userDataAtom);
 
-    // useEffect(() => {
-    //     const fetchUserData = async () => {
-    //         if (currentUser) {
-    //             try {
-    //                 const usersRef = collection(db, 'users');
-    //                 const userQuery = query(usersRef, where('email', '==', currentUser.email));
-    //                 const snapshot = await getDocs(userQuery);
-
-    //                 if (!snapshot.empty) {
-    //                     const userData = snapshot.docs[0].data();
-    //                     setUserData(userData);
-
-    //                     // Establecer el estado "image" después de obtener los datos del usuario
-    //                     const image = userData && userData.image ? userData.image : UsuarioIconDefault;
-    //                     setImage(image);
-    //                 }
-
-
-    //             } catch (error) {
-    //                 console.error('Error al obtener los datos del usuario:', error);
-    //             }
-    //         }
-    //     };
-
-    //     fetchUserData();
-    // }, [currentUser]);
-
-    useEffect(()=>{
-        if (userAtom){
-        // Establecer el estado "image" después de obtener los datos del usuario
-          const image = userAtom.image ? userAtom.image : UsuarioIconDefault;
-          setImage(image);
+    useEffect(() => {
+        if (userAtom) {
+            // Establecer el estado "image" después de obtener los datos del usuario
+            const image = userAtom.image ? userAtom.image : UsuarioIconDefault;
+            setImage(image);
         }
     }, [userAtom]);
 
+    /**
+     * Alterna la visibilidad del menú desplegable.
+     */
     const toggleMenu = () => {
         setShowMenu(!showMenu);
     };
 
+    /**
+     * Alterna el estado de apertura del menú de inicio de sesión.
+     */
     const toggleMenuLogin = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
+    /**
+     * Maneja el evento de alternancia del menú.
+     */
     const handleToggle = () => {
         toggleMenu();
     };
+
+    /**
+     * Cierra el menú.
+     */
     const closeMenu = () => {
         setShowMenu(false);
         setIsMenuOpen(false);
-    }
+    };
 
+    /**
+     * Maneja el clic en un enlace interno del menú.
+     *
+     * @param {string} path - Ruta del enlace.
+     */
     const handleLinkClickInternal = (path) => {
         closeMenu(); // Cerrar el menú antes de cambiar la ruta
         handleLinkClick(path); // Cambiar la ruta
-    }
+    };
 
+    /**
+     * Maneja el cierre de sesión del usuario.
+     */
     const handleLogout = () => {
         auth
             .signOut()
             .then(() => {
-                setUserAtom(null);    
+                setUserAtom(null);
                 setCartItems([]);
                 localStorage.clear();
                 setImage(UsuarioIconDefault); // Restablecer la imagen a la imagen predeterminada al cerrar sesión
                 navigate('/');
                 closeMenu();
-
             })
             .catch((error) => {
                 console.error('Error al cerrar sesión:', error);
             });
     };
 
-    // Función para manejar el enfoque en el campo de búsqueda
+    /**
+     * Maneja el enfoque en el campo de búsqueda.
+     */
     const handleInputFocus = () => {
         setIsFocused(true);
     };
-    // Función para manejar la pérdida de enfoque en el campo de búsqueda
+
+    /**
+     * Maneja la pérdida de enfoque en el campo de búsqueda.
+     */
     const handleInputBlur = () => {
         setIsFocused(false);
     };
-    // Obtener todos los artículos de la base de datos
+
+    /**
+     * Obtiene todos los artículos de la base de datos.
+     */
     useEffect(() => {
         const fetchArticles = async () => {
             try {
@@ -122,7 +132,9 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
         fetchArticles();
     }, []);
 
-    // Función para buscar los artículos coincidentes
+    /**
+     * Filtra los artículos coincidentes según el texto de búsqueda.
+     */
     useEffect(() => {
         const matching = articles.filter(article =>
             article.title.toLowerCase().includes(searchText.toLowerCase())
@@ -130,10 +142,20 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
         setFilteredArticles(matching);
     }, [searchText, articles]);
 
-    // Función para manejar el cambio en el campo de búsqueda
+    /**
+     * Maneja el cambio en el campo de búsqueda.
+     *
+     * @param {Object} event - Evento de cambio.
+     */
     const handleSearchChange = event => {
         setSearchText(event.target.value);
     };
+
+    /**
+     * Maneja el clic en un enlace interno del menú.
+     *
+     * @param {string} path - Ruta del enlace.
+     */
     const handleLinkClickIntern = (path) => {
         closeMenu(); // Cerrar el menú antes de cambiar la ruta
         handleInputBlur(); // Perder el enfoque del campo de búsqueda
@@ -173,9 +195,9 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
                         </Link>
                     </div>
                     <div className="hidden md:block">
-                            <div
+                        <div
                             className={`${userAtom && userAtom.isAdmin === true ? 'pr-20 mr-20' : ''} ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item `}>
-                            {userAtom && userAtom.isAdmin  === true ? (
+                            {userAtom && userAtom.isAdmin === true ? (
                                 <>
                                     <Link
                                         to="/admin"
@@ -502,7 +524,7 @@ function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
             <div className="flex justify-center text-center">
                 <div className={`${showMenu ? 'block' : 'hidden'} md:hidden`}>
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    {userAtom && userAtom.isAdmin === true ? (
+                        {userAtom && userAtom.isAdmin === true ? (
                             <>
                                 <Link
                                     to="/admin"

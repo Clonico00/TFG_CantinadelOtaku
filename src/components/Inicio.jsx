@@ -7,6 +7,10 @@ import Merch from '../img/merch.png';
 import Icons from '../img/iconos.png';
 import IconsMobile from '../img/iconosMobile.png';
 
+/**
+ * 
+* @class
+ */
 function Inicio() {
     const backgroundImage = `url(${Background})`;
     const [imageSource, setImageSource] = useState(window.innerWidth > 750 ? Icons : IconsMobile);
@@ -29,6 +33,7 @@ function Inicio() {
     const flexDirection = isMobile ? 'column' : 'row';
     const marginTop = window.innerWidth > 600 ? '100px' : '';
 
+
     return (
         <div>
             <div
@@ -47,7 +52,7 @@ function Inicio() {
             </div>
 
             <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", marginBottom: '100px', flexDirection, marginTop }}>
-            <div className='mc-div'>
+                <div className='mc-div'>
                     <img
                         src={Merch}
                         alt="Fondo"
@@ -93,8 +98,8 @@ function Inicio() {
                     </button>
                 </div>
 
-                
-               
+
+
             </div>
 
             <img

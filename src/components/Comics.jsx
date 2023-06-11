@@ -6,6 +6,14 @@ import { toast, Toaster } from 'react-hot-toast';
 import { AuthContext } from "./AuthContext";
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
+/**
+ * Componente para mostrar y gestionar los artículos de comics.
+ *  @class
+ * @param {Function} addToCart - Función para agregar un artículo al carrito.
+ * @param {Object[]} cartItems - Los artículos actualmente en el carrito.
+ * @param {Function} setCartItems - Función para actualizar los artículos en el carrito.
+ * @returns {JSX.Element} El componente Comics.
+ */
 function Comics({ addToCart, cartItems, setCartItems }) {
     const [page, setPage] = useState(1);
     const section = "comics"; // Actualiza la sección aquí
@@ -16,22 +24,39 @@ function Comics({ addToCart, cartItems, setCartItems }) {
     const [articles, setArticles] = useState([]);
 
     useEffect(() => {
-        const articlesRef = collection(db, 'articles');
-        const merchandisingQuery = query(articlesRef, where('category', '==', 'Comics'));
+        /**
+         * Carga los artículos de la categoría de comics desde la base de datos.
+         * @returns {Function} Función de limpieza para cancelar la suscripción a los cambios en la base de datos.
+         */
+        const loadComicsArticles = () => {
+            const articlesRef = collection(db, 'articles');
+            const comicsQuery = query(articlesRef, where('category', '==', 'Comics'));
 
-        const unsubscribe = onSnapshot(merchandisingQuery, (snapshot) => {
-            const merchandisingArticles = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-            setArticles(merchandisingArticles);
-        });
+            const unsubscribe = onSnapshot(comicsQuery, (snapshot) => {
+                const comicsArticles = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+                setArticles(comicsArticles);
+            });
 
-        return () => unsubscribe();
+            return unsubscribe;
+        };
+
+        return () => loadComicsArticles();
     }, []);
 
     const totalPages = Math.ceil(articles.length / articlesPerPage);
 
+    /**
+     * Maneja el clic en un número de página.
+     * @param {number} pageNum - El número de página seleccionado.
+     */
     const handleClick = (pageNum) => {
         setPage(pageNum);
     };
+
+    /**
+     * Maneja la acción de agregar un artículo al carrito.
+     * @param {Object} article - El artículo a agregar al carrito.
+     */
     const handleAddToCart = async (article) => {
         try {
             // Verificar si hay stock disponible
@@ -106,9 +131,6 @@ function Comics({ addToCart, cartItems, setCartItems }) {
         }
     };
 
-
-
-    ;
     const startIndex = (page - 1) * articlesPerPage;
     const endIndex = startIndex + articlesPerPage;
     const displayedArticles = articles.slice(startIndex, endIndex);
@@ -214,8 +236,8 @@ function Comics({ addToCart, cartItems, setCartItems }) {
                         <button
                             key={pageNum}
                             className={`mx-1 md:mx-2 lg:mx-3 py-2 px-3 md:py-2 md:px-4 lg:py-3 lg:px-5 rounded-full ${pageNum === page
-                                    ? "bg-blue-600 text-white"
-                                    : "bg-white border border-white text-blue-600 hover:bg-blue-600 hover:text-white transition-colors duration-300"
+                                ? "bg-blue-600 text-white"
+                                : "bg-white border border-white text-blue-600 hover:bg-blue-600 hover:text-white transition-colors duration-300"
                                 }`}
                             onClick={() => handleClick(pageNum)}
                         >

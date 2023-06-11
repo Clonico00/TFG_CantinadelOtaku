@@ -1,0 +1,670 @@
+<!DOCTYPE html><html lang="en" style="font-size:16px"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Source: Navbar.jsx</title><!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><script src="scripts/third-party/hljs.js" defer="defer"></script><script src="scripts/third-party/hljs-line-num.js" defer="defer"></script><script src="scripts/third-party/popper.js" defer="defer"></script><script src="scripts/third-party/tippy.js" defer="defer"></script><script src="scripts/third-party/tocbot.min.js"></script><script>var baseURL="/",locationPathname="",baseURL=(locationPathname=document.location.pathname).substr(0,locationPathname.lastIndexOf("/")+1)</script><link rel="stylesheet" href="styles/clean-jsdoc-theme.min.css"><svg aria-hidden="true" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display:none"><defs><symbol id="copy-icon" viewbox="0 0 488.3 488.3"><g><path d="M314.25,85.4h-227c-21.3,0-38.6,17.3-38.6,38.6v325.7c0,21.3,17.3,38.6,38.6,38.6h227c21.3,0,38.6-17.3,38.6-38.6V124    C352.75,102.7,335.45,85.4,314.25,85.4z M325.75,449.6c0,6.4-5.2,11.6-11.6,11.6h-227c-6.4,0-11.6-5.2-11.6-11.6V124    c0-6.4,5.2-11.6,11.6-11.6h227c6.4,0,11.6,5.2,11.6,11.6V449.6z"/><path d="M401.05,0h-227c-21.3,0-38.6,17.3-38.6,38.6c0,7.5,6,13.5,13.5,13.5s13.5-6,13.5-13.5c0-6.4,5.2-11.6,11.6-11.6h227    c6.4,0,11.6,5.2,11.6,11.6v325.7c0,6.4-5.2,11.6-11.6,11.6c-7.5,0-13.5,6-13.5,13.5s6,13.5,13.5,13.5c21.3,0,38.6-17.3,38.6-38.6    V38.6C439.65,17.3,422.35,0,401.05,0z"/></g></symbol><symbol id="search-icon" viewBox="0 0 512 512"><g><g><path d="M225.474,0C101.151,0,0,101.151,0,225.474c0,124.33,101.151,225.474,225.474,225.474    c124.33,0,225.474-101.144,225.474-225.474C450.948,101.151,349.804,0,225.474,0z M225.474,409.323    c-101.373,0-183.848-82.475-183.848-183.848S124.101,41.626,225.474,41.626s183.848,82.475,183.848,183.848    S326.847,409.323,225.474,409.323z"/></g></g><g><g><path d="M505.902,476.472L386.574,357.144c-8.131-8.131-21.299-8.131-29.43,0c-8.131,8.124-8.131,21.306,0,29.43l119.328,119.328    c4.065,4.065,9.387,6.098,14.715,6.098c5.321,0,10.649-2.033,14.715-6.098C514.033,497.778,514.033,484.596,505.902,476.472z"/></g></g></symbol><symbol id="font-size-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M11.246 15H4.754l-2 5H.6L7 4h2l6.4 16h-2.154l-2-5zm-.8-2L8 6.885 5.554 13h4.892zM21 12.535V12h2v8h-2v-.535a4 4 0 1 1 0-6.93zM19 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></symbol><symbol id="add-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"/></symbol><symbol id="minus-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M5 11h14v2H5z"/></symbol><symbol id="dark-theme-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z"/></symbol><symbol id="light-theme-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></symbol><symbol id="reset-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M18.537 19.567A9.961 9.961 0 0 1 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10c0 2.136-.67 4.116-1.81 5.74L17 12h3a8 8 0 1 0-2.46 5.772l.997 1.795z"/></symbol><symbol id="down-icon" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.7803 6.21967C13.0732 6.51256 13.0732 6.98744 12.7803 7.28033L8.53033 11.5303C8.23744 11.8232 7.76256 11.8232 7.46967 11.5303L3.21967 7.28033C2.92678 6.98744 2.92678 6.51256 3.21967 6.21967C3.51256 5.92678 3.98744 5.92678 4.28033 6.21967L8 9.93934L11.7197 6.21967C12.0126 5.92678 12.4874 5.92678 12.7803 6.21967Z"></path></symbol><symbol id="codepen-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.5 13.202L13 15.535v3.596L19.197 15 16.5 13.202zM14.697 12L12 10.202 9.303 12 12 13.798 14.697 12zM20 10.869L18.303 12 20 13.131V10.87zM19.197 9L13 4.869v3.596l3.5 2.333L19.197 9zM7.5 10.798L11 8.465V4.869L4.803 9 7.5 10.798zM4.803 15L11 19.131v-3.596l-3.5-2.333L4.803 15zM4 13.131L5.697 12 4 10.869v2.262zM2 9a1 1 0 0 1 .445-.832l9-6a1 1 0 0 1 1.11 0l9 6A1 1 0 0 1 22 9v6a1 1 0 0 1-.445.832l-9 6a1 1 0 0 1-1.11 0l-9-6A1 1 0 0 1 2 15V9z"/></symbol><symbol id="close-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/></symbol><symbol id="menu-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z"/></symbol></defs></svg></head><body class="dark" data-theme="dark"><div class="sidebar-container"><div class="sidebar" id="sidebar"><a href="/" class="sidebar-title sidebar-title-anchor">Home</a><div class="sidebar-items-container"><div class="sidebar-section-title with-arrow" data-isopen="false" id="nUgTOcHcCoY42YLvERR9-"><div>Classes</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="AddArticle.html">AddArticle</a></div><div class="sidebar-section-children"><a href="Admin.html">Admin</a></div><div class="sidebar-section-children"><a href="AuthProvider.html">AuthProvider</a></div><div class="sidebar-section-children"><a href="Carrito.html">Carrito</a></div><div class="sidebar-section-children"><a href="Comics.html">Comics</a></div><div class="sidebar-section-children"><a href="Detail.html">Detail</a></div><div class="sidebar-section-children"><a href="EditArticle.html">EditArticle</a></div><div class="sidebar-section-children"><a href="Footer.html">Footer</a></div><div class="sidebar-section-children"><a href="Forum.html">Forum</a></div><div class="sidebar-section-children"><a href="Inicio.html">Inicio</a></div><div class="sidebar-section-children"><a href="Libreria.html">Libreria</a></div><div class="sidebar-section-children"><a href="LibreriaDetail.html">LibreriaDetail</a></div><div class="sidebar-section-children"><a href="Login.html">Login</a></div><div class="sidebar-section-children"><a href="Mangas.html">Mangas</a></div><div class="sidebar-section-children"><a href="Mechandising.html">Mechandising</a></div><div class="sidebar-section-children"><a href="Navbar.html">Navbar</a></div><div class="sidebar-section-children"><a href="Register.html">Register</a></div></div></div></div></div><div class="navbar-container" id="VuAckcnZhf"><nav class="navbar"><div class="navbar-left-items"></div><div class="navbar-right-items"><div class="navbar-right-item"><button class="icon-button search-button" aria-label="open-search"><svg><use xlink:href="#search-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button theme-toggle" aria-label="toggle-theme"><svg><use class="theme-svg-use" xlink:href="#light-theme-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button font-size" aria-label="change-font-size"><svg><use xlink:href="#font-size-icon"></use></svg></button></div></div><nav></nav></nav></div><div class="toc-container"><div class="toc-content"><span class="bold">On this page</span><div id="eed4d2a0bfd64539bb9df78095dec881"></div></div></div><div class="body-wrapper"><div class="main-content"><div class="main-wrapper"><section id="source-page" class="source-page"><header><h1 id="title" class="has-anchor">Navbar.jsx</h1></header><article><pre class="prettyprint source lang-js"><code>import React, { useState, useContext, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import Logo from '../img/logo.png';
+import UsuarioIconDefault from '../img/usuario_icon.png';
+import Carrito from "../img/carrito.png";
+import { AuthContext } from './AuthContext';
+import { db, auth } from '../firebase';
+import { collection, where, getDocs, query } from "firebase/firestore";
+import { useNavigate } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { userDataAtom } from '../atoms/userAtom';
+
+/**
+ * Componente de la barra de navegación.
+ *
+ * @param {Object} props - Propiedades del componente.
+ * @param {string} props.activeLink - Ruta activa.
+ * @param {Function} props.handleLinkClick - Función de manejo de clic en enlace.
+ * @param {Array} props.cartItems - Elementos del carrito.
+ * @param {Function} props.setCartItems - Función para establecer los elementos del carrito.
+* @class */
+function Navbar({ activeLink, handleLinkClick, cartItems, setCartItems }) {
+    const [showMenu, setShowMenu] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [userData, setUserData] = useState(null);
+    const { currentUser } = useContext(AuthContext);
+    const [image, setImage] = useState(UsuarioIconDefault);
+    const [searchText, setSearchText] = useState('');
+    const [articles, setArticles] = useState([]);
+    const [filteredArticles, setFilteredArticles] = useState([]);
+    const [isFocused, setIsFocused] = useState(false);
+    const navigate = useNavigate();
+    const totalQuantity = Array.isArray(cartItems) ? cartItems.reduce((total, item) => total + item.cantidad, 0) || 0 : 0;
+
+    const [userAtom, setUserAtom] = useAtom(userDataAtom);
+
+    useEffect(() => {
+        if (userAtom) {
+            // Establecer el estado "image" después de obtener los datos del usuario
+            const image = userAtom.image ? userAtom.image : UsuarioIconDefault;
+            setImage(image);
+        }
+    }, [userAtom]);
+
+    /**
+     * Alterna la visibilidad del menú desplegable.
+     */
+    const toggleMenu = () => {
+        setShowMenu(!showMenu);
+    };
+
+    /**
+     * Alterna el estado de apertura del menú de inicio de sesión.
+     */
+    const toggleMenuLogin = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
+    /**
+     * Maneja el evento de alternancia del menú.
+     */
+    const handleToggle = () => {
+        toggleMenu();
+    };
+
+    /**
+     * Cierra el menú.
+     */
+    const closeMenu = () => {
+        setShowMenu(false);
+        setIsMenuOpen(false);
+    };
+
+    /**
+     * Maneja el clic en un enlace interno del menú.
+     *
+     * @param {string} path - Ruta del enlace.
+     */
+    const handleLinkClickInternal = (path) => {
+        closeMenu(); // Cerrar el menú antes de cambiar la ruta
+        handleLinkClick(path); // Cambiar la ruta
+    };
+
+    /**
+     * Maneja el cierre de sesión del usuario.
+     */
+    const handleLogout = () => {
+        auth
+            .signOut()
+            .then(() => {
+                setUserAtom(null);
+                setCartItems([]);
+                localStorage.clear();
+                setImage(UsuarioIconDefault); // Restablecer la imagen a la imagen predeterminada al cerrar sesión
+                navigate('/');
+                closeMenu();
+            })
+            .catch((error) => {
+                console.error('Error al cerrar sesión:', error);
+            });
+    };
+
+    /**
+     * Maneja el enfoque en el campo de búsqueda.
+     */
+    const handleInputFocus = () => {
+        setIsFocused(true);
+    };
+
+    /**
+     * Maneja la pérdida de enfoque en el campo de búsqueda.
+     */
+    const handleInputBlur = () => {
+        setIsFocused(false);
+    };
+
+    /**
+     * Obtiene todos los artículos de la base de datos.
+     */
+    useEffect(() => {
+        const fetchArticles = async () => {
+            try {
+                const articlesRef = collection(db, 'articles');
+                const snapshot = await getDocs(articlesRef);
+                const articlesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setArticles(articlesData);
+            } catch (error) {
+                console.log('Error fetching articles:', error);
+            }
+        };
+
+        fetchArticles();
+    }, []);
+
+    /**
+     * Filtra los artículos coincidentes según el texto de búsqueda.
+     */
+    useEffect(() => {
+        const matching = articles.filter(article =>
+            article.title.toLowerCase().includes(searchText.toLowerCase())
+        );
+        setFilteredArticles(matching);
+    }, [searchText, articles]);
+
+    /**
+     * Maneja el cambio en el campo de búsqueda.
+     *
+     * @param {Object} event - Evento de cambio.
+     */
+    const handleSearchChange = event => {
+        setSearchText(event.target.value);
+    };
+
+    /**
+     * Maneja el clic en un enlace interno del menú.
+     *
+     * @param {string} path - Ruta del enlace.
+     */
+    const handleLinkClickIntern = (path) => {
+        closeMenu(); // Cerrar el menú antes de cambiar la ruta
+        handleInputBlur(); // Perder el enfoque del campo de búsqueda
+    };
+
+    useEffect(() => {
+        function handleResize() {
+            if (window.innerWidth > 1100) {
+                setShowMenu(false);
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+
+    return (
+        &lt;nav className="bg-white navbar-menu rounded-b-lg border border-gray-200">
+            &lt;div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                &lt;div className="flex items-center justify-between h-16">
+                    &lt;div className="flex items-center">
+                        &lt;Link
+                            to="/"
+                            style={{
+                                backfaceVisibility: 'hidden',
+                                color: '#1e2447',
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                        >
+                            &lt;img src={Logo} alt="Logo" className="h-16 w-16 mr-2" />
+                            &lt;span
+                                className="font-extrabold tracking-tight hidden sm:block text-2xl md:text-md whitespace-nowrap">
+                                Cantina del Otaku &lt;/span>
+                        &lt;/Link>
+                    &lt;/div>
+                    &lt;div className="hidden md:block">
+                        &lt;div
+                            className={`${userAtom &amp;&amp; userAtom.isAdmin === true ? 'pr-20 mr-20' : ''} ml-10 flex items-baseline space-x-4 tracking-tight flex-grow-1 menu-item `}>
+                            {userAtom &amp;&amp; userAtom.isAdmin === true ? (
+                                &lt;>
+                                    &lt;Link
+                                        to="/admin"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                        style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                        onClick={() => handleLinkClick('/admin')}
+                                    >
+                                        Zona Admin
+                                    &lt;/Link>
+                                    &lt;Link
+                                        to="/foro"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg 
+                                            `}
+                                        style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                        onClick={() => handleLinkClick('/foro')}
+                                    >
+                                        Foro
+                                    &lt;/Link>
+                                &lt;/>
+                            ) : (
+                                &lt;>
+                                    &lt;Link
+                                        to="/"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg 
+                                            `}
+                                        style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                        onClick={() => handleLinkClick('/')}
+                                    >
+                                        Inicio
+                                    &lt;/Link>
+                                    &lt;Link
+                                        to="/merchandising"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg 
+                                            `}
+                                        style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                        onClick={() => handleLinkClick('/merchandising')}
+                                    >
+                                        Merchandising
+                                    &lt;/Link>
+                                    &lt;Link
+                                        to="/mangas"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg 
+                                            `}
+                                        style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                        onClick={() => handleLinkClick('/mangas')}
+                                    >
+                                        Mangas
+                                    &lt;/Link>
+                                    &lt;Link
+                                        to="/comics"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg 
+                                            `}
+                                        style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                        onClick={() => handleLinkClick('/comics')}
+                                    >
+                                        Comics
+                                    &lt;/Link>
+                                    &lt;Link
+                                        to="/foro"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg 
+                                            `}
+                                        style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                        onClick={() => handleLinkClick('/foro')}
+                                    >
+                                        Foro
+                                    &lt;/Link>
+
+
+                                    &lt;Link
+                                        to="/libreria"
+                                        className={`menu-item hover:scale-105 transition-all duration-400 px-3 py-2 text-md font-bold hover:text-shadow-lg `}
+                                        style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                        onClick={() => handleLinkClick('/libreria')}
+                                    >
+                                        Libreria
+                                    &lt;/Link>
+
+                                    &lt;div className="flex items-center">
+                                        &lt;div className="relative flex-grow">
+                                            &lt;input
+                                                type="text"
+                                                placeholder="Buscar..."
+                                                className="menu-item bg-gray-50 border border-gray-400 text-gray-900 rounded-lg w-full font-md mr-3 py-1 px-2 leading-tight focus:ring-blue-500 focus:border-blue-500 placeholder:font-light"
+                                                style={{
+                                                    transition: 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+                                                    minWidth: '100px',
+                                                    maxWidth: '500px',
+                                                    fontSize: '1rem'
+                                                }}
+                                                value={searchText}
+                                                onChange={handleSearchChange}
+                                                onFocus={handleInputFocus}
+                                                onBlur={handleInputBlur}
+                                            />
+                                            &lt;button
+                                                type="submit"
+                                                className="absolute right-0 top-0 bottom-0 rounded-r-lg flex items-center justify-center p-2"
+                                                style={{
+                                                    backfaceVisibility: 'hidden',
+                                                    color: '#1e2447',
+                                                    borderColor: '#1e2447'
+                                                }}
+                                            >&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="h-4 w-4">
+                                                    &lt;path
+                                                        d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                                                &lt;/svg>&lt;/button>
+                                            {isFocused &amp;&amp; searchText.length > 0 &amp;&amp; filteredArticles.length > 0 &amp;&amp; (
+                                                &lt;div onMouseDown={(e) => e.preventDefault()} onClick={(e) => e.stopPropagation()}>
+                                                    &lt;ul className="absolute mt-2 py-2 w-full bg-white rounded-md shadow-lg max-h-48 overflow-auto">
+                                                        {filteredArticles.map((article, index) => (
+                                                            &lt;li
+                                                                key={article.id}
+                                                                className={`flex items-center px-4 py-2 hover:bg-gray-100 ${index !== filteredArticles.length - 1 ? 'border-b' : ''}`}
+                                                                style={{ borderBottomWidth: '1px', borderBottomColor: '#E5E7EB' }}
+                                                            >
+                                                                &lt;Link
+                                                                    to={`/${article.category}/detail/${article.id}`}
+                                                                    className="flex items-center"
+                                                                    onClick={() => handleLinkClickIntern(`/${article.category}`)}
+                                                                >
+                                                                    &lt;img src={article.image} alt={article.title} className="w-12 h-12 mr-2" />
+                                                                    &lt;span className="font-bold" style={{ color: '#1e2447' }}>
+                                                                        {article.title}
+                                                                    &lt;/span>
+                                                                &lt;/Link>
+                                                            &lt;/li>
+                                                        ))}
+                                                    &lt;/ul>
+                                                &lt;/div>
+                                            )}
+
+
+                                            {isFocused &amp;&amp; searchText.length > 0 &amp;&amp; filteredArticles.length === 0 &amp;&amp; (
+                                                &lt;div className="absolute mt-2 py-2 w-full bg-white rounded-md shadow-lg">
+                                                    &lt;p className="px-4 py-2">No hay artículos&lt;/p>
+                                                &lt;/div>
+                                            )}
+
+
+                                        &lt;/div>
+                                    &lt;/div>
+                                &lt;/>
+                            )}
+
+                        &lt;/div>
+                    &lt;/div>
+                    &lt;div className="flex md:flex-row">
+                        &lt;div className={`flex items-center relative `}>
+                            {userAtom &amp;&amp; userAtom.isAdmin === true ? (
+                                &lt;>
+                                    &lt;button
+                                        type="button"
+                                        className="text-gray-700 hover:text-gray-900 py-1 px-2 ml-4 md:px-4"
+                                        onClick={toggleMenuLogin}
+                                        style={{ right: "0" }}
+                                    >
+                                        &lt;img
+                                            src={image}
+                                            alt="Logo"
+                                            className="h-8 w-8 md:h-10 md:w-10 object-contain mr-2 rounded-full"
+                                            style={{ minWidth: "20px", minHeight: "20px" }}
+                                            referrerPolicy="no-referrer"
+                                        />
+                                    &lt;/button>
+                                &lt;/>
+                            ) : (
+                                &lt;>
+                                    &lt;button
+                                        type="button"
+                                        className="text-gray-700 hover:text-gray-900 py-1 px-2 ml-4 md:px-4"
+                                        onClick={toggleMenuLogin}
+                                        style={{ right: "0" }}
+                                    >
+                                        &lt;img
+                                            src={image}
+                                            alt="Logo"
+                                            className="h-8 w-8 md:h-10 md:w-10 object-contain mr-2 rounded-full"
+                                            style={{ minWidth: "20px", minHeight: "20px" }}
+                                            referrerPolicy="no-referrer"
+                                        />
+                                    &lt;/button>
+                                    &lt;button
+                                        type="button"
+                                        className="text-gray-700 hover:text-gray-900 py-1 px-1 md:px-4 flex items-center relative"
+                                    >
+                                        &lt;Link to="/carrito">
+                                            &lt;img
+                                                src={Carrito}
+                                                alt="Logo"
+                                                className="h-6 w-6 md:h-8 md:w-8 object-contain mr-2"
+                                                style={{ minWidth: "20px", minHeight: "20px" }}
+                                            />
+                                        &lt;/Link>
+                                        {totalQuantity > 0 &amp;&amp; (
+                                            &lt;div className="flex items-center justify-center mb-4 bg-red-500 text-white rounded-full w-6 h-6 text-xs">
+                                                {totalQuantity}
+                                            &lt;/div>
+                                        )}
+                                    &lt;/button>
+
+                                &lt;/>
+                            )}
+
+
+                            {isMenuOpen &amp;&amp; (
+                                &lt;div
+                                    className={`${!userAtom ? 'mt-5' : 'mt-6'} absolute z-10 bg-white rounded-md shadow-xl flex flex-col `}
+                                    style={{
+                                        borderRadius: "0.375rem",
+                                        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.25)",
+                                        padding: "0.5rem",
+                                        width: "max-content",
+                                        left: "auto",
+                                        right: "0",
+                                        transform: "translate(0, calc(80% - 0.5rem))",
+                                    }}
+                                >
+
+                                    {userAtom ? (
+                                        &lt;>
+                                            &lt;div className="flex items-center">
+                                                &lt;img
+                                                    src={image}
+                                                    alt="Logo"
+                                                    className="h-10 w-10 md:h-10 md:w-10 mb-2 object-contain rounded-full"
+                                                    style={{ minWidth: "20px", minHeight: "20px" }}
+                                                    referrerPolicy="no-referrer"
+                                                />
+                                                &lt;div className="px-3 py-2">
+                                                    &lt;div className=" py-2 flex flex-col">
+                                                        &lt;div
+                                                            className="font-bold text-md"
+                                                            style={{
+                                                                backfaceVisibility: "hidden",
+                                                                color: "#1e2447",
+                                                            }}
+                                                        >
+                                                            {userAtom ? userAtom.name : ""}
+                                                        &lt;/div>
+                                                        &lt;div className="text-gray-600 text-sm">
+                                                            {userAtom &amp;&amp; userAtom.email ? `${userAtom.email}` : ""}
+                                                        &lt;/div>
+                                                    &lt;/div>
+                                                    &lt;hr className="border-gray-400 mt-2" />
+                                                &lt;/div>
+                                            &lt;/div>
+
+
+
+                                            &lt;button
+                                                className="menu-item hover:underline transition-all duration-400 px-3 py-2 text-sm font-bold hover:text-shadow-lg"
+                                                style={{ backfaceVisibility: "hidden", color: "#3a63f2" }}
+                                                onClick={handleLogout}
+                                            >
+                                                Cerrar sesión
+                                            &lt;/button>
+                                        &lt;/>
+                                    ) : (
+                                        &lt;>
+                                            &lt;Link
+                                                to="/register"
+                                                className="menu-item hover:underline transition-all duration-400 px-3 py-2 text-sm font-bold hover:text-shadow-lg"
+                                                style={{ backfaceVisibility: "hidden", color: "#3a63f2" }}
+                                                onClick={() => handleLinkClickInternal("/")}
+                                            >
+                                                Registro
+                                            &lt;/Link>
+                                            &lt;Link
+                                                to="/login"
+                                                className="menu-item hover:underline transition-all duration-400 px-3 py-2 text-sm font-bold hover:text-shadow-lg"
+                                                style={{ backfaceVisibility: "hidden", color: "#3a63f2" }}
+                                                onClick={() => handleLinkClickInternal("/")}
+                                            >
+                                                Iniciar sesión
+                                            &lt;/Link>
+                                        &lt;/>
+                                    )}
+
+                                &lt;/div>
+                            )}
+                        &lt;/div>
+
+                        &lt;div className="-mr-2 flex md:hidden">
+                            &lt;button
+                                type="button"
+                                className={`inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none `}
+                                aria-controls="mobile-menu"
+                                aria-expanded={showMenu ? 'true' : 'false'}
+                                onClick={handleToggle}
+                                style={{
+                                    transform: showMenu ? 'rotate(180deg)' : 'rotate(0deg)',
+                                    transition: 'transform 0.2s ease',
+                                }}
+                            >
+                                &lt;span className="sr-only">Open main menu&lt;/span>
+                                {showMenu ? (
+                                    &lt;svg
+                                        viewBox="0 0 448 512"
+                                        fill="currentColor"
+                                        height="1em"
+                                        width="1em"
+                                        className="fill-current text-black"
+                                    >
+                                        &lt;path
+                                            d="M0 96c0-17.7 14.3-32 32-32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zm0 160c0-17.7 14.3-32 32-32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zm448 160c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h384c17.7 0 32 14.3 32 32z" />
+                                    &lt;/svg>
+                                ) : (
+                                    &lt;svg
+                                        viewBox="0 0 448 512"
+                                        fill="currentColor"
+                                        height="1em"
+                                        width="1em"
+                                        className="fill-current text-black"
+                                    >
+                                        &lt;path
+                                            d="M0 96c0-17.7 14.3-32 32-32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zm0 160c0-17.7 14.3-32 32-32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zm448 160c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h384c17.7 0 32 14.3 32 32z" />
+                                    &lt;/svg>
+                                )}
+                            &lt;/button>
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+            &lt;div className="flex justify-center text-center">
+                &lt;div className={`${showMenu ? 'block' : 'hidden'} md:hidden`}>
+                    &lt;div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                        {userAtom &amp;&amp; userAtom.isAdmin === true ? (
+                            &lt;>
+                                &lt;Link
+                                    to="/admin"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                >
+                                    Zona Admin
+                                &lt;/Link>
+                                &lt;hr className="my-1 border-gray-300" />
+                                &lt;Link
+                                    to="/foro"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                >
+                                    Foro
+                                &lt;/Link>
+                            &lt;/>
+                        ) : (
+                            &lt;>
+                                &lt;Link
+                                    to="/"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                >
+                                    Inicio
+                                &lt;/Link>
+                                &lt;hr className="my-1 border-gray-300" />
+                                &lt;Link
+                                    to="/merchandising"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                >
+                                    Merchandising
+                                &lt;/Link>
+                                &lt;hr className="my-1 border-gray-300" />
+                                &lt;Link
+                                    to="/mangas"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                >
+                                    Mangas
+                                &lt;/Link>
+                                &lt;hr className="my-1 border-gray-300" />
+                                &lt;Link
+                                    to="/comics"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                >
+                                    Comics
+                                &lt;/Link>
+                                &lt;hr className="my-1 border-gray-300" />
+                                &lt;Link
+                                    to="/foro"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                >
+                                    Foro
+                                &lt;/Link>
+                                &lt;hr className="my-1 border-gray-300" />
+                                &lt;Link
+                                    to="/libreria"
+                                    className="hover:scale-105 transition-all duration-400 block px-3 py-2 text-md font-extrabold hover:text-shadow-lg menu-item"
+                                    style={{ backfaceVisibility: 'hidden', color: '#3a63f2' }}
+                                >
+                                    Libreria
+                                &lt;/Link>
+                                &lt;div className="flex">
+                                    &lt;div className="relative flex-grow">
+                                        &lt;button
+                                            type="submit"
+                                            className="absolute left-0 top-0 bottom-0 rounded-l-lg flex items-center justify-center p-2"
+                                            style={{ backfaceVisibility: 'hidden', zIndex: 1, width: '2.5rem' }}
+                                        >
+                                            &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="h-4 w-4">
+                                                &lt;path
+                                                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                                                />
+                                            &lt;/svg>
+                                        &lt;/button>
+                                        &lt;input
+                                            type="text"
+                                            placeholder="Buscar..."
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg flex-grow py-1 px-8 leading-tight focus:ring-blue-500 focus:border-blue-500 placeholder:font-light menu-item"
+                                            style={{ transition: 'width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms' }}
+                                            value={searchText}
+                                            onChange={handleSearchChange}
+                                            onFocus={handleInputFocus}
+                                            onBlur={handleInputBlur}
+                                        />
+                                        {isFocused &amp;&amp; searchText.length > 0 &amp;&amp; filteredArticles.length > 0 &amp;&amp; (
+                                            &lt;div onMouseDown={(e) => e.preventDefault()} onClick={(e) => e.stopPropagation()}>
+                                                &lt;ul className="absolute z-10 mt-2 py-2 w-full bg-white rounded-md shadow-lg max-h-48 overflow-y-auto" style={{ left: '0', right: 'auto' }}>
+                                                    {filteredArticles.map((article, index) => (
+                                                        &lt;Link
+                                                            to={`/${article.category}/detail/${article.id}`}
+                                                            className="flex items-center"
+                                                            key={article.id}
+                                                            onClick={handleLinkClickIntern}
+                                                        >
+                                                            &lt;li className={`px-4 py-2 hover:bg-gray-100 ${index !== filteredArticles.length - 1 ? 'border-b' : ''}`}>
+                                                                &lt;div className="flex items-center">
+                                                                    &lt;img src={article.image} alt={article.title} className="w-12 h-12 mr-2" />
+                                                                    &lt;span className="font-bold text-sm" style={{ color: '#1e2447' }}>
+                                                                        {article.title}
+                                                                    &lt;/span>
+                                                                &lt;/div>
+                                                            &lt;/li>
+                                                        &lt;/Link>
+                                                    ))}
+                                                &lt;/ul>
+                                            &lt;/div>
+                                        )}
+
+
+                                        {isFocused &amp;&amp; searchText.length > 0 &amp;&amp; filteredArticles.length === 0 &amp;&amp; (
+                                            &lt;div className="absolute mt-2 py-2 w-full bg-white rounded-md shadow-lg">
+                                                &lt;p className="px-4 py-2">No hay artículos&lt;/p>
+                                            &lt;/div>
+                                        )}
+                                    &lt;/div>
+
+                                &lt;/div>
+
+                            &lt;/>
+                        )}
+
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+        &lt;/nav>
+
+    );
+
+}
+
+export default Navbar;
+
+
+
+
+</code></pre></article></section></div></div></div><div class="search-container" id="PkfLWpAbet" style="display:none"><div class="wrapper" id="iCxFxjkHbP"><button class="icon-button search-close-button" id="VjLlGakifb" aria-label="close search"><svg><use xlink:href="#close-icon"></use></svg></button><div class="search-box-c"><svg><use xlink:href="#search-icon"></use></svg> <input type="text" id="vpcKVYIppa" class="search-input" placeholder="Search..." autofocus></div><div class="search-result-c" id="fWwVHRuDuN"><span class="search-result-c-text">Type anything to view search result</span></div></div></div><div class="mobile-menu-icon-container"><button class="icon-button" id="mobile-menu" data-isopen="false" aria-label="menu"><svg><use xlink:href="#menu-icon"></use></svg></button></div><div id="mobile-sidebar" class="mobile-sidebar-container"><div class="mobile-sidebar-wrapper"><a href="/" class="sidebar-title sidebar-title-anchor">Home</a><div class="mobile-nav-links"></div><div class="mobile-sidebar-items-c"><div class="sidebar-section-title with-arrow" data-isopen="false" id="nUgTOcHcCoY42YLvERR9-"><div>Classes</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="AddArticle.html">AddArticle</a></div><div class="sidebar-section-children"><a href="Admin.html">Admin</a></div><div class="sidebar-section-children"><a href="AuthProvider.html">AuthProvider</a></div><div class="sidebar-section-children"><a href="Carrito.html">Carrito</a></div><div class="sidebar-section-children"><a href="Comics.html">Comics</a></div><div class="sidebar-section-children"><a href="Detail.html">Detail</a></div><div class="sidebar-section-children"><a href="EditArticle.html">EditArticle</a></div><div class="sidebar-section-children"><a href="Footer.html">Footer</a></div><div class="sidebar-section-children"><a href="Forum.html">Forum</a></div><div class="sidebar-section-children"><a href="Inicio.html">Inicio</a></div><div class="sidebar-section-children"><a href="Libreria.html">Libreria</a></div><div class="sidebar-section-children"><a href="LibreriaDetail.html">LibreriaDetail</a></div><div class="sidebar-section-children"><a href="Login.html">Login</a></div><div class="sidebar-section-children"><a href="Mangas.html">Mangas</a></div><div class="sidebar-section-children"><a href="Mechandising.html">Mechandising</a></div><div class="sidebar-section-children"><a href="Navbar.html">Navbar</a></div><div class="sidebar-section-children"><a href="Register.html">Register</a></div></div></div><div class="mobile-navbar-actions"><div class="navbar-right-item"><button class="icon-button search-button" aria-label="open-search"><svg><use xlink:href="#search-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button theme-toggle" aria-label="toggle-theme"><svg><use class="theme-svg-use" xlink:href="#light-theme-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button font-size" aria-label="change-font-size"><svg><use xlink:href="#font-size-icon"></use></svg></button></div></div></div></div><script type="text/javascript" src="scripts/core.min.js"></script><script src="scripts/search.min.js" defer="defer"></script><script src="scripts/third-party/fuse.js" defer="defer"></script><script type="text/javascript">var tocbotInstance=tocbot.init({tocSelector:"#eed4d2a0bfd64539bb9df78095dec881",contentSelector:".main-content",headingSelector:"h1, h2, h3",hasInnerContainers:!0,scrollContainer:".main-content",headingsOffset:130,onClick:bringLinkToView})</script></body></html>

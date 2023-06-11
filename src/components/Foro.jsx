@@ -7,177 +7,206 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { where, getDocs, query, onSnapshot, orderBy, doc, deleteDoc } from "firebase/firestore";
 import UsuarioIconDefault from '../img/usuario_icon.png';
 import { toast, Toaster } from 'react-hot-toast';
+/**
+ * 
+* @class
+ */
 
 const Forum = () => {
-    const [isOpen, setIsOpen] = useState(false)
-    const { currentUser } = useContext(AuthContext);
-    const [userData, setUserData] = useState(null);
-    // eslint-disable-next-line
-    const [image, setImage] = useState(UsuarioIconDefault);
-    const [messages, setMessages] = useState([]);
-    const [messageIdtoDelete, setMessageIdtoDelete] = useState("");
-    const [selectedImage, setSelectedImage] = useState(null);
+  const [isOpen, setIsOpen] = useState(false)
+  const { currentUser } = useContext(AuthContext);
+  const [userData, setUserData] = useState(null);
+  // eslint-disable-next-line
+  const [image, setImage] = useState(UsuarioIconDefault);
+  const [messages, setMessages] = useState([]);
+  const [messageIdtoDelete, setMessageIdtoDelete] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
 
-    const handlePhotoSelect = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const imageURL = URL.createObjectURL(file);
-            setSelectedImage(imageURL);
-        } else {
-            setSelectedImage(null);
-        }
-    };
-    const handlePhotoClear = () => {
-        setSelectedImage(null);
-    };
+  /**
+   * Maneja la selección de una foto por el usuario.
+   * @param {object} e - Evento de cambio de archivo.
+   */
+  const handlePhotoSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageURL = URL.createObjectURL(file);
+      setSelectedImage(imageURL);
+    } else {
+      setSelectedImage(null);
+    }
+  };
 
+  /**
+   * Limpia la selección de la foto del usuario.
+   */
+  const handlePhotoClear = () => {
+    setSelectedImage(null);
+  };
 
-    const formatTimestamp = (timestamp) => {
-        // const date = timestamp.toDate(); 
-        //hacemos la conversion si timestamp es no nulo
-        const date = timestamp ? timestamp.toDate() : new Date(); // Convertir el timestamp a un objeto Date
+  /**
+   * Formatea un timestamp en una cadena de texto que muestra la hora y la fecha.
+   * @param {object} timestamp - El timestamp a formatear.
+   * @returns {string} La cadena de texto formateada con la hora y la fecha.
+   */
+  const formatTimestamp = (timestamp) => {
+    const date = timestamp ? timestamp.toDate() : new Date(); // Convertir el timestamp a un objeto Date
 
-        const hour = date.getHours().toString().padStart(2, '0'); // Obtener la hora y asegurarse de que tenga 2 dígitos
-        const minute = date.getMinutes().toString().padStart(2, '0'); // Obtener los minutos y asegurarse de que tengan 2 dígitos
-        const formattedTime = `${hour}:${minute}`; // Formatear la hora y los minutos
+    const hour = date.getHours().toString().padStart(2, '0'); // Obtener la hora y asegurarse de que tenga 2 dígitos
+    const minute = date.getMinutes().toString().padStart(2, '0'); // Obtener los minutos y asegurarse de que tengan 2 dígitos
+    const formattedTime = `${hour}:${minute}`; // Formatear la hora y los minutos
 
-        const options = { year: 'numeric', month: 'numeric', day: 'numeric' }; // Opciones de formato de fecha
-        const formattedDate = date.toLocaleDateString(undefined, options); // Formatear la fecha
+    const options = { year: 'numeric', month: 'numeric', day: 'numeric' }; // Opciones de formato de fecha
+    const formattedDate = date.toLocaleDateString(undefined, options); // Formatear la fecha
 
-        return `${formattedTime} · ${formattedDate}`; // Combinar la hora y la fecha formateadas
-    };
+    return `${formattedTime} · ${formattedDate}`; // Combinar la hora y la fecha formateadas
+  };
 
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            if (currentUser) {
-                try {
-                    const usersRef = collection(db, 'users');
-                    const userQuery = query(usersRef, where('email', '==', currentUser.email));
-                    const snapshot = await getDocs(userQuery);
-
-                    if (!snapshot.empty) {
-                        const userData = snapshot.docs[0].data();
-                        setUserData(userData);
-
-                        // Establecer el estado "image" después de obtener los datos del usuario
-                        const image = userData && userData.image ? userData.image : UsuarioIconDefault;
-                        setImage(image);
-                    }
-                } catch (error) {
-                    console.error('Error al obtener los datos del usuario:', error);
-                }
-            }
-        };
-
-        fetchUserData();
-    }, [currentUser]);
-
-    const sendMessage = async () => {
-        const inputElement = document.getElementById('nombre');
-        const message = inputElement.value;
-
-        // Verificar si se seleccionó una imagen
-        const imageInputElement = document.getElementById('image-input');
-
-
-        //comprueba que que el tipo de archivo sea una imagen y no peso mas de 5mb
-        const imageFile = imageInputElement.files[0] && imageInputElement.files[0].type.includes('image/') && imageInputElement.files[0].size < 5000000 ? imageInputElement.files[0] : null;
-        if (!imageFile) {
-            toast.error('Error al enviar el mensaje: La imagen no es válida o es demasiado grande');
-            return;
-        }
-
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (currentUser) {
         try {
-            let profilePictureURL = null; // Inicializa la URL de la imagen como null
+          const usersRef = collection(db, 'users');
+          const userQuery = query(usersRef, where('email', '==', currentUser.email));
+          const snapshot = await getDocs(userQuery);
 
+          if (!snapshot.empty) {
+            const userData = snapshot.docs[0].data();
+            setUserData(userData);
 
-            if (imageFile) {
-                const storageRef = ref(storage, `forum_images/${currentUser.id}`);
-                await uploadBytes(storageRef, imageFile);
-                profilePictureURL = await getDownloadURL(storageRef);
-            }
-
-            await addDoc(collection(db, 'forum'), {
-                user: currentUser.email,
-                userName: userData.name,
-                user_photo: userData.image,
-                message: message,
-                message_date: serverTimestamp(),
-                message_img: profilePictureURL,
-            });
-
-            // Limpiar el campo del mensaje y restablecer la selección de imagen
-            inputElement.value = '';
-            imageInputElement.value = '';
-
-            console.log('Mensaje enviado correctamente');
-            console.log(currentUser)
+            // Establecer el estado "image" después de obtener los datos del usuario
+            const image = userData && userData.image ? userData.image : UsuarioIconDefault;
+            setImage(image);
+          }
         } catch (error) {
-            console.error('Error al enviar el mensaje:', error);
+          console.error('Error al obtener los datos del usuario:', error);
         }
+      }
     };
 
-    useEffect(() => {
-        const unsubscribe = onSnapshot(
-            query(collection(db, 'forum'), orderBy('message_date')),
-            (snapshot) => {
-                const messageData = snapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-                setMessages(messageData);
-            }
-        );
+    fetchUserData();
+  }, [currentUser]);
 
-        return () => unsubscribe();
-    }, []);
+  /**
+   * Envía un mensaje al foro.
+   */
+  const sendMessage = async () => {
+    const inputElement = document.getElementById('nombre');
+    const message = inputElement.value;
 
-    const deleteMessage = async () => {
-        try {
-            await deleteDoc(doc(db, 'forum', messageIdtoDelete));
-            console.log('Mensaje eliminado correctamente');
-            closeModal();
-        } catch (error) {
-            console.error('Error al eliminar el mensaje:', error);
-        }
-    };
+    // Verificar si se seleccionó una imagen
+    const imageInputElement = document.getElementById('image-input');
 
-
-    // Función para calcular la diferencia de tiempo entre la fecha del mensaje y el momento actual
-    const getTimeDifference = (timestamp) => {
-        const currentDate = new Date(); // Fecha actual
-        // const messageDate = timestamp.toDate(); // Fecha del mensaje
-        //hacemos la conversion si timestamp es no nulo
-        const messageDate = timestamp ? timestamp.toDate() : new Date(); // Fecha del mensaje 
-        const difference = Math.abs(currentDate - messageDate); // Diferencia en milisegundos
-
-        const minutesDifference = Math.floor(difference / (1000 * 60)); // Diferencia en minutos
-
-        if (minutesDifference < 1) {
-            return 'Posted less than a minute ago';
-        } else if (minutesDifference === 1) {
-            return 'Posted 1 minute ago';
-        } else if (minutesDifference < 60) {
-            return `Posted ${minutesDifference} minutes ago`;
-        } else {
-            const hoursDifference = Math.floor(minutesDifference / 60); // Diferencia en horas
-
-            if (hoursDifference === 1) {
-                return 'Posted 1 hour ago';
-            } else {
-                return `Posted ${hoursDifference} hours ago`;
-            }
-        }
-    };
-
-    function closeModal() {
-        setIsOpen(false)
+    // Comprueba que el tipo de archivo sea una imagen y no pese más de 5MB
+    const imageFile =
+      imageInputElement.files[0] &&
+      imageInputElement.files[0].type.includes('image/') &&
+      imageInputElement.files[0].size < 5000000
+        ? imageInputElement.files[0]
+        : null;
+    if (!imageFile) {
+      toast.error('Error al enviar el mensaje: La imagen no es válida o es demasiado grande');
+      return;
     }
 
-    function openModal() {
-        setIsOpen(true)
+    try {
+      let profilePictureURL = null; // Inicializa la URL de la imagen como null
+
+      if (imageFile) {
+        const storageRef = ref(storage, `forum_images/${currentUser.id}`);
+        await uploadBytes(storageRef, imageFile);
+        profilePictureURL = await getDownloadURL(storageRef);
+      }
+
+      await addDoc(collection(db, 'forum'), {
+        user: currentUser.email,
+        userName: userData.name,
+        user_photo: userData.image,
+        message: message,
+        message_date: serverTimestamp(),
+        message_img: profilePictureURL,
+      });
+
+      // Limpiar el campo del mensaje y restablecer la selección de imagen
+      inputElement.value = '';
+      imageInputElement.value = '';
+
+      console.log('Mensaje enviado correctamente');
+      console.log(currentUser);
+    } catch (error) {
+      console.error('Error al enviar el mensaje:', error);
     }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      query(collection(db, 'forum'), orderBy('message_date')),
+      (snapshot) => {
+        const messageData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setMessages(messageData);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  /**
+   * Elimina un mensaje del foro.
+   */
+  const deleteMessage = async () => {
+    try {
+      await deleteDoc(doc(db, 'forum', messageIdtoDelete));
+      console.log('Mensaje eliminado correctamente');
+      closeModal();
+    } catch (error) {
+      console.error('Error al eliminar el mensaje:', error);
+    }
+  };
+
+  /**
+   * Calcula la diferencia de tiempo entre la fecha del mensaje y el momento actual.
+   * @param {object} timestamp - El timestamp del mensaje.
+   * @returns {string} La diferencia de tiempo formateada.
+   */
+  const getTimeDifference = (timestamp) => {
+    const currentDate = new Date(); // Fecha actual
+    const messageDate = timestamp ? timestamp.toDate() : new Date(); // Fecha del mensaje
+    const difference = Math.abs(currentDate - messageDate); // Diferencia en milisegundos
+
+    const minutesDifference = Math.floor(difference / (1000 * 60)); // Diferencia en minutos
+
+    if (minutesDifference < 1) {
+      return 'Posted less than a minute ago';
+    } else if (minutesDifference === 1) {
+      return 'Posted 1 minute ago';
+    } else if (minutesDifference < 60) {
+      return `Posted ${minutesDifference} minutes ago`;
+    } else {
+      const hoursDifference = Math.floor(minutesDifference / 60); // Diferencia en horas
+
+      if (hoursDifference === 1) {
+        return 'Posted 1 hour ago';
+      } else {
+        return `Posted ${hoursDifference} hours ago`;
+      }
+    }
+  };
+
+  /**
+   * Cierra el modal de eliminación de mensaje.
+   */
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  /**
+   * Abre el modal de eliminación de mensaje.
+   */
+  function openModal() {
+    setIsOpen(true);
+  }
 
 
     return (

@@ -1,21 +1,27 @@
-import React, { Fragment, useState, useEffect, useContext, useRef } from "react";
+import React, { Fragment, useState, useEffect, useRef } from "react";
 import { provincias } from "../data";
 import { provinciasConCiudades } from "../data";
 import { Dialog, Transition } from "@headlessui/react";
 import { toast, Toaster } from 'react-hot-toast';
-//import { AuthContext } from "./AuthContext";
 import { db } from "../firebase";
 import { doc, getDoc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { collection, where, getDocs, query } from "firebase/firestore";
+import { collection } from "firebase/firestore";
 import emailjs from '@emailjs/browser';
 import { useAtomValue } from "jotai";
 import { userDataAtom } from "../atoms/userAtom";
 
-
+/**
+ * Componente del carrito de compras.
+ *
+ * @class
+ * @param {object} props - Propiedades del componente.
+ * @param {array} props.cartItems - Lista de artículos en el carrito.
+ * @param {function} props.setCartItems - Función para actualizar la lista de artículos en el carrito.
+ * @returns {JSX.Element} Componente de Carrito.
+ */
 export function Carrito({ cartItems, setCartItems }) {
     const [isOpen, setIsOpen] = useState(false);
     const [articleToDelete, setArticleToDelete] = useState("");
-    //const { currentUser } = useContext(AuthContext);
     const [checkboxes, setCheckboxes] = useState({});
     const form = useRef();
     const subtotal = Array.isArray(cartItems)
@@ -24,9 +30,14 @@ export function Carrito({ cartItems, setCartItems }) {
     const taxes = subtotal * 0.1;
     const total = subtotal + taxes;
     const [fullName, setFullName] = useState('');
-
     const userAtom = useAtomValue(userDataAtom);
 
+    /**
+     * Maneja la disminución de la cantidad de un artículo en el carrito.
+     *
+     * @param {string} itemId - ID del artículo.
+     * @returns {Promise<void>} Promesa resuelta una vez actualizado el carrito.
+     */
     const handleDecrease = async (itemId) => {
         const existingItem = cartItems.find((item) => item.id === itemId);
 
@@ -65,13 +76,26 @@ export function Carrito({ cartItems, setCartItems }) {
         }
     };
 
+    /**
+     * Maneja el cambio de estado del checkbox de un artículo en el carrito.
+     *
+     * @param {string} itemId - ID del artículo.
+     * @param {boolean} checked - Valor del checkbox.
+     * @returns {void}
+     */
     const handleCheckboxChange = (itemId, checked) => {
         setCheckboxes((prevCheckboxes) => ({
-          ...prevCheckboxes,
-          [itemId]: checked,
+            ...prevCheckboxes,
+            [itemId]: checked,
         }));
-      };
-      
+    };
+
+    /**
+     * Maneja el incremento de la cantidad de un artículo en el carrito.
+     *
+     * @param {string} itemId - ID del artículo.
+     * @returns {Promise<void>} Promesa resuelta una vez actualizado el carrito.
+     */
     const handleIncrease = async (itemId) => {
         const article = cartItems.find((item) => item.id === itemId);
         if (article && article.cantidad < article.stock) {
@@ -109,6 +133,11 @@ export function Carrito({ cartItems, setCartItems }) {
         }
     };
 
+    /**
+     * Maneja la eliminación de un artículo del carrito.
+     *
+     * @returns {Promise<void>} Promesa resuelta una vez actualizado el carrito.
+     */
     const handleDeleteItem = async () => {
         const updatedCartItems = cartItems.filter((item) => item.id !== articleToDelete);
         const deletedItem = cartItems.find((item) => item.id === articleToDelete);
@@ -139,11 +168,21 @@ export function Carrito({ cartItems, setCartItems }) {
         }
     };
 
-
+    /**
+     * Actualiza el carrito en el almacenamiento local.
+     *
+     * @param {array} updatedCartItems - Lista de artículos actualizada.
+     * @returns {void}
+     */
     const updateLocalStorageCart = (updatedCartItems) => {
         localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
     };
 
+    /**
+  * Carga el carrito desde el almacenamiento local al iniciar el componente.
+  *
+  * @returns {void}
+  */
     useEffect(() => {
         const loadCartFromLocalStorage = () => {
             const cartItemsFromLocalStorage = JSON.parse(localStorage.getItem('cartItems'));
@@ -156,6 +195,11 @@ export function Carrito({ cartItems, setCartItems }) {
         // eslint-disable-next-line
     }, []);
 
+    /**
+     * Carga el carrito desde la base de datos.
+     *
+     * @returns {Promise<void>} Promesa resuelta una vez se haya cargado el carrito desde la base de datos.
+     */
     const loadCartFromDatabase = async () => {
         try {
             if (userAtom) {
@@ -177,6 +221,12 @@ export function Carrito({ cartItems, setCartItems }) {
         }
     };
 
+    /**
+     * Guarda el carrito en la base de datos.
+     *
+     * @param {array} updatedCartItems - Lista de artículos actualizada.
+     * @returns {Promise<void>} Promesa resuelta una vez se haya guardado el carrito en la base de datos.
+     */
     const saveCartToDatabase = async (updatedCartItems) => {
         try {
             if (userAtom) {
@@ -190,6 +240,11 @@ export function Carrito({ cartItems, setCartItems }) {
         }
     };
 
+    /**
+     * Carga el carrito desde la base de datos al iniciar sesión o al cambiar el usuario.
+     *
+     * @returns {void}
+     */
     useEffect(() => {
         loadCartFromDatabase();
         // if (currentUser) {
@@ -215,15 +270,30 @@ export function Carrito({ cartItems, setCartItems }) {
         // eslint-disable-next-line
     }, [userAtom]);
 
-
+    /**
+     * Cierra el modal.
+     *
+     * @returns {void}
+     */
     function closeModal() {
         setIsOpen(false);
     }
 
+    /**
+     * Abre el modal.
+     *
+     * @returns {void}
+     */
     function openModal() {
         setIsOpen(true);
     }
 
+    /**
+     * Envía un correo electrónico con los detalles del formulario y los artículos del carrito.
+     *
+     * @param {Event} e - Evento del formulario.
+     * @returns {Promise<void>} Promesa resuelta una vez se haya enviado el correo electrónico.
+     */
     const sendEmail = async (e) => {
         e.preventDefault();
         const nombre = form.current.nombre.value;
@@ -236,34 +306,34 @@ export function Carrito({ cartItems, setCartItems }) {
         const ciudad = form.current.ciudad.value;
         const cp = form.current.cp.value;
         const ticketMessage = `
-          Datos del formulario:
-          Nombre: ${nombre}
-          Email: ${email}
-          
-          Dirección de envío:
-          Calle: ${calle}
-          Número: ${numero}
-          Piso: ${piso !== '' ? piso : '-'}
-          Letra: ${letra !== '' ? letra : '-'}
-          Provincia: ${provincia}
-          Ciudad: ${ciudad}
-          Código Postal: ${cp}
-          
+      Datos del formulario:
+      Nombre: ${nombre}
+      Email: ${email}
       
-          Artículos:
-          ${cartItems
+      Dirección de envío:
+      Calle: ${calle}
+      Número: ${numero}
+      Piso: ${piso !== '' ? piso : '-'}
+      Letra: ${letra !== '' ? letra : '-'}
+      Provincia: ${provincia}
+      Ciudad: ${ciudad}
+      Código Postal: ${cp}
+      
+  
+      Artículos:
+      ${cartItems
                 .map(
                     (item) => `
-            - ${item.title}
-              Cantidad: ${item.cantidad}
-              Precio: ${(item.price * item.cantidad).toFixed(2)} €`
+        - ${item.title}
+          Cantidad: ${item.cantidad}
+          Precio: ${(item.price * item.cantidad).toFixed(2)} €`
                 )
                 .join('\n')}
-          
-          Subtotal: ${subtotal.toFixed(2)} €
-          Impuestos: ${taxes.toFixed(2)} €
-          Total: ${total.toFixed(2)} €
-        `;
+      
+      Subtotal: ${subtotal.toFixed(2)} €
+      Impuestos: ${taxes.toFixed(2)} €
+      Total: ${total.toFixed(2)} €
+    `;
 
         const templateParams = {
             to_name: nombre,
@@ -273,7 +343,6 @@ export function Carrito({ cartItems, setCartItems }) {
         };
 
         try {
-
             if (userAtom) {
                 const userEmail = userAtom.email;
                 const cartDocRef = doc(db, 'carts', userEmail);
@@ -299,16 +368,19 @@ export function Carrito({ cartItems, setCartItems }) {
 
                         for (const item of cartItems) {
                             const isChecked = checkboxes[item.id];
-                            if (isChecked) { // Verificar si el checkbox está marcado
+                            if (isChecked) {
+                                // Verificar si el checkbox está marcado
                                 if (existingTitles.includes(item.title)) {
-                                    toast.error(`No se pudo completar la compra. El artículo "${item.title}" ya está en la biblioteca.`);
+                                    toast.error(
+                                        `No se pudo completar la compra. El artículo "${item.title}" ya está en la biblioteca.`
+                                    );
                                     return;
                                 }
 
                                 const newItem = {
                                     title: item.title,
                                     pdf: item.pdf,
-                                    image: item.image
+                                    image: item.image,
                                 };
 
                                 userData.library.push(newItem);
@@ -316,19 +388,19 @@ export function Carrito({ cartItems, setCartItems }) {
                         }
 
                         await setDoc(userDocRef, userData);
-
                     } else {
                         const libraryData = {
-                            library: []
+                            library: [],
                         };
 
                         for (const item of cartItems) {
                             const isChecked = checkboxes[item.id];
-                            if (isChecked) { // Verificar si el checkbox está marcado
+                            if (isChecked) {
+                                // Verificar si el checkbox está marcado
                                 const newItem = {
                                     title: item.title,
                                     pdf: item.pdf,
-                                    image: item.image
+                                    image: item.image,
                                 };
 
                                 libraryData.library.push(newItem);
@@ -395,12 +467,12 @@ export function Carrito({ cartItems, setCartItems }) {
                                                 {(item.category === "Mangas" || item.category === "Comics") && (
                                                     <div className="mt-4">
                                                         <label className="flex items-center">
-                                                        <input
-                                                            id={`checkbox-${item.id}`}
-                                                            type="checkbox"
-                                                            className="form-checkbox h-4 w-4 text-indigo-600"
-                                                            checked={checkboxes[item.id]}
-                                                            onChange={(e) => handleCheckboxChange(item.id, e.target.checked)}
+                                                            <input
+                                                                id={`checkbox-${item.id}`}
+                                                                type="checkbox"
+                                                                className="form-checkbox h-4 w-4 text-indigo-600"
+                                                                checked={checkboxes[item.id]}
+                                                                onChange={(e) => handleCheckboxChange(item.id, e.target.checked)}
                                                             />
                                                             <span className="ml-2 text-gray-700">
                                                                 {item.category === "Comics"

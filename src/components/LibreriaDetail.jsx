@@ -9,7 +9,10 @@ import PDF from "../pdf/Análisis y diseño.pdf";
 import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 
+/**
 
+    Componente de detalle de la librería.
+* @class    */
 const LibreriaDetail = () => {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
@@ -18,12 +21,22 @@ const LibreriaDetail = () => {
   const queryParams = new URLSearchParams(location.search);
   const pdfUrl = decodeURIComponent(queryParams.get('pdf'));
 
+  // Verifica la autenticación del usuario
   if (currentUser && (currentUser.email !== user || currentUser.id !== id)) {
     navigate('/login');
   }
- 
+
   const toolbarPluginInstance = toolbarPlugin();
   const { renderDefaultToolbar, Toolbar } = toolbarPluginInstance;
+
+  /**
+  
+      Renderiza la página del PDF.
+  
+      @param {object} props - Las propiedades de la página del PDF.
+  
+      @returns {JSX.Element} El componente de la página del PDF.
+      */
   const renderPage = (props) => (
     <>
       {props.canvasLayer.children}
@@ -60,6 +73,12 @@ const LibreriaDetail = () => {
     </>
   );
 
+  /**
+  
+      Transforma los elementos de la barra de herramientas.
+      @param {object} slot - Los elementos de la barra de herramientas.
+      @returns {object} Los elementos de la barra de herramientas transformados.
+      */
   const transform = (slot) => {
     const {
       Download,
@@ -83,7 +102,6 @@ const LibreriaDetail = () => {
       SwitchThemeMenuItem: SwitchThemeMenuItem ? () => <></> : SwitchThemeMenuItem,
     };
   };
-
 
   return (
     <div style={{ height: "100vh" }} className="mb-20 border border-gray-200 rounded">

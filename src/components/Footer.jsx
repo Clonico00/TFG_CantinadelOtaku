@@ -7,16 +7,22 @@ import { Link } from "react-router-dom";
 import { AuthContext } from './AuthContext';
 import { db } from '../firebase';
 import { collection, where, getDocs, query } from "firebase/firestore";
-const Footer = ({ handleLinkClick }) => {
 
+/**
+ * Componente del pie de página.
+ * @param {Object} props - Propiedades del componente.
+ * @param {Function} props.handleLinkClick - Función de manejo de clic en enlaces.
+* @class */
+const Footer = ({ handleLinkClick }) => {
     const [userData, setUserData] = useState(null);
     const { currentUser } = useContext(AuthContext);
+
     useEffect(() => {
         const fetchUserData = async () => {
             if (currentUser) {
                 try {
                     const usersRef = collection(db, 'users');
-                    const userQuery = await query(usersRef, where('email', '==', currentUser.email));
+                    const userQuery = query(usersRef, where('email', '==', currentUser.email));
                     const snapshot = await getDocs(userQuery);
 
                     if (!snapshot.empty) {
@@ -31,6 +37,7 @@ const Footer = ({ handleLinkClick }) => {
 
         fetchUserData();
     }, [currentUser]);
+
 
     return <footer className="py-12 w-full rounded-t-lg shadow-md border border-gray-200 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:text-center">

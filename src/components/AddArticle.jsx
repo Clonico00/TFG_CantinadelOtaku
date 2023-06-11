@@ -3,12 +3,22 @@ import { db, storage } from "../firebase";
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useNavigate } from "react-router-dom";
-export default function AddArticle() {
+
+/**
+ * @class
+ */
+function AddArticle() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState("");
     const [showPdfInput, setShowPdfInput] = useState(false);
 
+    /**
+     * Maneja el cambio de categoría seleccionada.
+     * @param {Object} event - El evento de cambio.
+     * @param {string} event.target.value - El valor seleccionado.
+     * @returns {void}
+     */
     const handleCategoryChange = (event) => {
         const category = event.target.value;
         setSelectedCategory(category);
@@ -19,6 +29,12 @@ export default function AddArticle() {
             setShowPdfInput(false);
         }
     };
+
+    /**
+     * Maneja la acción de agregar un nuevo artículo.
+     * @param {Object} e - El evento de envío del formulario.
+     * @returns {Promise<void>}
+     */
     const handleAdd = async (e) => {
         e.preventDefault();
 
@@ -30,10 +46,10 @@ export default function AddArticle() {
         const stock = parseInt(e.target.stock.value);
         const brand = e.target.brand.value;
         const image = e.target.photo.files[0];
-        //el pdf puede estar o no
+        // El pdf puede estar o no
         const pdfFile = e.target.elements.pdf && e.target.elements.pdf.files[0];
         const pdf = pdfFile ? pdfFile.name : "";
-        
+
         try {
             // Comprobar si ya existe un artículo con el mismo título y categoría
             const articlesCollection = collection(db, 'articles');
@@ -81,6 +97,7 @@ export default function AddArticle() {
             setError('Ocurrió un error durante el registro.');
         }
     };
+
 
     return (
         <>
@@ -278,3 +295,5 @@ export default function AddArticle() {
         </>
     );
 }
+
+export default AddArticle;

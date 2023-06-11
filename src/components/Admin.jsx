@@ -5,7 +5,10 @@ import { Link } from "react-router-dom";
 import { Dialog, Transition } from '@headlessui/react'
 import { toast, Toaster } from 'react-hot-toast';
 
-export default function Admin() {
+/**
+* @class
+ */
+function Admin() {
     const [currentPage, setCurrentPage] = useState(1);
     const [isOpen, setIsOpen] = useState(false)
     const [articles, setArticles] = useState([]);
@@ -14,6 +17,11 @@ export default function Admin() {
         column: '', // Columna de ordenación actual
         type: 'asc', // Tipo de orden: 'asc' para ascendente, 'desc' para descendente
     });
+
+    /**
+     * Maneja la acción de ordenar las columnas.
+     * @param {string} column - El nombre de la columna a ordenar.
+     */
     const handleSort = (column) => {
         if (sortColumn.column === column) {
             // Si la columna actual es la misma que se hizo clic, invertir el tipo de orden
@@ -29,7 +37,8 @@ export default function Admin() {
             });
         }
     };
-    //nos teamos todos los articles de mi bbdd de la coleccion artices y los ordenamos por nombre
+
+    // Obtener los artículos de la base de datos y ordenarlos según la columna y tipo de orden actual
     useEffect(() => {
         const articlesRef = collection(db, 'articles');
         const articlesQuery = query(articlesRef);
@@ -59,7 +68,9 @@ export default function Admin() {
         return () => unsubscribe();
     }, [sortColumn]);
 
-
+    /**
+     * Maneja la acción de eliminar un artículo.
+     */
     const handleDelete = async () => {
         try {
             await deleteDoc(doc(db, 'articles', articleToDelete));
@@ -75,17 +86,17 @@ export default function Admin() {
         }
     };
 
-
-
-
+    // Cálculos para la paginación
     const itemsPerPage = 10;
-
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentItems = articles.slice(startIndex, endIndex);
-
     const totalPages = Math.ceil(articles.length / itemsPerPage);
 
+    /**
+     * Establece el número de página actual.
+     * @param {number} page - El número de página a establecer.
+     */
     const setPage = (page) => {
         if (page < 1 || page > totalPages) {
             return;
@@ -94,12 +105,18 @@ export default function Admin() {
         setCurrentPage(page);
     };
 
+    /**
+     * Cierra el diálogo.
+     */
     function closeModal() {
-        setIsOpen(false)
+        setIsOpen(false);
     }
 
+    /**
+     * Abre el diálogo.
+     */
     function openModal() {
-        setIsOpen(true)
+        setIsOpen(true);
     }
 
     return (
@@ -458,3 +475,5 @@ export default function Admin() {
         </>
     );
 }
+
+export default Admin;

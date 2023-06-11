@@ -5,6 +5,14 @@ import { db } from "../firebase";
 import { toast, Toaster } from 'react-hot-toast';
 import { AuthContext } from "./AuthContext";
 
+/**
+ * Componente de detalle del artículo.
+ *  @class
+ * @param {object} props - Propiedades del componente.
+ * @param {Array} props.cartItems - Array de elementos en el carrito.
+ * @param {function} props.setCartItems - Función para actualizar los elementos del carrito.
+ * @returns {JSX.Element} El componente Detail.
+ */
 export function Detail({ cartItems, setCartItems }) {
     const location = useLocation();
     const path = location.pathname;
@@ -41,6 +49,10 @@ export function Detail({ cartItems, setCartItems }) {
         fetchArticle(id);
     }, [id]);
 
+    /**
+     * Maneja la acción de agregar un artículo al carrito.
+     * @param {object} article - Artículo a añadir al carrito.
+     */
     const handleAddToCart = async (article) => {
         try {
             // Verificar si hay stock disponible
@@ -87,7 +99,6 @@ export function Detail({ cartItems, setCartItems }) {
                         );
                         await setDoc(cartDocRef, { cartItems: updatedCartItems });
                         setCartItems(updatedCartItems);
-
                     } else {
                         // El artículo no está en el carrito, agregarlo con cantidad 1
                         const newItem = { ...article, cantidad: 1 };
@@ -101,7 +112,6 @@ export function Detail({ cartItems, setCartItems }) {
                     await setDoc(cartDocRef, newCart);
                     localStorage.setItem('cartItems', JSON.stringify(newCart));
                     setCartItems(newCart);
-
                 }
 
                 toast.success(`${article.title} se ha añadido al carrito`);
@@ -119,7 +129,6 @@ export function Detail({ cartItems, setCartItems }) {
         // Renderizar un mensaje de carga mientras se obtiene el artículo
         return <p>Cargando artículo...</p>;
     }
-
 
     return (
         <>

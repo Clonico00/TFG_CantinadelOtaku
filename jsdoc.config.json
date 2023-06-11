@@ -1,0 +1,17 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "source": {
+    "include": ["src/components"],
+    "includePattern": ".+\\.js(doc|x)?$"
+  },
+  "opts": {
+    "destination": "docs/",
+    "template": "node_modules/clean-jsdoc-theme",
+    "recurse": true,
+    "verbose": true
+
+    
+  }
+}

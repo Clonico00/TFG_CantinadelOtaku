@@ -3,45 +3,61 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from "../firebase";
+
+/**
+
+    Componente de la librería.
+* @class    */
 function Libreria() {
     const [page, setPage] = useState(1);
     const { currentUser } = useContext(AuthContext);
     const [articles, setDisplayedArticles] = useState([]);
     const articlesPerPage = 9;
 
+    /**
+    
+        Recupera los datos de la librería desde Firestore.
+        @returns {Promise} Una promesa que resuelve con los datos de la librería.
+        */
     const fetchLibraryData = async () => {
         const libraryCollection = collection(db, 'library');
-        const querySnapshot = await getDocs(query(libraryCollection, where('__name__', '==', currentUser.email)));
-
+        const querySnapshot = await getDocs(query(libraryCollection, where('name', '==', currentUser.email)));
         const libraryDocs = [];
         querySnapshot.forEach((doc) => {
             libraryDocs.push({ id: doc.id, data: doc.data() });
         });
 
         return libraryDocs;
+
     };
 
     useEffect(() => {
+        /**
+        * Obtiene los datos de la librería y actualiza el estado.
+        */
         const getLibraryData = async () => {
             try {
                 const libraryData = await fetchLibraryData();
-                // Guarda los documentos en un estado o realiza cualquier otra lógica que desees
                 setDisplayedArticles(libraryData);
                 console.log(libraryData);
             } catch (error) {
                 console.log('Error al obtener los documentos de la colección library:', error);
             }
         };
-
         if (currentUser) {
             getLibraryData();
         }
         // eslint-disable-next-line
-    }, [currentUser]);
 
+    }, [currentUser]);
 
     const totalPages = Math.ceil(articles.length / articlesPerPage);
 
+    /**
+    
+        Maneja el evento de clic en una página.
+        @param {number} pageNum - El número de la página.
+        */
     const handleClick = (pageNum) => {
         setPage(pageNum);
     };

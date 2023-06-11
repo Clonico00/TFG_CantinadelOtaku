@@ -4,7 +4,11 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from "../firebase";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export default function EditArticle() {
+/**
+ * Componente para editar un artículo existente.
+* @class
+ */
+ function EditArticle() {
     const location = useLocation();
     const path = location.pathname;
     const navigate = useNavigate();
@@ -15,6 +19,10 @@ export default function EditArticle() {
     let id = path.substring(path.lastIndexOf('/') + 1);
     const [article, setArticle] = useState(null);
 
+    /**
+     * Maneja el cambio de categoría del artículo.
+     * @param {Event} event - Evento de cambio de categoría.
+     */
     const handleCategoryChange = (event) => {
         const category = event.target.value;
         setSelectedCategory(category);
@@ -25,6 +33,7 @@ export default function EditArticle() {
             setShowPdfInput(false);
         }
     };
+
     useEffect(() => {
         const fetchArticle = async (id) => {
             const articleRef = doc(db, 'articles', id);
@@ -41,13 +50,15 @@ export default function EditArticle() {
         fetchArticle(id);
     }, [id]);
 
-
     if (!article) {
         // Renderizar un mensaje de carga mientras se obtiene el artículo
         return <p>Cargando artículo...</p>;
     }
 
-
+    /**
+     * Maneja la edición del artículo.
+     * @param {Event} event - Evento de envío del formulario.
+     */
     const handleEdit = async (event) => {
         event.preventDefault();
 
@@ -79,6 +90,7 @@ export default function EditArticle() {
                 const snapshot = await uploadBytes(fileRef, updatedArticle.image);
                 imageUrl = await getDownloadURL(snapshot.ref);
             }
+
             // Actualizar el archivo de almacenamiento si se proporciona un nuevo pdf
             let pdfUrl = article.pdf;
             if (updatedArticle.pdf) {
@@ -87,7 +99,6 @@ export default function EditArticle() {
                 const snapshot = await uploadBytes(fileRef, updatedArticle.pdf);
                 pdfUrl = await getDownloadURL(snapshot.ref);
             }
-
 
             // Crear el objeto actualizado para la base de datos
             const updatedFields = {
@@ -101,25 +112,17 @@ export default function EditArticle() {
             console.log('Artículo actualizado exitosamente');
 
             // Restablecer el estado del artículo
-            setArticle({
-                id: '',
-                title: '',
-                description: '',
-                category: '',
-                precio: '',
-                stock: '',
-                brand: '',
-                image: '',
-                pdfurl: '',
-                // Restablece aquí los demás campos del artículo
-            });
+            setArticle(null);
             navigate('/admin');
         } catch (error) {
             setError('Error al actualizar el artículo', error);
         }
     };
 
-
+    /**
+     * Maneja el cambio en los campos del artículo.
+     * @param {Event} event - Evento de cambio en los campos del artículo.
+     */
     const handleChange = (event) => {
         setArticle({
             ...article,
@@ -320,3 +323,5 @@ export default function EditArticle() {
         </div>
     );
 }
+
+export default EditArticle;

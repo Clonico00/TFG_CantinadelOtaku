@@ -4,8 +4,14 @@ import { auth } from '../firebase'; // Ruta a tu archivo firebase.js
 // Crea el contexto de autenticación
 export const AuthContext = createContext();
 
-// Proveedor del contexto de autenticación
-export const AuthProvider = ({ children }) => {
+/**
+ * Proveedor del contexto de autenticación.
+ * @param {object} props - Propiedades del componente.
+ * @param {JSX.Element} props.children - Componentes hijos envueltos por el AuthProvider.
+/**
+ * 
+* @class
+ */export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 

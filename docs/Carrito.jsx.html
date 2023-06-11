@@ -1,0 +1,844 @@
+<!DOCTYPE html><html lang="en" style="font-size:16px"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Source: Carrito.jsx</title><!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><script src="scripts/third-party/hljs.js" defer="defer"></script><script src="scripts/third-party/hljs-line-num.js" defer="defer"></script><script src="scripts/third-party/popper.js" defer="defer"></script><script src="scripts/third-party/tippy.js" defer="defer"></script><script src="scripts/third-party/tocbot.min.js"></script><script>var baseURL="/",locationPathname="",baseURL=(locationPathname=document.location.pathname).substr(0,locationPathname.lastIndexOf("/")+1)</script><link rel="stylesheet" href="styles/clean-jsdoc-theme.min.css"><svg aria-hidden="true" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display:none"><defs><symbol id="copy-icon" viewbox="0 0 488.3 488.3"><g><path d="M314.25,85.4h-227c-21.3,0-38.6,17.3-38.6,38.6v325.7c0,21.3,17.3,38.6,38.6,38.6h227c21.3,0,38.6-17.3,38.6-38.6V124    C352.75,102.7,335.45,85.4,314.25,85.4z M325.75,449.6c0,6.4-5.2,11.6-11.6,11.6h-227c-6.4,0-11.6-5.2-11.6-11.6V124    c0-6.4,5.2-11.6,11.6-11.6h227c6.4,0,11.6,5.2,11.6,11.6V449.6z"/><path d="M401.05,0h-227c-21.3,0-38.6,17.3-38.6,38.6c0,7.5,6,13.5,13.5,13.5s13.5-6,13.5-13.5c0-6.4,5.2-11.6,11.6-11.6h227    c6.4,0,11.6,5.2,11.6,11.6v325.7c0,6.4-5.2,11.6-11.6,11.6c-7.5,0-13.5,6-13.5,13.5s6,13.5,13.5,13.5c21.3,0,38.6-17.3,38.6-38.6    V38.6C439.65,17.3,422.35,0,401.05,0z"/></g></symbol><symbol id="search-icon" viewBox="0 0 512 512"><g><g><path d="M225.474,0C101.151,0,0,101.151,0,225.474c0,124.33,101.151,225.474,225.474,225.474    c124.33,0,225.474-101.144,225.474-225.474C450.948,101.151,349.804,0,225.474,0z M225.474,409.323    c-101.373,0-183.848-82.475-183.848-183.848S124.101,41.626,225.474,41.626s183.848,82.475,183.848,183.848    S326.847,409.323,225.474,409.323z"/></g></g><g><g><path d="M505.902,476.472L386.574,357.144c-8.131-8.131-21.299-8.131-29.43,0c-8.131,8.124-8.131,21.306,0,29.43l119.328,119.328    c4.065,4.065,9.387,6.098,14.715,6.098c5.321,0,10.649-2.033,14.715-6.098C514.033,497.778,514.033,484.596,505.902,476.472z"/></g></g></symbol><symbol id="font-size-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M11.246 15H4.754l-2 5H.6L7 4h2l6.4 16h-2.154l-2-5zm-.8-2L8 6.885 5.554 13h4.892zM21 12.535V12h2v8h-2v-.535a4 4 0 1 1 0-6.93zM19 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></symbol><symbol id="add-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"/></symbol><symbol id="minus-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M5 11h14v2H5z"/></symbol><symbol id="dark-theme-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z"/></symbol><symbol id="light-theme-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></symbol><symbol id="reset-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M18.537 19.567A9.961 9.961 0 0 1 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10c0 2.136-.67 4.116-1.81 5.74L17 12h3a8 8 0 1 0-2.46 5.772l.997 1.795z"/></symbol><symbol id="down-icon" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.7803 6.21967C13.0732 6.51256 13.0732 6.98744 12.7803 7.28033L8.53033 11.5303C8.23744 11.8232 7.76256 11.8232 7.46967 11.5303L3.21967 7.28033C2.92678 6.98744 2.92678 6.51256 3.21967 6.21967C3.51256 5.92678 3.98744 5.92678 4.28033 6.21967L8 9.93934L11.7197 6.21967C12.0126 5.92678 12.4874 5.92678 12.7803 6.21967Z"></path></symbol><symbol id="codepen-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.5 13.202L13 15.535v3.596L19.197 15 16.5 13.202zM14.697 12L12 10.202 9.303 12 12 13.798 14.697 12zM20 10.869L18.303 12 20 13.131V10.87zM19.197 9L13 4.869v3.596l3.5 2.333L19.197 9zM7.5 10.798L11 8.465V4.869L4.803 9 7.5 10.798zM4.803 15L11 19.131v-3.596l-3.5-2.333L4.803 15zM4 13.131L5.697 12 4 10.869v2.262zM2 9a1 1 0 0 1 .445-.832l9-6a1 1 0 0 1 1.11 0l9 6A1 1 0 0 1 22 9v6a1 1 0 0 1-.445.832l-9 6a1 1 0 0 1-1.11 0l-9-6A1 1 0 0 1 2 15V9z"/></symbol><symbol id="close-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/></symbol><symbol id="menu-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z"/></symbol></defs></svg></head><body class="dark" data-theme="dark"><div class="sidebar-container"><div class="sidebar" id="sidebar"><a href="/" class="sidebar-title sidebar-title-anchor">Home</a><div class="sidebar-items-container"><div class="sidebar-section-title with-arrow" data-isopen="false" id="nUgTOcHcCoY42YLvERR9-"><div>Classes</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="AddArticle.html">AddArticle</a></div><div class="sidebar-section-children"><a href="Admin.html">Admin</a></div><div class="sidebar-section-children"><a href="AuthProvider.html">AuthProvider</a></div><div class="sidebar-section-children"><a href="Carrito.html">Carrito</a></div><div class="sidebar-section-children"><a href="Comics.html">Comics</a></div><div class="sidebar-section-children"><a href="Detail.html">Detail</a></div><div class="sidebar-section-children"><a href="EditArticle.html">EditArticle</a></div><div class="sidebar-section-children"><a href="Footer.html">Footer</a></div><div class="sidebar-section-children"><a href="Forum.html">Forum</a></div><div class="sidebar-section-children"><a href="Inicio.html">Inicio</a></div><div class="sidebar-section-children"><a href="Libreria.html">Libreria</a></div><div class="sidebar-section-children"><a href="LibreriaDetail.html">LibreriaDetail</a></div><div class="sidebar-section-children"><a href="Login.html">Login</a></div><div class="sidebar-section-children"><a href="Mangas.html">Mangas</a></div><div class="sidebar-section-children"><a href="Mechandising.html">Mechandising</a></div><div class="sidebar-section-children"><a href="Navbar.html">Navbar</a></div><div class="sidebar-section-children"><a href="Register.html">Register</a></div></div></div></div></div><div class="navbar-container" id="VuAckcnZhf"><nav class="navbar"><div class="navbar-left-items"></div><div class="navbar-right-items"><div class="navbar-right-item"><button class="icon-button search-button" aria-label="open-search"><svg><use xlink:href="#search-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button theme-toggle" aria-label="toggle-theme"><svg><use class="theme-svg-use" xlink:href="#light-theme-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button font-size" aria-label="change-font-size"><svg><use xlink:href="#font-size-icon"></use></svg></button></div></div><nav></nav></nav></div><div class="toc-container"><div class="toc-content"><span class="bold">On this page</span><div id="eed4d2a0bfd64539bb9df78095dec881"></div></div></div><div class="body-wrapper"><div class="main-content"><div class="main-wrapper"><section id="source-page" class="source-page"><header><h1 id="title" class="has-anchor">Carrito.jsx</h1></header><article><pre class="prettyprint source lang-js"><code>import React, { Fragment, useState, useEffect, useRef } from "react";
+import { provincias } from "../data";
+import { provinciasConCiudades } from "../data";
+import { Dialog, Transition } from "@headlessui/react";
+import { toast, Toaster } from 'react-hot-toast';
+import { db } from "../firebase";
+import { doc, getDoc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection } from "firebase/firestore";
+import emailjs from '@emailjs/browser';
+import { useAtomValue } from "jotai";
+import { userDataAtom } from "../atoms/userAtom";
+
+/**
+ * Componente del carrito de compras.
+ *
+ * @class
+ * @param {object} props - Propiedades del componente.
+ * @param {array} props.cartItems - Lista de artículos en el carrito.
+ * @param {function} props.setCartItems - Función para actualizar la lista de artículos en el carrito.
+ * @returns {JSX.Element} Componente de Carrito.
+ */
+export function Carrito({ cartItems, setCartItems }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [articleToDelete, setArticleToDelete] = useState("");
+    const [checkboxes, setCheckboxes] = useState({});
+    const form = useRef();
+    const subtotal = Array.isArray(cartItems)
+        ? cartItems.reduce((accumulator, item) => accumulator + item.precio * item.cantidad, 0)
+        : 0;
+    const taxes = subtotal * 0.1;
+    const total = subtotal + taxes;
+    const [fullName, setFullName] = useState('');
+    const userAtom = useAtomValue(userDataAtom);
+
+    /**
+     * Maneja la disminución de la cantidad de un artículo en el carrito.
+     *
+     * @param {string} itemId - ID del artículo.
+     * @returns {Promise&lt;void>} Promesa resuelta una vez actualizado el carrito.
+     */
+    const handleDecrease = async (itemId) => {
+        const existingItem = cartItems.find((item) => item.id === itemId);
+
+        if (existingItem &amp;&amp; existingItem.cantidad > 1) {
+            const updatedCartItems = cartItems.map((item) => {
+                if (item.id === itemId) {
+                    return { ...item, cantidad: item.cantidad - 1 };
+                }
+                return item;
+            });
+            setCartItems(updatedCartItems);
+
+            try {
+                const articleDocRef = doc(db, 'articles', itemId);
+                const articleDocSnap = await getDoc(articleDocRef);
+
+                if (articleDocSnap.exists()) {
+                    const articleData = articleDocSnap.data();
+                    const updatedStock = articleData.stock + 1;
+                    await updateDoc(articleDocRef, { stock: updatedStock });
+                    console.log(`Stock actualizado para el artículo ${existingItem.title}`);
+                } else {
+                    console.error(`El artículo ${existingItem.title} no existe en la base de datos.`);
+                }
+            } catch (error) {
+                console.error('Error al actualizar el stock del artículo:', error);
+            }
+
+            if (userAtom) {
+                saveCartToDatabase(updatedCartItems);
+            } else {
+                updateLocalStorageCart(updatedCartItems);
+            }
+        } else {
+            toast.error('No se puede disminuir la cantidad del artículo, borre el artículo si no lo desea');
+        }
+    };
+
+    /**
+     * Maneja el cambio de estado del checkbox de un artículo en el carrito.
+     *
+     * @param {string} itemId - ID del artículo.
+     * @param {boolean} checked - Valor del checkbox.
+     * @returns {void}
+     */
+    const handleCheckboxChange = (itemId, checked) => {
+        setCheckboxes((prevCheckboxes) => ({
+            ...prevCheckboxes,
+            [itemId]: checked,
+        }));
+    };
+
+    /**
+     * Maneja el incremento de la cantidad de un artículo en el carrito.
+     *
+     * @param {string} itemId - ID del artículo.
+     * @returns {Promise&lt;void>} Promesa resuelta una vez actualizado el carrito.
+     */
+    const handleIncrease = async (itemId) => {
+        const article = cartItems.find((item) => item.id === itemId);
+        if (article &amp;&amp; article.cantidad &lt; article.stock) {
+            const updatedCartItems = cartItems.map((item) => {
+                if (item.id === itemId) {
+                    return { ...item, cantidad: item.cantidad + 1 };
+                }
+                return item;
+            });
+            setCartItems(updatedCartItems);
+
+            try {
+                const articleDocRef = doc(db, 'articles', itemId);
+                const articleDocSnap = await getDoc(articleDocRef);
+
+                if (articleDocSnap.exists()) {
+                    const articleData = articleDocSnap.data();
+                    const updatedStock = articleData.stock - 1;
+                    await updateDoc(articleDocRef, { stock: updatedStock });
+                    console.log(`Stock actualizado para el artículo ${article.title}`);
+                } else {
+                    console.error(`El artículo con ID ${itemId} no existe en la base de datos.`);
+                }
+            } catch (error) {
+                console.error('Error al actualizar el stock del artículo:', error);
+            }
+
+            if (userAtom) {
+                saveCartToDatabase(updatedCartItems);
+            } else {
+                updateLocalStorageCart(updatedCartItems);
+            }
+        } else {
+            toast.error('No hay suficiente stock disponible');
+        }
+    };
+
+    /**
+     * Maneja la eliminación de un artículo del carrito.
+     *
+     * @returns {Promise&lt;void>} Promesa resuelta una vez actualizado el carrito.
+     */
+    const handleDeleteItem = async () => {
+        const updatedCartItems = cartItems.filter((item) => item.id !== articleToDelete);
+        const deletedItem = cartItems.find((item) => item.id === articleToDelete);
+        setCartItems(updatedCartItems);
+        closeModal();
+        toast.success('Artículo eliminado del carrito');
+
+        try {
+            const articleDocRef = doc(db, 'articles', deletedItem.id);
+            const articleDocSnap = await getDoc(articleDocRef);
+
+            if (articleDocSnap.exists()) {
+                const articleData = articleDocSnap.data();
+                const updatedStock = articleData.stock + deletedItem.cantidad;
+                await updateDoc(articleDocRef, { stock: updatedStock });
+                console.log(`Stock actualizado para el artículo ${deletedItem.title}`);
+            } else {
+                console.error(`El artículo ${deletedItem.title} no existe en la base de datos.`);
+            }
+        } catch (error) {
+            console.error('Error al actualizar el stock del artículo:', error);
+        }
+
+        if (userAtom) {
+            saveCartToDatabase(updatedCartItems);
+        } else {
+            updateLocalStorageCart(updatedCartItems);
+        }
+    };
+
+    /**
+     * Actualiza el carrito en el almacenamiento local.
+     *
+     * @param {array} updatedCartItems - Lista de artículos actualizada.
+     * @returns {void}
+     */
+    const updateLocalStorageCart = (updatedCartItems) => {
+        localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+    };
+
+    /**
+  * Carga el carrito desde el almacenamiento local al iniciar el componente.
+  *
+  * @returns {void}
+  */
+    useEffect(() => {
+        const loadCartFromLocalStorage = () => {
+            const cartItemsFromLocalStorage = JSON.parse(localStorage.getItem('cartItems'));
+            if (cartItemsFromLocalStorage) {
+                setCartItems(cartItemsFromLocalStorage);
+            }
+        };
+
+        loadCartFromLocalStorage();
+        // eslint-disable-next-line
+    }, []);
+
+    /**
+     * Carga el carrito desde la base de datos.
+     *
+     * @returns {Promise&lt;void>} Promesa resuelta una vez se haya cargado el carrito desde la base de datos.
+     */
+    const loadCartFromDatabase = async () => {
+        try {
+            if (userAtom) {
+                const userEmail = userAtom.email;
+                const cartDocRef = doc(db, 'carts', userEmail);
+                const cartDocSnap = await getDoc(cartDocRef);
+
+                if (cartDocSnap.exists()) {
+                    const cartData = cartDocSnap.data();
+                    setCartItems(cartData.cartItems);
+                    updateLocalStorageCart(cartData.cartItems); // Actualizar localStorage con los datos de la base de datos
+                } else {
+                    setCartItems([]);
+                    localStorage.removeItem('cartItems'); // Eliminar el carrito del localStorage si no existe en la base de datos
+                }
+            }
+        } catch (error) {
+            console.error('Error al cargar el carrito desde la base de datos:', error);
+        }
+    };
+
+    /**
+     * Guarda el carrito en la base de datos.
+     *
+     * @param {array} updatedCartItems - Lista de artículos actualizada.
+     * @returns {Promise&lt;void>} Promesa resuelta una vez se haya guardado el carrito en la base de datos.
+     */
+    const saveCartToDatabase = async (updatedCartItems) => {
+        try {
+            if (userAtom) {
+                const userEmail = userAtom.email;
+                const cartDocRef = doc(db, 'carts', userEmail);
+                await setDoc(cartDocRef, { cartItems: updatedCartItems });
+                updateLocalStorageCart(updatedCartItems); // Actualizar localStorage con los datos de la base de datos
+            }
+        } catch (error) {
+            console.error('Error al guardar el carrito en la base de datos:', error);
+        }
+    };
+
+    /**
+     * Carga el carrito desde la base de datos al iniciar sesión o al cambiar el usuario.
+     *
+     * @returns {void}
+     */
+    useEffect(() => {
+        loadCartFromDatabase();
+        // if (currentUser) {
+        //     const usersCollection = collection(db, 'users');
+        //     const userQuery = query(usersCollection, where('email', '==', currentUser.email));
+        //     getDocs(userQuery)
+        //         .then((querySnapshot) => {
+        //             if (!querySnapshot.empty) {
+        //                 const userData = querySnapshot.docs[0].data();
+        //                 if (userData.name === undefined || userData.apellidos === undefined) {
+        //                     setFullName(currentUser.displayName);
+        //                 } else {
+        //                     setFullName(userData.name + ' ' + userData.apellidos);
+        //                 }
+        //             } else {
+        //                 console.log('No matching documents found!');
+        //             }
+        //         })
+        //         .catch((error) => {
+        //             console.log('Error querying user document:', error);
+        //         });
+        // }
+        // eslint-disable-next-line
+    }, [userAtom]);
+
+    /**
+     * Cierra el modal.
+     *
+     * @returns {void}
+     */
+    function closeModal() {
+        setIsOpen(false);
+    }
+
+    /**
+     * Abre el modal.
+     *
+     * @returns {void}
+     */
+    function openModal() {
+        setIsOpen(true);
+    }
+
+    /**
+     * Envía un correo electrónico con los detalles del formulario y los artículos del carrito.
+     *
+     * @param {Event} e - Evento del formulario.
+     * @returns {Promise&lt;void>} Promesa resuelta una vez se haya enviado el correo electrónico.
+     */
+    const sendEmail = async (e) => {
+        e.preventDefault();
+        const nombre = form.current.nombre.value;
+        const email = form.current.email.value;
+        const calle = form.current.calle.value;
+        const numero = form.current.numero.value;
+        const piso = form.current.piso.value;
+        const letra = form.current.letra.value;
+        const provincia = form.current.provincia.value;
+        const ciudad = form.current.ciudad.value;
+        const cp = form.current.cp.value;
+        const ticketMessage = `
+      Datos del formulario:
+      Nombre: ${nombre}
+      Email: ${email}
+      
+      Dirección de envío:
+      Calle: ${calle}
+      Número: ${numero}
+      Piso: ${piso !== '' ? piso : '-'}
+      Letra: ${letra !== '' ? letra : '-'}
+      Provincia: ${provincia}
+      Ciudad: ${ciudad}
+      Código Postal: ${cp}
+      
+  
+      Artículos:
+      ${cartItems
+                .map(
+                    (item) => `
+        - ${item.title}
+          Cantidad: ${item.cantidad}
+          Precio: ${(item.price * item.cantidad).toFixed(2)} €`
+                )
+                .join('\n')}
+      
+      Subtotal: ${subtotal.toFixed(2)} €
+      Impuestos: ${taxes.toFixed(2)} €
+      Total: ${total.toFixed(2)} €
+    `;
+
+        const templateParams = {
+            to_name: nombre,
+            to_email: email,
+            from_name: 'Cantina del Otaku',
+            message: ticketMessage,
+        };
+
+        try {
+            if (userAtom) {
+                const userEmail = userAtom.email;
+                const cartDocRef = doc(db, 'carts', userEmail);
+                const cartDocSnap = await getDoc(cartDocRef);
+
+                if (cartDocSnap.exists()) {
+                    const cartData = cartDocSnap.data();
+                    const cartItems = cartData.cartItems;
+
+                    // Agregar la información de los artículos a la colección 'library'
+                    const libraryCollection = collection(db, 'library');
+                    const userDocRef = doc(libraryCollection, userEmail);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+
+                        if (!userData.library) {
+                            userData.library = [];
+                        }
+
+                        const existingTitles = userData.library.map((item) => item.title);
+
+                        for (const item of cartItems) {
+                            const isChecked = checkboxes[item.id];
+                            if (isChecked) {
+                                // Verificar si el checkbox está marcado
+                                if (existingTitles.includes(item.title)) {
+                                    toast.error(
+                                        `No se pudo completar la compra. El artículo "${item.title}" ya está en la biblioteca.`
+                                    );
+                                    return;
+                                }
+
+                                const newItem = {
+                                    title: item.title,
+                                    pdf: item.pdf,
+                                    image: item.image,
+                                };
+
+                                userData.library.push(newItem);
+                            }
+                        }
+
+                        await setDoc(userDocRef, userData);
+                    } else {
+                        const libraryData = {
+                            library: [],
+                        };
+
+                        for (const item of cartItems) {
+                            const isChecked = checkboxes[item.id];
+                            if (isChecked) {
+                                // Verificar si el checkbox está marcado
+                                const newItem = {
+                                    title: item.title,
+                                    pdf: item.pdf,
+                                    image: item.image,
+                                };
+
+                                libraryData.library.push(newItem);
+                            }
+                        }
+
+                        await setDoc(userDocRef, libraryData);
+                    }
+                }
+
+                // Eliminar el documento de carrito del usuario
+                await emailjs.send('service_2iahr5w', '1', templateParams, 'EFIEuOyWXXiQw7h4n');
+
+                await deleteDoc(cartDocRef);
+            }
+
+            setCartItems([]);
+            localStorage.removeItem('cartItems');
+            toast.success('Compra realizada con éxito');
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    return (
+        &lt;>
+            &lt;Toaster
+                position="bottom-center"
+                reverseOrder={false}
+
+                toastStyle={{
+                    width: '50%', // Ajusta el ancho del contenido del toast
+                }}
+            />
+            {/*eslint-disable-next-line */}
+            {Array.isArray(cartItems) &amp;&amp; cartItems.length !== 0 ? (
+                &lt;div className=" pt-20 mb-24 overflow-auto">
+                    &lt;h2 className="text-center text-2xl font-extrabold mb-12 mt-1"
+                        style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>Carrito&lt;/h2>
+                    &lt;div className="mx-auto max-w-7xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
+                        &lt;div className="rounded-lg md:w-2/3">
+                            {cartItems.map((item, index) => (
+                                &lt;div key={index}>
+                                    &lt;div
+                                        className="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start">
+                                        &lt;img
+                                            src={item.image}
+                                            alt="product-image2"
+                                            className="w-full rounded-lg sm:w-40"
+                                        />
+                                        &lt;div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
+                                            &lt;div className="mt-5 sm:mt-0">
+                                                &lt;h2 className="text-lg font-bold text-gray-900" style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>
+                                                    {item.title}
+                                                &lt;/h2>
+                                                &lt;span className="text-sm title-font text-slate-400 tracking-widest">{item.brand}&lt;/span>
+
+                                                &lt;div className="mt-auto">
+                                                    &lt;p className="text-sm title-font font-bold" style={{ backfaceVisibility: "hidden", color: "#4a63ee" }}>
+                                                        &lt;span className="text-gray-900 text-lg">{(parseFloat(item.precio) * item.cantidad).toFixed(2)} €&lt;/span> ({parseFloat(item.precio).toFixed(2)} € x {item.cantidad})
+                                                    &lt;/p>
+                                                &lt;/div>
+
+                                                {(item.category === "Mangas" || item.category === "Comics") &amp;&amp; (
+                                                    &lt;div className="mt-4">
+                                                        &lt;label className="flex items-center">
+                                                            &lt;input
+                                                                id={`checkbox-${item.id}`}
+                                                                type="checkbox"
+                                                                className="form-checkbox h-4 w-4 text-indigo-600"
+                                                                checked={checkboxes[item.id]}
+                                                                onChange={(e) => handleCheckboxChange(item.id, e.target.checked)}
+                                                            />
+                                                            &lt;span className="ml-2 text-gray-700">
+                                                                {item.category === "Comics"
+                                                                    ? "¿Desea agregar este cómic a su librería?"
+                                                                    : "¿Desea agregar este manga a su librería?"}
+                                                            &lt;/span>
+                                                        &lt;/label>
+                                                    &lt;/div>
+                                                )}
+                                            &lt;/div>
+
+                                            &lt;div
+                                                className="mt-4 flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6 ">
+                                                &lt;div className="flex items-center space-x-4 ml-24 sm:justify-end "
+                                                    style={{ order: 2, color: "#d73544" }}>
+                                                    &lt;button style={{ color: "#d73544" }} onClick={() => {
+                                                        setArticleToDelete(item.id);
+                                                        openModal();
+                                                    }}>
+                                                        &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                                                            className="h-4 w-4"
+                                                            strokeWidth="1"
+                                                            fill="currentColor">
+
+                                                            &lt;path
+                                                                d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                                        &lt;/svg>
+                                                    &lt;/button>
+                                                    &lt;Transition appear show={isOpen} as={Fragment}>
+                                                        &lt;Dialog as="div" className="relative z-10" onClose={closeModal}>
+                                                            &lt;Transition.Child
+                                                                as={Fragment}
+                                                                enter="ease-out duration-300"
+                                                                enterFrom="opacity-0"
+                                                                enterTo="opacity-100"
+                                                                leave="ease-in duration-200"
+                                                                leaveFrom="opacity-100"
+                                                                leaveTo="opacity-0"
+                                                            >
+                                                                &lt;div className="fixed inset-0 bg-black bg-opacity-25" />
+                                                            &lt;/Transition.Child>
+
+                                                            &lt;div className="fixed inset-0 overflow-y-auto">
+                                                                &lt;div
+                                                                    className="flex min-h-full items-center justify-center p-4 text-center">
+                                                                    &lt;Transition.Child
+                                                                        as={Fragment}
+                                                                        enter="ease-out duration-300"
+                                                                        enterFrom="opacity-0 scale-95"
+                                                                        enterTo="opacity-100 scale-100"
+                                                                        leave="ease-in duration-200"
+                                                                        leaveFrom="opacity-100 scale-100"
+                                                                        leaveTo="opacity-0 scale-95"
+                                                                    >
+                                                                        &lt;Dialog.Panel
+                                                                            className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                                                                            &lt;Dialog.Title as="h3"
+                                                                                className="text-lg font-medium leading-6 text-gray-900">
+                                                                                Confirmación de borrado
+                                                                            &lt;/Dialog.Title>
+                                                                            &lt;div className="mt-2">
+                                                                                &lt;p className="text-sm text-gray-500">
+                                                                                    ¿Estás seguro de que quieres borrar este
+                                                                                    articulo de su articulo?
+                                                                                &lt;/p>
+                                                                            &lt;/div>
+
+                                                                            &lt;div className="mt-4 flex justify-end">
+                                                                                &lt;button
+                                                                                    type="button"
+                                                                                    className="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                                                                    onClick={() => handleDeleteItem()}
+                                                                                    style={{ backgroundColor: '#4a63ee' }}
+                                                                                >
+                                                                                    Si, estoy seguro
+                                                                                &lt;/button>
+                                                                                &lt;button
+                                                                                    type="button"
+                                                                                    className="inline-flex justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 ml-2"
+                                                                                    onClick={closeModal}
+                                                                                >
+                                                                                    Cancelar
+                                                                                &lt;/button>
+                                                                            &lt;/div>
+                                                                        &lt;/Dialog.Panel>
+                                                                    &lt;/Transition.Child>
+                                                                &lt;/div>
+                                                            &lt;/div>
+                                                        &lt;/Dialog>
+                                                    &lt;/Transition>
+
+                                                &lt;/div>
+                                                &lt;div className="flex items-center border-gray-100 sm:justify-start">
+                                                    &lt;span
+                                                        className="cursor-pointer rounded-l bg-gray-100 py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-blue-50"
+                                                        onClick={() => handleDecrease(item.id)}
+                                                    >
+                                                        {"-"}
+                                                    &lt;/span>
+                                                    &lt;input
+                                                        className="h-8 w-12 border bg-white text-center text-xs outline-none"
+                                                        type="text"
+                                                        value={item.cantidad}
+                                                        min={1}
+                                                        readOnly={true}
+                                                    />
+                                                    &lt;span
+                                                        className="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50"
+                                                        onClick={() => handleIncrease(item.id)}
+                                                    >
+                                                        {"+"}
+                                                    &lt;/span>
+                                                &lt;/div>
+                                            &lt;/div>
+                                        &lt;/div>
+                                    &lt;/div>
+                                &lt;/div>
+                            ))}
+                        &lt;/div>
+                        &lt;div className="mt-6 h-full rounded-lg border bg-white p-6 shadow-md md:mt-0 md:w-1/3">
+                            &lt;div className="mb-2 flex justify-between">
+                                &lt;h3 className="text-center text-2xl font-extrabold mb-2 mt-1"
+                                    style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>Resumen&lt;/h3>
+                            &lt;/div>
+                            &lt;hr />
+                            &lt;form ref={form} onSubmit={sendEmail} >
+                                {userAtom ? (
+                                    &lt;>
+                                        &lt;div className="mb-2 flex justify-between mt-4 flex-col">
+                                            &lt;label htmlFor="nombre"
+                                                className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
+                                                style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                            >
+                                                Nombre:
+                                            &lt;/label>
+                                            &lt;div className="relative mb-6">
+                                                &lt;input type="text" name="nombre" id="nombre"
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                                    required
+                                                    defaultValue={fullName || userAtom.displayName}
+                                                />
+                                            &lt;/div>
+                                        &lt;/div>
+                                        &lt;div className="mb-2 flex justify-between mt-4 flex-col">
+                                            &lt;label htmlFor="email"
+                                                className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
+                                                style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                            >
+                                                Email:
+                                            &lt;/label>
+                                            &lt;div className="relative mb-6">
+                                                &lt;input type="email" name="email" id="email"
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                                    required
+                                                    defaultValue={userAtom.email}
+
+                                                />
+                                            &lt;/div>
+                                        &lt;/div>
+                                    &lt;/>
+
+                                ) : (
+                                    &lt;>
+                                        &lt;div className="mb-2 flex justify-between mt-4 flex-col">
+                                            &lt;label htmlFor="nombre"
+                                                className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
+                                                style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                            >
+                                                Nombre:
+                                            &lt;/label>
+                                            &lt;div className="relative mb-6">
+                                                &lt;input type="text" name="nombre" id="nombre"
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                                    required
+                                                    placeholder="Nombre"
+
+                                                />
+                                            &lt;/div>
+                                        &lt;/div>
+                                        &lt;div className="mb-2 flex justify-between mt-4 flex-col">
+                                            &lt;label htmlFor="email"
+                                                className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
+                                                style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                            >
+                                                Email:
+                                            &lt;/label>
+                                            &lt;div className="relative mb-6">
+                                                &lt;input type="text" name="email" id="email"
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                                    required
+                                                    placeholder="Email"
+
+                                                />
+                                            &lt;/div>
+                                        &lt;/div>
+                                    &lt;/>
+                                )
+                                }
+
+                                &lt;div className="mb-2 flex justify-between mt-4 flex-col">
+                                    &lt;label htmlFor="calle"
+                                        className="text-sm font-bold text-gray-900  block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                    >
+                                        Calle:
+                                    &lt;/label>
+                                    &lt;div className="relative mb-6">
+                                        &lt;input type="text" name="calle" id="calle"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required
+                                            placeholder="Introducte la calle..."
+
+                                        />
+                                    &lt;/div>
+                                &lt;/div>
+                                &lt;div className="mb-2 flex justify-between mt-2 flex-col">
+                                    &lt;label htmlFor="numero"
+                                        className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                    >
+                                        Numero:
+                                    &lt;/label>
+                                    &lt;div className="relative mb-6">
+                                        &lt;input type="text" name="numero" id="numero"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required
+                                            placeholder="Introducte el numero..."
+
+                                        />
+                                    &lt;/div>
+                                &lt;/div>
+                                &lt;div className="mb-2 flex justify-between mt-2 flex-col">
+                                    &lt;label htmlFor="piso"
+                                        className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                    >
+                                        Piso:
+                                    &lt;/label>
+                                    &lt;div className="relative mb-6">
+                                        &lt;input type="text" name="piso" id="piso"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required
+                                            placeholder="Introducte el piso..."
+
+                                        />
+                                    &lt;/div>
+                                &lt;/div>
+                                &lt;div className="mb-2 flex justify-between mt-2 flex-col">
+                                    &lt;label htmlFor="letra"
+                                        className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                    >
+                                        Letra:
+                                    &lt;/label>
+                                    &lt;div className="relative mb-6">
+                                        &lt;input type="text" name="letra" id="letra"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required
+                                            placeholder="Introducte la letra..."
+
+                                        />
+                                    &lt;/div>
+                                &lt;/div>
+                                &lt;div className="mb-2 flex justify-between mt-2 flex-col">
+                                    &lt;label htmlFor="provincia"
+                                        className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>
+                                        Provincia:
+                                    &lt;/label>
+                                    &lt;div className="relative mb-6">
+                                        &lt;select name="provincia" id="provincia"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required onChange={(e) => {
+                                                const provinciaSeleccionada = e.target.value;
+                                                const seleccion = provinciasConCiudades.find((provincia) => provincia.provincia === provinciaSeleccionada);
+                                                if (seleccion) {
+                                                    const ciudadesDeProvincia = seleccion.ciudades;
+                                                    const ciudadSelect = document.getElementById('ciudad');
+                                                    ciudadSelect.innerHTML = '';
+                                                    ciudadesDeProvincia.forEach((ciudad) => {
+                                                        const opcion = document.createElement('option');
+                                                        opcion.value = ciudad;
+                                                        opcion.text = ciudad;
+                                                        ciudadSelect.appendChild(opcion);
+                                                    });
+                                                }
+                                            }}>
+                                            {provincias.map((provincia, index) => (
+                                                &lt;option key={index} value={provincia}>
+                                                    {provincia}
+                                                &lt;/option>
+                                            ))}
+                                        &lt;/select>
+                                    &lt;/div>
+                                &lt;/div>
+                                &lt;div className="mb-2 flex justify-between mt-2 flex-col">
+                                    &lt;label htmlFor="ciudad"
+                                        className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>
+                                        Ciudad:
+                                    &lt;/label>
+                                    &lt;div className="relative mb-6">
+                                        &lt;select name="ciudad" id="ciudad"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required>&lt;/select>
+                                    &lt;/div>
+                                &lt;/div>
+
+
+                                &lt;div className="mb-2 flex justify-between mt-2 flex-col">
+                                    &lt;label htmlFor="cp"
+                                        className="text-sm font-bold text-gray-900 block mb-2 dark:text-gray-300"
+                                        style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}
+                                    >
+                                        Codigo Postal:
+                                    &lt;/label>
+                                    &lt;div className="relative mb-6">
+                                        &lt;input type="text" name="cp" id="cp"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required
+                                            placeholder="Introducte el codigo postal..."
+
+                                        />
+                                    &lt;/div>
+                                &lt;/div>
+                                &lt;hr className="my-4" />
+                                &lt;div className="flex justify-between mt-4">
+                                    &lt;p className="text-gray-700">Subtotal&lt;/p>
+                                    &lt;p className="text-gray-700">{subtotal.toFixed(2)} €&lt;/p>
+                                &lt;/div>
+                                &lt;div className="flex justify-between mt-1">
+                                    &lt;p className="text-gray-700">Impuestos  &lt;/p>
+                                    &lt;p className="text-gray-700">{taxes.toFixed(2)} €&lt;/p>
+                                &lt;/div>
+                                &lt;div className="flex justify-between mt-2">
+                                    &lt;p className="text-xl font-bold" style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>
+                                        Total
+                                    &lt;/p>
+                                    &lt;div className="">
+                                        &lt;p className="mb-1 text-lg font-bold" style={{ backfaceVisibility: 'hidden', color: '#1e2447' }}>
+                                            {total.toFixed(2)} €
+                                        &lt;/p>
+                                    &lt;/div>
+                                &lt;/div>
+                                &lt;button
+                                    className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600"
+                                    style={{ backfaceVisibility: 'hidden', backgroundColor: '#4a63ee' }}>
+                                    Realizar Compra
+                                &lt;/button>
+                            &lt;/form>
+
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/div>
+            ) : (
+
+                &lt;h2 className="text-center text-2xl font-extrabold my-80 "
+                    style={{ backfaceVisibility: "hidden", color: "#1e2447" }}>
+                    No hay articulos en el carrito
+                &lt;/h2>
+
+            )}
+
+
+        &lt;/>
+    );
+}</code></pre></article></section></div></div></div><div class="search-container" id="PkfLWpAbet" style="display:none"><div class="wrapper" id="iCxFxjkHbP"><button class="icon-button search-close-button" id="VjLlGakifb" aria-label="close search"><svg><use xlink:href="#close-icon"></use></svg></button><div class="search-box-c"><svg><use xlink:href="#search-icon"></use></svg> <input type="text" id="vpcKVYIppa" class="search-input" placeholder="Search..." autofocus></div><div class="search-result-c" id="fWwVHRuDuN"><span class="search-result-c-text">Type anything to view search result</span></div></div></div><div class="mobile-menu-icon-container"><button class="icon-button" id="mobile-menu" data-isopen="false" aria-label="menu"><svg><use xlink:href="#menu-icon"></use></svg></button></div><div id="mobile-sidebar" class="mobile-sidebar-container"><div class="mobile-sidebar-wrapper"><a href="/" class="sidebar-title sidebar-title-anchor">Home</a><div class="mobile-nav-links"></div><div class="mobile-sidebar-items-c"><div class="sidebar-section-title with-arrow" data-isopen="false" id="nUgTOcHcCoY42YLvERR9-"><div>Classes</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="AddArticle.html">AddArticle</a></div><div class="sidebar-section-children"><a href="Admin.html">Admin</a></div><div class="sidebar-section-children"><a href="AuthProvider.html">AuthProvider</a></div><div class="sidebar-section-children"><a href="Carrito.html">Carrito</a></div><div class="sidebar-section-children"><a href="Comics.html">Comics</a></div><div class="sidebar-section-children"><a href="Detail.html">Detail</a></div><div class="sidebar-section-children"><a href="EditArticle.html">EditArticle</a></div><div class="sidebar-section-children"><a href="Footer.html">Footer</a></div><div class="sidebar-section-children"><a href="Forum.html">Forum</a></div><div class="sidebar-section-children"><a href="Inicio.html">Inicio</a></div><div class="sidebar-section-children"><a href="Libreria.html">Libreria</a></div><div class="sidebar-section-children"><a href="LibreriaDetail.html">LibreriaDetail</a></div><div class="sidebar-section-children"><a href="Login.html">Login</a></div><div class="sidebar-section-children"><a href="Mangas.html">Mangas</a></div><div class="sidebar-section-children"><a href="Mechandising.html">Mechandising</a></div><div class="sidebar-section-children"><a href="Navbar.html">Navbar</a></div><div class="sidebar-section-children"><a href="Register.html">Register</a></div></div></div><div class="mobile-navbar-actions"><div class="navbar-right-item"><button class="icon-button search-button" aria-label="open-search"><svg><use xlink:href="#search-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button theme-toggle" aria-label="toggle-theme"><svg><use class="theme-svg-use" xlink:href="#light-theme-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button font-size" aria-label="change-font-size"><svg><use xlink:href="#font-size-icon"></use></svg></button></div></div></div></div><script type="text/javascript" src="scripts/core.min.js"></script><script src="scripts/search.min.js" defer="defer"></script><script src="scripts/third-party/fuse.js" defer="defer"></script><script type="text/javascript">var tocbotInstance=tocbot.init({tocSelector:"#eed4d2a0bfd64539bb9df78095dec881",contentSelector:".main-content",headingSelector:"h1, h2, h3",hasInnerContainers:!0,scrollContainer:".main-content",headingsOffset:130,onClick:bringLinkToView})</script></body></html>
