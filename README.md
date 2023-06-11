@@ -12,6 +12,9 @@ https://cantinadelotaku.web.app/
 Link de la documentacion del codigo:
 https://clonico00.github.io/TFG_CantinadelOtaku/docs/index.html
 
+Link de la documentacion del TFG:
+https://drive.google.com/file/d/1SYFloYWi_BN_oCfr7r8vx-lt2lu_JMuC/view?usp=sharing
+
 Para instalar y correr el proyecto en local:
 
 1- npm i
