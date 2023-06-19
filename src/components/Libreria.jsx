@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
-
+import { useAtomValue } from "jotai";
+import { userDataAtom } from "../atoms/userAtom";
 /**
 
     Componente de la librería.
@@ -13,24 +14,29 @@ function Libreria() {
   const { currentUser } = useContext(AuthContext);
   const [articles, setDisplayedArticles] = useState([]);
   const articlesPerPage = 9;
+  const userAtom = useAtomValue(userDataAtom);
 
   /**
     
         Recupera los datos de la librería desde Firestore.
         @returns {Promise} Una promesa que resuelve con los datos de la librería.
         */
-  const fetchLibraryData = async () => {
-    const libraryCollection = collection(db, "library");
-    const querySnapshot = await getDocs(
-      query(libraryCollection, where("name", "==", currentUser.email))
-    );
-    const libraryDocs = [];
-    querySnapshot.forEach((doc) => {
-      libraryDocs.push({ id: doc.id, data: doc.data() });
-    });
-
-    return libraryDocs;
-  };
+        const fetchLibraryData = async () => {
+          console.log(userAtom.email);
+          const libraryCollection = collection(db, "library");
+          const userDocRef = doc(libraryCollection, userAtom.email);
+          const userDocSnap = await getDoc(userDocRef);
+        
+          if (userDocSnap.exists()) {
+            const libraryData = { id: userDocSnap.id, data: userDocSnap.data() };
+            console.log(libraryData);
+            return [libraryData];
+          } else {
+            console.log("El documento no existe.");
+            return [];
+          }
+        };
+        
 
   useEffect(() => {
     /**
@@ -48,11 +54,11 @@ function Libreria() {
         );
       }
     };
-    if (currentUser) {
+    if (userAtom) {
       getLibraryData();
     }
     // eslint-disable-next-line
-  }, [currentUser]);
+  }, [userAtom]);
 
   const totalPages = Math.ceil(articles.length / articlesPerPage);
 
@@ -71,7 +77,7 @@ function Libreria() {
 
   return (
     <>
-      {currentUser ? (
+      {userAtom ? (
         <>
           {articles.length > 0 ? (
             <>
@@ -94,7 +100,7 @@ function Libreria() {
                       >
                         <Link
                           to={`/libreria/detail/${encodeURIComponent(
-                            currentUser.email
+                            userAtom.email
                           )}/${encodeURIComponent(item.pdf)}`}
                         >
                           <div className="relative flex items-end overflow-hidden rounded-xl">
@@ -144,11 +150,10 @@ function Libreria() {
                     (pageNum) => (
                       <button
                         key={pageNum}
-                        className={`mx-1 md:mx-2 lg:mx-3 py-2 px-3 md:py-2 md:px-4 lg:py-3 lg:px-5 rounded-full ${
-                          pageNum === page
-                            ? "bg-blue-600 text-white"
-                            : "bg-white border border-white text-blue-600 hover:bg-blue-600 hover:text-white transition-colors duration-300"
-                        }`}
+                        className={`mx-1 md:mx-2 lg:mx-3 py-2 px-3 md:py-2 md:px-4 lg:py-3 lg:px-5 rounded-full ${pageNum === page
+                          ? "bg-blue-600 text-white"
+                          : "bg-white border border-white text-blue-600 hover:bg-blue-600 hover:text-white transition-colors duration-300"
+                          }`}
                         onClick={() => handleClick(pageNum)}
                       >
                         {pageNum}
