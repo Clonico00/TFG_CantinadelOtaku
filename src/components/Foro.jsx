@@ -104,22 +104,22 @@ const Forum = () => {
   const sendMessage = async () => {
     const inputElement = document.getElementById("nombre");
     const message = inputElement.value;
-
+    
     // Verificar si se seleccionó una imagen
     const imageInputElement = document.getElementById("image-input");
-
-    // Comprueba que el tipo de archivo sea una imagen y no pese más de 5MB
-    const imageFile =
-      imageInputElement.files[0] &&
-      imageInputElement.files[0].type.includes("image/") &&
-      imageInputElement.files[0].size < 5000000
-        ? imageInputElement.files[0]
-        : null;
-    if (!imageFile) {
-      toast.error(
-        "Error al enviar el mensaje: La imagen no es válida o es demasiado grande"
-      );
-      return;
+    const imageFile = imageInputElement.files[0];
+    
+    if (imageFile) {
+      // Comprobar el tipo de archivo y el tamaño si existe una imagen seleccionada
+      if (
+        !imageFile.type.includes("image/") ||
+        imageFile.size >= 5000000
+      ) {
+        toast.error(
+          "Error al enviar el mensaje: La imagen no es válida o es demasiado grande"
+        );
+        return;
+      }
     }
 
     try {

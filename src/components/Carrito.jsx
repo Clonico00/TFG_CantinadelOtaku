@@ -327,7 +327,7 @@ export function Carrito({ cartItems, setCartItems }) {
           (item) => `
         - ${item.title}
           Cantidad: ${item.cantidad}
-          Precio: ${(item.price * item.cantidad).toFixed(2)} €`
+          Precio: ${(item.precio * item.cantidad).toFixed(2)} €`
         )
         .join("\n")}
       

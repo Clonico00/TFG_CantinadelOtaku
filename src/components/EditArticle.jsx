@@ -98,7 +98,7 @@ function EditArticle() {
       }
 
       // Actualizar el archivo de almacenamiento si se proporciona un nuevo pdf
-      let pdfUrl = article.pdf;
+      let pdfUrl = article.pdf ;
       if (updatedArticle.pdf) {
         // Subir el archivo al almacenamiento y obtener la URL de descarga
         const fileRef = ref(storage, `pdfs/${id}/${updatedArticle.pdf.name}`);
@@ -302,7 +302,7 @@ function EditArticle() {
                 <div className="relative">
                   <label
                     htmlFor="photo"
-                    className="text-sm font-bold mb-2 text-gray-900 block dark:text-gray-300"
+                    className="text-sm font-bold mb- text-gray-900 block dark:text-gray-300"
                     style={{ backfaceVisibility: "hidden", color: "#1e2447" }}
                   >
                     Imagen del artículo:{" "}
@@ -317,14 +317,12 @@ function EditArticle() {
                   </div>
                 </div>
               </div>
-              {(selectedCategory === "Mangas" ||
-                selectedCategory === "Comics" ||
-                showPdfInput) && (
+             
                 <div className="flex flex-col">
                   <div className="relative">
                     <label
                       htmlFor="pdf"
-                      className="text-sm font-bold mb-2 text-gray-900 block dark:text-gray-300"
+                      className="text-sm font-bold  mt-2 text-gray-900 block dark:text-gray-300"
                       style={{ backfaceVisibility: "hidden", color: "#1e2447" }}
                     >
                       PDF:
@@ -339,7 +337,7 @@ function EditArticle() {
                     </div>
                   </div>
                 </div>
-              )}
+              
 
               <button
                 type="submit"
